@@ -7,5 +7,3 @@ COPY . /code/
 RUN pip install -r /code/requirements.txt
 
 CMD python -m src.clock
-
-CMD python -m src.models
