@@ -1,0 +1,11 @@
+APScheduler
+alpha_vantage
+tweepy
+black
+flake8
+peewee
+psycopg2-binary
+pytest
+pytest-cov
+codecov
+sentry_sdk
