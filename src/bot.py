@@ -1,7 +1,7 @@
 import tweepy
 from os import environ
 
-from models import Mention
+from .models import Mention
 
 
 def init_tweepy():
