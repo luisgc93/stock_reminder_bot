@@ -22,7 +22,7 @@ class Mention(BaseModel):
 def migrate():
     tables = db.get_tables()
     if not tables:
-        db.create_tables([Mention, ])
+        db.create_tables([Mention])
 
 
 if __name__ == "__main__":
