@@ -8,9 +8,9 @@ from . import bot
 sched = BlockingScheduler()
 
 
-# @sched.scheduled_job("interval", minutes=2)
-# def timed_job():
-#     bot.reply_to_mentions()
+@sched.scheduled_job("interval", minutes=2)
+def timed_job():
+    bot.reply_to_mentions()
 
 
 def main():
