@@ -10,6 +10,6 @@ def init_tweepy():
 
 def reply_to_mentions():
     api = init_tweepy()
-    api.update_status(
-        status="Hello world!"
-    )
+    # api.update_status(
+    #     status="Hello world!"
+    # )
