@@ -11,6 +11,7 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job("interval", minutes=2)
 def timed_job():
+    a = 1/0
     bot.reply_to_mentions()
 
 
