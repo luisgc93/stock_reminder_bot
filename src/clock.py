@@ -5,6 +5,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from . import bot
 
+sentry_sdk.init(environ["SENTRY_PROJECT_URL"], traces_sample_rate=1.0)
 sched = BlockingScheduler()
 
 
