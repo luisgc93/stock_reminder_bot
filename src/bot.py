@@ -17,13 +17,8 @@ def init_tweepy():
 
 
 def reply_to_mentions():
-    last_replied_mention_id = None
-    if Mention.select().exists():
-        last_replied_mention_id = (
-            Mention.select().order_by(Mention.id.desc()).get().tweet_id
-        )
     api = init_tweepy()
-    new_mentions = api.mentions_timeline(since_id=last_replied_mention_id)
+    new_mentions = api.mentions_timeline(since_id=get_last_replied_mention_id())
     for mention in new_mentions:
         Mention(tweet_id=mention.id).save()
         user = mention.user.screen_name
@@ -34,6 +29,15 @@ def reply_to_mentions():
 
 
 def tweet_contains_stock(tweet):
+def get_last_replied_mention_id():
+    if not Mention.select().exists():
+        return
+    last_replied_mention_id = (
+        Mention.select().order_by(Mention.id.desc()).get().tweet_id
+    )
+    return last_replied_mention_id
+
+
     return const.CASHTAG in tweet
 
 
