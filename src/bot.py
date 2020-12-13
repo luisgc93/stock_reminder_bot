@@ -3,7 +3,7 @@ import tweepy
 from os import environ
 
 from . import const
-from .models import Mention
+from .models import Mention, Reminder
 from dateutil.parser import parse
 from datetime import datetime
 
@@ -21,6 +21,15 @@ def reply_to_mentions():
     new_mentions = api.mentions_timeline(since_id=get_last_replied_mention_id())
     for mention in new_mentions:
         Mention(tweet_id=mention.id).save()
+        tweet = mention.text
+        if contains_stock(tweet) and contains_date(tweet):
+            Reminder(
+                tweet_id=mention.id,
+                published_at=datetime.today(),
+                reminder_date=parse_reminder_date(tweet),
+                stock_symbol=parse_stock_name(tweet),
+                stock_price=0.0,
+            ).save()
         user = mention.user.screen_name
         api = init_tweepy()
         api.update_status(
