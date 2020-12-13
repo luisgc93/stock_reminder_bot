@@ -30,7 +30,7 @@ def reply_to_mentions():
             api = init_tweepy()
             api.update_status(
                 status=f"@{user} Sure thing buddy! I'll remind you of the price of "
-                f"${reminder.stock_symbol} on the {reminder.remind_on.date()}. "
+                f"${reminder.stock_symbol} on {reminder.remind_on.date()}. "
                 f"I hope you make tons of money! 🤑",
                 in_reply_to_status_id=mention.id,
             )

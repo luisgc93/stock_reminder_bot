@@ -43,7 +43,7 @@ class TestBot:
 
         expected_status_call = call().update_status(
             status="@user_name Sure thing buddy! I'll remind you of the price of "
-            "$BABA on the 2021-03-13. I hope you make tons of money! 🤑",
+            "$BABA on 2021-03-13. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
 
