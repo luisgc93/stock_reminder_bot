@@ -69,7 +69,7 @@ class TestParseTweet:
     def test_returns_stock_price_with_two_decimal_places(self):
         price = bot.get_price("BABA")
 
-        assert price == "$276.80"
+        assert price == 276.80
 
     @pytest.mark.parametrize(
         "string, reminder_date",

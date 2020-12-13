@@ -86,4 +86,4 @@ def get_price(stock):
     key = list(data.keys())[0]
     full_price = data[key]["1. open"]
 
-    return f"${full_price[:-2]}"
+    return float(full_price[:-2])
