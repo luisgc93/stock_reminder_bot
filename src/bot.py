@@ -74,9 +74,9 @@ def parse_reminder_date(string):
     return datetime(*time_struct[:6], tzinfo=pytz.utc)
 
 
-def get_stock_price(stock_name):
+def get_price(stock):
     ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
-    data, meta_data = ts.get_intraday(stock_name)
+    data, meta_data = ts.get_intraday(stock)
     key = list(data.keys())[0]
     full_price = data[key]["1. open"]
 
