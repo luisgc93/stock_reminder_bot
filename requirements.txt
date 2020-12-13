@@ -9,3 +9,6 @@ pytest
 pytest-cov
 codecov
 sentry_sdk
+python-dateutil
+parsedatetime
+freezegun
