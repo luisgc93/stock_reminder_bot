@@ -36,18 +36,39 @@ def reply_to_mentions():
             )
 
 
+def reply_to_reminders():
+    today = datetime.today()
+    reminders = Reminder.select().where(Reminder.remind_on == today)
+    for reminder in reminders:
+        api = init_tweepy()
+        username = "user_name"
+        time_since_created_on = calculate_elapsed_time(reminder.created_on)
+        original_price = reminder.stock_price
+        current_price = get_price(reminder.stock_symbol)
+        total_returns = calculate_returns(original_price, current_price)
+        if current_price >= original_price:
+            custom_response = const.POSITIVE_RETURNS_EMOJI
+        else:
+            custom_response = const.NEGATIVE_RETURNS_EMOJI
+        api.update_status(
+            status=f"@{username} {time_since_created_on} ago you bought "
+                   f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
+                   f"It is now worth ${current_price:.2f}. That's a return of"
+                   f" {total_returns}%! {custom_response}",
+            in_reply_to_status_id=reminder.tweet_id,
+        )
+
+
 def create_reminder(mention, tweet):
     stock = parse_stock_symbol(tweet)
     price = get_price(stock)
-    reminder = Reminder(
+    return Reminder.create(
         tweet_id=mention.id,
-        published_at=datetime.today(),
+        created_on=datetime.today(),
         remind_on=calculate_reminder_date(tweet),
         stock_symbol=stock,
         stock_price=price,
     )
-    reminder.save()
-    return reminder
 
 
 def get_last_replied_mention_id():
@@ -85,6 +106,10 @@ def calculate_reminder_date(string):
     return datetime(*time_struct[:6], tzinfo=pytz.utc)
 
 
+def calculate_elapsed_time(created_on):
+    return "3 months"
+
+
 def get_price(stock):
     ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
     data, meta_data = ts.get_intraday(stock)
@@ -92,3 +117,7 @@ def get_price(stock):
     full_price = data[key]["1. open"]
 
     return float(full_price[:-2])
+
+
+def calculate_returns(original_price, current_price):
+    return round(((current_price-original_price)/original_price) * 100, 2)
