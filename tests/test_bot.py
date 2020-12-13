@@ -46,7 +46,7 @@ class TestParseTweet:
     def test_returns_stock_name_when_tweet_contains_cash_tag(self, tweet, stock_name):
         assert bot.parse_stock_name(tweet) == stock_name
 
-    def test_returns_reminder_date_from_tweet(self):
+    def test_returns_reminder_date_from_string(self):
         with freeze_time("2020-12-13T11:00+01:00"):
             assert bot.parse_reminder_date("in one week") == datetime(
                 2020, 12, 20, 11, 0
