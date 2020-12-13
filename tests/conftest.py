@@ -52,7 +52,7 @@ def reminder(mention):
         created_on=datetime(2020, 12, 13),
         remind_on=datetime(2021, 12, 13),
         stock_symbol="AMZN",
-        stock_price=2954.91
+        stock_price=2954.91,
     )
 
 

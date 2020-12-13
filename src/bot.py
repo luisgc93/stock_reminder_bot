@@ -52,9 +52,9 @@ def reply_to_reminders():
             custom_response = const.NEGATIVE_RETURNS_EMOJI
         api.update_status(
             status=f"@{username} {time_since_created_on} ago you bought "
-                   f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
-                   f"It is now worth ${current_price:.2f}. That's a return of"
-                   f" {total_returns}%! {custom_response}",
+            f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
+            f"It is now worth ${current_price:.2f}. That's a return of"
+            f" {total_returns}%! {custom_response}",
             in_reply_to_status_id=reminder.tweet_id,
         )
 
@@ -120,4 +120,4 @@ def get_price(stock):
 
 
 def calculate_returns(original_price, current_price):
-    return round(((current_price-original_price)/original_price) * 100, 2)
+    return round(((current_price - original_price) / original_price) * 100, 2)
