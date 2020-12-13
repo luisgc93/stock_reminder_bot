@@ -1,7 +1,12 @@
 import tweepy
 from os import environ
 
+from . import const
 from .models import Mention
+from dateutil.parser import parse
+from datetime import datetime
+
+import parsedatetime
 
 
 def init_tweepy():
@@ -25,3 +30,29 @@ def reply_to_mentions():
         api.update_status(
             status=f"@{user} Hey buddy!", in_reply_to_status_id=mention.id
         )
+
+
+def tweet_contains_stock(tweet):
+    return const.CASHTAG in tweet
+
+
+def tweet_contains_date(tweet):
+    if any([string in tweet for string in const.DATE_TIME_STRINGS]):
+        return True
+    try:
+        parse(tweet, fuzzy=True)
+        return True
+    except ValueError:
+        return False
+
+
+def parse_stock_name(string):
+    name = string.split("$")[1].split(" ")[0]
+    return "".join([x for x in name if x.isalpha()])
+
+
+def parse_reminder_date(string):
+    string = string.split("in ")[1]
+    cal = parsedatetime.Calendar()
+    time_struct, parse_status = cal.parse(string)
+    return datetime(*time_struct[:6])
