@@ -11,7 +11,7 @@ from freezegun import freeze_time
 
 
 class TestBot:
-    @pytest.mark.usefixtures("mock_new_mention")
+    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intra_day")
     def test_saves_new_mentions(self, mock_tweepy):
         assert Mention.select().count() == 0
 
@@ -20,8 +20,8 @@ class TestBot:
         mock_tweepy.assert_has_calls([call().mentions_timeline(since_id=None)])
         assert Mention.select().count() == 1
 
-    @pytest.mark.usefixtures("mock_new_mention")
-    def test_saves_reminder_when_new_mention_contains_stock_and_date(self):
+    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intra_day")
+    def test_creates_reminder_when_new_mention_contains_stock_and_date(self):
         assert Reminder.select().count() == 0
 
         bot.reply_to_mentions()
