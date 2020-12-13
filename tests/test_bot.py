@@ -49,7 +49,8 @@ class TestParseTweet:
         assert bot.parse_stock_name(tweet) == stock_name
 
     def test_returns_reminder_date_from_string(self):
-        with freeze_time("2020-12-13T11:00+01:00"):
+        fake_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
+        with freeze_time(fake_date):
             assert bot.parse_reminder_date("in one week") == datetime(
-                2020, 12, 20, 11, 0, tzinfo=pytz.utc
+                2020, 12, 20, 12, 0, tzinfo=pytz.utc
             )
