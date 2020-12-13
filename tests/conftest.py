@@ -52,3 +52,36 @@ def status(twitter_user):
 def mock_new_mention(mock_tweepy, status):
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
     return mock_tweepy
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_intra_day():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
+        mock.return_value = (
+            {
+                "2020-11-27 16:55:00": {
+                    "1. open": "276.8000",
+                    "2. high": "276.8000",
+                    "3. low": "276.8000",
+                    "4. close": "276.8000",
+                    "5. volume": "513",
+                },
+                "2020-11-27 16:50:00": {
+                    "1. open": "276.9000",
+                    "2. high": "276.9800",
+                    "3. low": "276.8400",
+                    "4. close": "276.9800",
+                    "5. volume": "754",
+                },
+            },
+            {
+                "1. Information": "Intraday (15min) open, high, low, "
+                "close prices and volume",
+                "2. Symbol": "BABA",
+                "3. Last Refreshed": "2020-11-27 17:00:00",
+                "4. Interval": "15min",
+                "5. Output Size": "Compact",
+                "6. Time Zone": "US/Eastern",
+            },
+        )
+        yield mock
