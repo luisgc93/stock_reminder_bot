@@ -31,10 +31,10 @@ class TestBot:
 
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
-        assert reminder.published_at == date(2020, 12, 13)
+        assert reminder.created_on == date(2020, 12, 13)
         assert reminder.remind_on == "2021-03-13 01:00:00+00:00"
-        assert reminder.stock_symbol == "BABA"
-        assert reminder.stock_price == 276.80
+        assert reminder.stock_symbol == "AMZN"
+        assert reminder.stock_price == 3112.70
 
     @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intra_day")
     def test_replies_to_new_mention_when_reminder_created(self, mock_tweepy):
@@ -43,7 +43,7 @@ class TestBot:
 
         expected_status_call = call().update_status(
             status="@user_name Sure thing buddy! I'll remind you of the price of "
-            "$BABA on 2021-03-13. I hope you make tons of money! 🤑",
+            "$AMZN on 2021-03-13. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
 
@@ -101,7 +101,7 @@ class TestParseTweet:
 
     def test_returns_true_when_tweet_contains_date(self):
 
-        assert bot.contains_date("Remind me of $BABA in one year") is True
+        assert bot.contains_date("Remind me of $AMZN in one year") is True
 
     def test_returns_false_when_tweet_does_not_contain_date(self):
 
@@ -119,9 +119,9 @@ class TestParseTweet:
 
     @pytest.mark.usefixtures("mock_alpha_vantage_get_intra_day")
     def test_returns_stock_price_with_two_decimal_places(self):
-        price = bot.get_price("BABA")
+        price = bot.get_price("AMZN")
 
-        assert price == 276.80
+        assert price == 3112.70
 
     @pytest.mark.parametrize(
         "string, reminder_date",
