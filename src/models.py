@@ -1,6 +1,6 @@
 from os import environ
 
-from peewee import BigIntegerField, Model
+from peewee import *
 from playhouse.db_url import connect
 
 # Use default sqlite db in tests
@@ -19,10 +19,21 @@ class Mention(BaseModel):
         table_name = "mentions"
 
 
+class Reminder(BaseModel):
+    tweet_id = BigIntegerField()
+    published_at = DateField()
+    reminder_date = DateTimeField()
+    stock_symbol = CharField()
+    stock_price = FloatField()
+
+    class Meta:
+        table_name = "reminders"
+
+
 def migrate():
     tables = db.get_tables()
     if not tables:
-        db.create_tables([Mention])
+        db.create_tables([Mention, Reminder])
 
 
 if __name__ == "__main__":
