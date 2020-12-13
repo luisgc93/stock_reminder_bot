@@ -28,7 +28,7 @@ class Mention(BaseModel):
 
 class Reminder(BaseModel):
     tweet_id = BigIntegerField()
-    published_at = DateField()
+    created_on = DateField()
     remind_on = DateTimeField()
     stock_symbol = CharField()
     stock_price = FloatField()
