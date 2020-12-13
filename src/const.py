@@ -14,6 +14,10 @@ DATE_TIME_STRINGS = ["year", "month", "week", "day", "hour", "minutes"]
 CASHTAG = "$"
 
 
+POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
+
+NEGATIVE_RETURNS_EMOJI = "😭📉"
+
 API_LIMIT_EXCEEDED_MESSAGE = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
 )
