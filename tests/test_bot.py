@@ -50,6 +50,45 @@ class TestBot:
         assert Reminder.select().count() == 1
         assert expected_status_call in mock_tweepy.mock_calls
 
+    @pytest.mark.usefixtures("mention", "mock_alpha_vantage_get_intra_day")
+    def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_up(
+            self, reminder, mock_tweepy
+    ):
+        with freeze_time(reminder.remind_on):
+            bot.reply_to_reminders()
+
+        expected_status_call = call().update_status(
+            status="@user_name 3 months ago you bought $AMZN at $2954.91. It is now worth"
+                   " $3112.70. That's a return of 5.34%! 🚀🤑📈",
+            in_reply_to_status_id=1,
+        )
+
+        assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures("mention", "mock_alpha_vantage_get_intra_day")
+    def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_down(
+            self, reminder, mock_tweepy
+    ):
+        reminder.stock_price = 3386.12
+        reminder.save()
+        with freeze_time(reminder.remind_on):
+            bot.reply_to_reminders()
+
+        expected_status_call = call().update_status(
+            status="@user_name 3 months ago you bought $AMZN at $3386.12. It is now worth"
+                   " $3112.70. That's a return of -8.07%! 😭📉",
+            in_reply_to_status_id=1,
+        )
+
+        assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures("mention")
+    def test_does_not_reply_to_old_mention_when_reminder_date_is_not_today(self, reminder, mock_tweepy):
+        with freeze_time("2020-12-14"):
+            bot.reply_to_reminders()
+
+        mock_tweepy.assert_not_called()
+
 
 class TestParseTweet:
     def test_returns_true_when_tweet_contains_cash_tag(self):
