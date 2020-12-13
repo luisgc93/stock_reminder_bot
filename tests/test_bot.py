@@ -62,7 +62,16 @@ class TestParseTweet:
 
         assert price == "$276.80"
 
-    def test_returns_reminder_date_from_string(self):
-        published_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
-        with freeze_time(published_date):
-            assert bot.parse_reminder_date("in one week").date() == date(2020, 12, 20)
+    @pytest.mark.parametrize(
+        "string, reminder_date",
+        [
+            ("in 3 days", datetime(2020, 12, 16, 11, tzinfo=pytz.utc)),
+            ("in one week", datetime(2020, 12, 20, 11, tzinfo=pytz.utc)),
+            ("in two months", datetime(2021, 2, 13, 11, tzinfo=pytz.utc)),
+            ("in 2 years", datetime(2022, 12, 13, 11, tzinfo=pytz.utc)),
+        ],
+    )
+    def test_calculates_reminder_date_from_string(self, string, reminder_date):
+        published_at = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
+        with freeze_time(published_at):
+            assert bot.calculate_reminder_date(string).date() == reminder_date.date()
