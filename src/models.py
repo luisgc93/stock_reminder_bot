@@ -1,6 +1,13 @@
 from os import environ
 
-from peewee import *
+from peewee import (
+    BigIntegerField,
+    DateField,
+    DateTimeField,
+    CharField,
+    FloatField,
+    Model,
+)
 from playhouse.db_url import connect
 
 # Use default sqlite db in tests
