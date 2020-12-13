@@ -4,9 +4,9 @@ import pytest
 from peewee import SqliteDatabase
 from tweepy import Status, User
 
-from src.models import Mention
+from src.models import Mention, Reminder
 
-MODELS = [Mention]
+MODELS = [Mention, Reminder]
 
 
 @pytest.fixture(autouse=True)
@@ -43,7 +43,7 @@ def twitter_user():
 def status(twitter_user):
     tweet = Status()
     tweet.id = 1
-    tweet.text = "What is the current price of $BABA?"
+    tweet.text = "Price of $BABA in 3 months."
     tweet.user = twitter_user
     return tweet
 
