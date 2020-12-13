@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 import pytest
 from unittest.mock import call
@@ -49,8 +49,6 @@ class TestParseTweet:
         assert bot.parse_stock_name(tweet) == stock_name
 
     def test_returns_reminder_date_from_string(self):
-        fake_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
-        with freeze_time(fake_date):
-            assert bot.parse_reminder_date("in one week") == datetime(
-                2020, 12, 20, 12, 0, tzinfo=pytz.utc
-            )
+        published_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
+        with freeze_time(published_date):
+            assert bot.parse_reminder_date("in one week").date() == date(2020, 12, 20)
