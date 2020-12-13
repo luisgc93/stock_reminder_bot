@@ -24,9 +24,18 @@ class TestBot:
     def test_creates_reminder_when_new_mention_contains_stock_and_date(self):
         assert Reminder.select().count() == 0
 
-        bot.reply_to_mentions()
+        published_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
+        with freeze_time(published_date):
+            bot.reply_to_mentions()
 
         assert Reminder.select().count() == 1
+
+        reminder = Reminder.select().first()
+        assert reminder.tweet_id == 1
+        assert reminder.published_at == published_date.date()
+        assert reminder.remind_on == '2021-03-13 12:00:00+00:00'
+        assert reminder.stock_symbol == "BABA"
+        assert reminder.stock_price == 276.80
 
 
 class TestParseTweet:
