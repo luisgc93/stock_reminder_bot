@@ -25,20 +25,24 @@ def reply_to_mentions():
         Mention(tweet_id=mention.id).save()
         tweet = mention.text
         if contains_stock(tweet) and contains_date(tweet):
-            stock = parse_stock_symbol(tweet)
-            price = get_price(stock)
-            Reminder(
-                tweet_id=mention.id,
-                published_at=datetime.today(),
-                reminder_date=parse_reminder_date(tweet),
-                stock_symbol=stock,
-                stock_price=price,
-            ).save()
+            create_reminder(mention, tweet)
         user = mention.user.screen_name
         api = init_tweepy()
         api.update_status(
             status=f"@{user} Hey buddy!", in_reply_to_status_id=mention.id
         )
+
+
+def create_reminder(mention, tweet):
+    stock = parse_stock_symbol(tweet)
+    price = get_price(stock)
+    Reminder(
+        tweet_id=mention.id,
+        published_at=datetime.today(),
+        remind_on=calculate_reminder_date(tweet),
+        stock_symbol=stock,
+        stock_price=price,
+    ).save()
 
 
 def get_last_replied_mention_id():
