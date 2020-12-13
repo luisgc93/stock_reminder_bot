@@ -28,7 +28,6 @@ def reply_to_mentions():
         )
 
 
-def tweet_contains_stock(tweet):
 def get_last_replied_mention_id():
     if not Mention.select().exists():
         return
@@ -38,10 +37,11 @@ def get_last_replied_mention_id():
     return last_replied_mention_id
 
 
+def contains_stock(tweet):
     return const.CASHTAG in tweet
 
 
-def tweet_contains_date(tweet):
+def contains_date(tweet):
     if any([string in tweet for string in const.DATE_TIME_STRINGS]):
         return True
     try:
