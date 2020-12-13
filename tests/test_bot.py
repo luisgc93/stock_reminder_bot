@@ -32,19 +32,19 @@ class TestBot:
 class TestParseTweet:
     def test_returns_true_when_tweet_contains_cash_tag(self):
 
-        assert bot.tweet_contains_stock("What is the price of $AMZN?") is True
+        assert bot.contains_stock("What is the price of $AMZN?") is True
 
     def test_returns_false_when_tweet_does_not_contain_cash_tag(self):
 
-        assert bot.tweet_contains_stock("What is the price of amazon?") is False
+        assert bot.contains_stock("What is the price of amazon?") is False
 
     def test_returns_true_when_tweet_contains_date(self):
 
-        assert bot.tweet_contains_date("Remind me of $BABA in one year") is True
+        assert bot.contains_date("Remind me of $BABA in one year") is True
 
     def test_returns_false_when_tweet_does_not_contain_date(self):
 
-        assert bot.tweet_contains_date("Hello there!") is False
+        assert bot.contains_date("Hello there!") is False
 
     @pytest.mark.parametrize(
         "tweet, stock_name",
