@@ -62,7 +62,7 @@ def contains_date(tweet):
         return False
 
 
-def parse_stock_name(string):
+def parse_stock_symbol(string):
     name = string.split("$")[1].split(" ")[0]
     return "".join([x for x in name if x.isalpha()])
 
