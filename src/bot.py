@@ -2,6 +2,8 @@ import pytz
 import tweepy
 from os import environ
 
+from alpha_vantage.timeseries import TimeSeries
+
 from . import const
 from .models import Mention, Reminder
 from dateutil.parser import parse
@@ -70,3 +72,12 @@ def parse_reminder_date(string):
     cal = parsedatetime.Calendar()
     time_struct, parse_status = cal.parse(string)
     return datetime(*time_struct[:6], tzinfo=pytz.utc)
+
+
+def get_stock_price(stock_name):
+    ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
+    data, meta_data = ts.get_intraday(stock_name)
+    key = list(data.keys())[0]
+    full_price = data[key]["1. open"]
+
+    return f"${full_price[:-2]}"
