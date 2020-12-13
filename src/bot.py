@@ -1,3 +1,4 @@
+import pytz
 import tweepy
 from os import environ
 
@@ -55,4 +56,4 @@ def parse_reminder_date(string):
     string = string.split("in ")[1]
     cal = parsedatetime.Calendar()
     time_struct, parse_status = cal.parse(string)
-    return datetime(*time_struct[:6])
+    return datetime(*time_struct[:6], tzinfo=pytz.utc)

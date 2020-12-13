@@ -3,6 +3,8 @@ from datetime import datetime
 import pytest
 from unittest.mock import call
 
+import pytz
+
 from src import bot
 from src.models import Mention
 from freezegun import freeze_time
@@ -49,5 +51,5 @@ class TestParseTweet:
     def test_returns_reminder_date_from_string(self):
         with freeze_time("2020-12-13T11:00+01:00"):
             assert bot.parse_reminder_date("in one week") == datetime(
-                2020, 12, 20, 11, 0
+                2020, 12, 20, 11, 0, tzinfo=pytz.utc
             )
