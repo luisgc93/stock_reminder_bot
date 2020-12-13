@@ -24,18 +24,31 @@ class TestBot:
     def test_creates_reminder_when_new_mention_contains_stock_and_date(self):
         assert Reminder.select().count() == 0
 
-        published_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
-        with freeze_time(published_date):
+        with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
         assert Reminder.select().count() == 1
 
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
-        assert reminder.published_at == published_date.date()
-        assert reminder.remind_on == '2021-03-13 12:00:00+00:00'
+        assert reminder.published_at == date(2020, 12, 13)
+        assert reminder.remind_on == "2021-03-13 01:00:00+00:00"
         assert reminder.stock_symbol == "BABA"
         assert reminder.stock_price == 276.80
+
+    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intra_day")
+    def test_replies_to_new_mention_when_reminder_created(self, mock_tweepy):
+        with freeze_time("2020-12-13"):
+            bot.reply_to_mentions()
+
+        expected_status_call = call().update_status(
+            status="@user_name Sure thing buddy! I'll remind you of the price of "
+            "$BABA on the 2021-03-13. I hope you make tons of money! 🤑",
+            in_reply_to_status_id=1,
+        )
+
+        assert Reminder.select().count() == 1
+        assert expected_status_call in mock_tweepy.mock_calls
 
 
 class TestParseTweet:
@@ -81,6 +94,5 @@ class TestParseTweet:
         ],
     )
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
-        published_at = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
-        with freeze_time(published_at):
+        with freeze_time("2020-12-13"):
             assert bot.calculate_reminder_date(string).date() == reminder_date.date()
