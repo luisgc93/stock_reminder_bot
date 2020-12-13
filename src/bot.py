@@ -73,7 +73,7 @@ def parse_stock_symbol(string):
     return "".join([x for x in name if x.isalpha()])
 
 
-def parse_reminder_date(string):
+def calculate_reminder_date(string):
     string = string.split("in ")[1]
     cal = parsedatetime.Calendar()
     time_struct, parse_status = cal.parse(string)
