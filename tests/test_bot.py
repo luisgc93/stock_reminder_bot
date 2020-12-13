@@ -6,7 +6,7 @@ from unittest.mock import call
 import pytz
 
 from src import bot
-from src.models import Mention
+from src.models import Mention, Reminder
 from freezegun import freeze_time
 
 
@@ -19,6 +19,14 @@ class TestBot:
 
         mock_tweepy.assert_has_calls([call().mentions_timeline(since_id=None)])
         assert Mention.select().count() == 1
+
+    @pytest.mark.usefixtures("mock_new_mention")
+    def test_saves_reminder_when_new_mention_contains_stock_and_date(self):
+        assert Reminder.select().count() == 0
+
+        bot.reply_to_mentions()
+
+        assert Reminder.select().count() == 1
 
 
 class TestParseTweet:
