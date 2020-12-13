@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest.mock import patch
 
 import pytest
@@ -40,10 +41,26 @@ def twitter_user():
 
 
 @pytest.fixture
+def mention():
+    return Mention.create(tweet_id=1)
+
+
+@pytest.fixture
+def reminder(mention):
+    return Reminder.create(
+        tweet_id=mention.id,
+        created_on=datetime(2020, 12, 13),
+        remind_on=datetime(2021, 12, 13),
+        stock_symbol="AMZN",
+        stock_price=2954.91
+    )
+
+
+@pytest.fixture
 def status(twitter_user):
     tweet = Status()
     tweet.id = 1
-    tweet.text = "Price of $BABA in 3 months."
+    tweet.text = "Price of $AMZN in 3 months."
     tweet.user = twitter_user
     return tweet
 
@@ -59,26 +76,26 @@ def mock_alpha_vantage_get_intra_day():
     with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
         mock.return_value = (
             {
-                "2020-11-27 16:55:00": {
-                    "1. open": "276.8000",
-                    "2. high": "276.8000",
-                    "3. low": "276.8000",
-                    "4. close": "276.8000",
-                    "5. volume": "513",
+                "2020-12-13 16:55:00": {
+                    "1. open": "3112.7000",
+                    "2. high": "3112.7000",
+                    "3. low": "3112.7000",
+                    "4. close": "3112.7000",
+                    "5. volume": "196",
                 },
-                "2020-11-27 16:50:00": {
-                    "1. open": "276.9000",
-                    "2. high": "276.9800",
-                    "3. low": "276.8400",
-                    "4. close": "276.9800",
-                    "5. volume": "754",
+                "2020-12-13 16:50:00": {
+                    "1. open": "3110.6700",
+                    "2. high": "3110.6700",
+                    "3. low": "3110.6700",
+                    "4. close": "3110.6700",
+                    "5. volume": "102",
                 },
             },
             {
                 "1. Information": "Intraday (15min) open, high, low, "
                 "close prices and volume",
-                "2. Symbol": "BABA",
-                "3. Last Refreshed": "2020-11-27 17:00:00",
+                "2. Symbol": "AMZN",
+                "3. Last Refreshed": "2020-12-13 17:00:00",
                 "4. Interval": "15min",
                 "5. Output Size": "Compact",
                 "6. Time Zone": "US/Eastern",
