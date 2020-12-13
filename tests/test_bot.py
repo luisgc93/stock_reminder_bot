@@ -56,6 +56,12 @@ class TestParseTweet:
     def test_returns_stock_name_when_tweet_contains_cash_tag(self, tweet, stock_name):
         assert bot.parse_stock_name(tweet) == stock_name
 
+    @pytest.mark.usefixtures("mock_alpha_vantage_get_intra_day")
+    def test_returns_stock_price_with_two_decimal_places(self):
+        price = bot.get_stock_price("BABA")
+
+        assert price == "$276.80"
+
     def test_returns_reminder_date_from_string(self):
         published_date = datetime(2020, 12, 13, 11, tzinfo=pytz.utc)
         with freeze_time(published_date):
