@@ -101,7 +101,6 @@ def parse_stock_symbol(string):
 
 
 def calculate_reminder_date(string):
-    string = string.split("in ")[1]
     cal = parsedatetime.Calendar()
     time_struct, parse_status = cal.parse(string)
     return date(*time_struct[:3])
