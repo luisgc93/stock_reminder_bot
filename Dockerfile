@@ -4,6 +4,6 @@ WORKDIR /code
 
 COPY . /code/
 
-RUN pip install -r /code/requirements.txt && python -m src.models
+RUN pip install -r /code/requirements.txt
 
 CMD python -m src.models
