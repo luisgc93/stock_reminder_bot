@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from unittest.mock import patch
 
 import pytest
@@ -49,8 +49,8 @@ def mention():
 def reminder(mention):
     return Reminder.create(
         tweet_id=mention.id,
-        created_on=datetime(2020, 12, 13),
-        remind_on=datetime(2021, 12, 13),
+        created_on=date(2020, 10, 16),
+        remind_on=date(2021, 1, 16),
         stock_symbol="AMZN",
         stock_price=2954.91,
     )
