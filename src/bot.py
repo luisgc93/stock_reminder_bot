@@ -8,6 +8,7 @@ from . import const
 from .models import Mention, Reminder
 from dateutil.parser import parse
 from datetime import datetime
+import humanize
 
 import parsedatetime
 
@@ -106,8 +107,8 @@ def calculate_reminder_date(string):
     return datetime(*time_struct[:6], tzinfo=pytz.utc)
 
 
-def calculate_elapsed_time(created_on):
-    return "3 months"
+def calculate_time_delta(today, created_on):
+    return humanize.naturaldelta(today - created_on)
 
 
 def get_price(stock):
