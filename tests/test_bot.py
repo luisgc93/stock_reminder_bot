@@ -40,7 +40,7 @@ class TestBot:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status="Sure thing buddy! I'll remind you of the price of "
+            status="@user_name Sure thing buddy! I'll remind you of the price of "
             "$AMZN on Saturday March 13 2021. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
