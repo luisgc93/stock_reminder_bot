@@ -34,7 +34,7 @@ class TestBot:
         assert reminder.created_on == date(2020, 12, 13)
         assert reminder.remind_on == date(2021, 3, 13)
         assert reminder.stock_symbol == "AMZN"
-        assert reminder.stock_price == 3112.70
+        assert reminder.stock_price == 3201.65
 
     @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intra_day")
     def test_replies_to_new_mention_when_reminder_created(self, mock_tweepy):
@@ -59,7 +59,7 @@ class TestBot:
 
         expected_status_call = call().update_status(
             status="@user_name 3 months ago you bought $AMZN at $2954.91. "
-            "It is now worth $3112.70. That's a return of 5.34%! 🚀🤑📈",
+            "It is now worth $3201.65. That's a return of 8.35%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
 
@@ -76,7 +76,7 @@ class TestBot:
 
         expected_status_call = call().update_status(
             status="@user_name 3 months ago you bought $AMZN at $3386.12. "
-            "It is now worth $3112.70. That's a return of -8.07%! 😭📉",
+            "It is now worth $3201.65. That's a return of -5.45%! 😭📉",
             in_reply_to_status_id=1,
         )
 
@@ -139,7 +139,7 @@ class TestParseTweet:
     def test_returns_stock_price_with_two_decimal_places(self):
         price = bot.get_price("AMZN")
 
-        assert price == 3112.70
+        assert price == 3201.65
 
     @pytest.mark.parametrize(
         "string, reminder_date",

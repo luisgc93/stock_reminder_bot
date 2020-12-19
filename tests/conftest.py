@@ -73,32 +73,17 @@ def mock_new_mention(mock_tweepy, status):
 
 @pytest.fixture
 def mock_alpha_vantage_get_intra_day():
-    with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
-        mock.return_value = (
-            {
-                "2020-12-13 16:55:00": {
-                    "1. open": "3112.7000",
-                    "2. high": "3112.7000",
-                    "3. low": "3112.7000",
-                    "4. close": "3112.7000",
-                    "5. volume": "196",
-                },
-                "2020-12-13 16:50:00": {
-                    "1. open": "3110.6700",
-                    "2. high": "3110.6700",
-                    "3. low": "3110.6700",
-                    "4. close": "3110.6700",
-                    "5. volume": "102",
-                },
-            },
-            {
-                "1. Information": "Intraday (15min) open, high, low, "
-                "close prices and volume",
-                "2. Symbol": "AMZN",
-                "3. Last Refreshed": "2020-12-13 17:00:00",
-                "4. Interval": "15min",
-                "5. Output Size": "Compact",
-                "6. Time Zone": "US/Eastern",
-            },
-        )
+    with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
+        mock.return_value = {
+            '01. symbol': 'AMZN',
+            '02. open': '3243.9900',
+            '03. high': '3249.4200',
+            '04. low': '3171.6000',
+            '05. price': '3201.6500',
+            '06. volume': '5995713',
+            '07. latest trading day': '2020-12-18',
+            '08. previous close': '3236.0800',
+            '09. change': '-34.4300',
+            '10. change percent': '-1.0639%'
+        }
         yield mock
