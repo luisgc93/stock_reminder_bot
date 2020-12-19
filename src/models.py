@@ -26,6 +26,7 @@ class Mention(BaseModel):
 
 
 class Reminder(BaseModel):
+    user_name = CharField()
     tweet_id = BigIntegerField()
     created_on = DateField()
     remind_on = DateField()

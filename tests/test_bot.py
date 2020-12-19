@@ -57,7 +57,7 @@ class TestBot:
 
         expected_status_call = call().update_with_media(
             filename=const.MR_SCROOGE_IMAGE_PATH,
-            status="3 months ago you bought $AMZN at $2954.91. "
+            status="@user_name 3 months ago you bought $AMZN at $2954.91. "
             "It is now worth $3201.65. That's a return of 8.35%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
@@ -75,7 +75,7 @@ class TestBot:
 
         expected_status_call = call().update_with_media(
             filename=const.MR_BURNS_IMAGE_PATH,
-            status="3 months ago you bought $AMZN at $3386.12. "
+            status="@user_name 3 months ago you bought $AMZN at $3386.12. "
             "It is now worth $3201.65. That's a return of -5.45%! 😭📉",
             in_reply_to_status_id=1,
         )

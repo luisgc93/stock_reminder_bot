@@ -47,7 +47,7 @@ def reply_to_reminders():
         current_price = get_price(reminder.stock_symbol)
         total_returns = calculate_returns(original_price, current_price)
         status = (
-            f"{time_since_created_on} ago you bought "
+            f"@{reminder.user_name} {time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
             f"It is now worth ${current_price:.2f}. That's a return of"
             f" {total_returns}%! "
@@ -70,6 +70,7 @@ def create_reminder(mention, tweet):
     stock = parse_stock_symbol(tweet)
     price = get_price(stock)
     return Reminder.create(
+        user_name=mention.user.screen_name,
         tweet_id=mention.id,
         created_on=date.today(),
         remind_on=calculate_reminder_date(tweet),
