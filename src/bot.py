@@ -117,7 +117,7 @@ def calculate_time_delta(today, created_on):
 
 def get_price(stock):
     ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
-    data = ts.get_quote_endpoint(stock)
+    data, _ = ts.get_quote_endpoint(stock)
     full_price = data["05. price"]
 
     return float(full_price[:-2])
