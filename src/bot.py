@@ -29,7 +29,7 @@ def reply_to_mentions():
             user = mention.user.screen_name
             api = init_tweepy()
             api.update_status(
-                status=f"@{user} Sure thing buddy! I'll remind you "
+                status=f"Sure thing buddy! I'll remind you "
                 f"of the price of ${reminder.stock_symbol} on "
                 f"{reminder.remind_on.strftime('%A %B %d %Y')}. "
                 f"I hope you make tons of money! 🤑",
@@ -42,7 +42,6 @@ def reply_to_reminders():
     reminders = Reminder.select().where(Reminder.remind_on == today)
     for reminder in reminders:
         api = init_tweepy()
-        username = "user_name"
         time_since_created_on = calculate_time_delta(today, reminder.created_on)
         original_price = reminder.stock_price
         current_price = get_price(reminder.stock_symbol)
@@ -52,7 +51,7 @@ def reply_to_reminders():
         else:
             custom_response = const.NEGATIVE_RETURNS_EMOJI
         api.update_status(
-            status=f"@{username} {time_since_created_on} ago you bought "
+            status=f"{time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
             f"It is now worth ${current_price:.2f}. That's a return of"
             f" {total_returns}%! {custom_response}",

@@ -42,7 +42,7 @@ class TestBot:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status="@user_name Sure thing buddy! I'll remind you of the price of "
+            status="Sure thing buddy! I'll remind you of the price of "
             "$AMZN on Saturday March 13 2021. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
@@ -58,7 +58,7 @@ class TestBot:
             bot.reply_to_reminders()
 
         expected_status_call = call().update_status(
-            status="@user_name 3 months ago you bought $AMZN at $2954.91. "
+            status="3 months ago you bought $AMZN at $2954.91. "
             "It is now worth $3201.65. That's a return of 8.35%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
@@ -75,7 +75,7 @@ class TestBot:
             bot.reply_to_reminders()
 
         expected_status_call = call().update_status(
-            status="@user_name 3 months ago you bought $AMZN at $3386.12. "
+            status="3 months ago you bought $AMZN at $3386.12. "
             "It is now worth $3201.65. That's a return of -5.45%! 😭📉",
             in_reply_to_status_id=1,
         )
