@@ -4,6 +4,6 @@ WORKDIR /code
 
 COPY . /code/
 
-RUN pip install -r /code/requirements.txt
+RUN pip install -r /code/requirements.txt && python -m src.models
 
-CMD python -m src.models
+CMD python -m src.clock
