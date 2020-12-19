@@ -38,7 +38,7 @@ class Reminder(BaseModel):
 
 def migrate():
     tables = db.get_tables()
-    print(tables)
+    err = tables/0
     if [Mention, Reminder] not in tables:
         db.create_tables([Mention, Reminder])
 
