@@ -12,3 +12,4 @@ sentry_sdk
 python-dateutil
 parsedatetime
 freezegun
+humanize
