@@ -2,6 +2,7 @@ import tweepy
 from os import environ
 
 from alpha_vantage.timeseries import TimeSeries
+from alpha_vantage.foreignexchange import ForeignExchange
 
 from . import const
 from .models import Mention, Reminder
@@ -118,9 +119,15 @@ def calculate_time_delta(today, created_on):
 
 
 def get_price(stock):
-    ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
-    data, _ = ts.get_quote_endpoint(stock)
-    full_price = data["05. price"]
+    if stock in const.CRYPTO_CURRENCIES:
+        fe = ForeignExchange(key=environ["ALPHA_VANTAGE_API_KEY"])
+        data, _ = fe.get_currency_exchange_rate(stock, "USD")
+        full_price = data["5. Exchange Rate"]
+
+    else:
+        ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
+        data, _ = ts.get_quote_endpoint(stock)
+        full_price = data["05. price"]
 
     return float(full_price[:-2])
 

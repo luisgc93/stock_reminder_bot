@@ -75,7 +75,7 @@ def mock_new_mention(mock_tweepy, status):
 @pytest.fixture
 def mock_alpha_vantage_get_intra_day():
     with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
-        mock.return_value = [
+        mock.return_value = (
             {
                 "01. symbol": "AMZN",
                 "02. open": "3243.9900",
@@ -89,5 +89,27 @@ def mock_alpha_vantage_get_intra_day():
                 "10. change percent": "-1.0639%",
             },
             None,
-        ]
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_currency_exchange_rate():
+    with patch(
+        "alpha_vantage.foreignexchange.ForeignExchange.get_currency_exchange_rate"
+    ) as mock:
+        mock.return_value = (
+            {
+                "1. From_Currency Code": "BTC",
+                "2. From_Currency Name": "Bitcoin",
+                "3. To_Currency Code": "USD",
+                "4. To_Currency Name": "United States Dollar",
+                "5. Exchange Rate": "23933.49000000",
+                "6. Last Refreshed": "2020-12-19 22:37:01",
+                "7. Time Zone": "UTC",
+                "8. Bid Price": "23930.67000000",
+                "9. Ask Price": "23933.49000000",
+            },
+            None,
+        )
         yield mock

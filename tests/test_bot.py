@@ -136,11 +136,21 @@ class TestParseTweet:
     def test_returns_stock_name_when_tweet_contains_cash_tag(self, tweet, stock_name):
         assert bot.parse_stock_symbol(tweet) == stock_name
 
-    @pytest.mark.usefixtures("mock_alpha_vantage_get_intra_day")
-    def test_returns_stock_price_with_two_decimal_places(self):
+    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intra_day):
         price = bot.get_price("AMZN")
 
         assert price == 3201.65
+        mock_alpha_vantage_get_intra_day.assert_called_once_with("AMZN")
+
+    def test_returns_price_for_cryptocurrency(
+        self, mock_alpha_vantage_get_currency_exchange_rate
+    ):
+        price = bot.get_price("BTC")
+
+        assert price == 23933.49
+        mock_alpha_vantage_get_currency_exchange_rate.assert_called_once_with(
+            "BTC", "USD"
+        )
 
     @pytest.mark.parametrize(
         "string, reminder_date",
