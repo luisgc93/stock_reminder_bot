@@ -11,12 +11,6 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job("interval", minutes=2)
 def timed_job():
-    api = bot.init_tweepy()
-    api.update_with_media(
-        filename=const.MR_SCROOGE_IMAGE_PATH,
-        status="TEST" + const.POSITIVE_RETURNS_EMOJI,
-        in_reply_to_status_id=1340323379136634880,
-    )
     bot.reply_to_mentions()
 
 
