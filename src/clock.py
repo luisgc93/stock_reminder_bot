@@ -3,7 +3,7 @@ from os import environ
 import sentry_sdk
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from . import bot
+from . import bot, models
 
 sentry_sdk.init(environ["SENTRY_PROJECT_URL"], traces_sample_rate=1.0)
 sched = BlockingScheduler()
@@ -20,6 +20,7 @@ def scheduled_job():
 
 
 def main():
+    models.migrate()
     sched.start()
 
 
