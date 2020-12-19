@@ -1,4 +1,3 @@
-import pytz
 import tweepy
 from os import environ
 
@@ -7,7 +6,7 @@ from alpha_vantage.timeseries import TimeSeries
 from . import const
 from .models import Mention, Reminder
 from dateutil.parser import parse
-from datetime import datetime
+from datetime import date
 import humanize
 
 import parsedatetime
@@ -30,20 +29,21 @@ def reply_to_mentions():
             user = mention.user.screen_name
             api = init_tweepy()
             api.update_status(
-                status=f"@{user} Sure thing buddy! I'll remind you of the price of "
-                f"${reminder.stock_symbol} on {reminder.remind_on.date()}. "
+                status=f"@{user} Sure thing buddy! I'll remind you "
+                f"of the price of ${reminder.stock_symbol} on "
+                f"{reminder.remind_on.strftime('%A %B %d %Y')}. "
                 f"I hope you make tons of money! 🤑",
                 in_reply_to_status_id=mention.id,
             )
 
 
 def reply_to_reminders():
-    today = datetime.today()
+    today = date.today()
     reminders = Reminder.select().where(Reminder.remind_on == today)
     for reminder in reminders:
         api = init_tweepy()
         username = "user_name"
-        time_since_created_on = calculate_elapsed_time(reminder.created_on)
+        time_since_created_on = calculate_time_delta(today, reminder.created_on)
         original_price = reminder.stock_price
         current_price = get_price(reminder.stock_symbol)
         total_returns = calculate_returns(original_price, current_price)
@@ -65,7 +65,7 @@ def create_reminder(mention, tweet):
     price = get_price(stock)
     return Reminder.create(
         tweet_id=mention.id,
-        created_on=datetime.today(),
+        created_on=date.today(),
         remind_on=calculate_reminder_date(tweet),
         stock_symbol=stock,
         stock_price=price,
@@ -104,7 +104,7 @@ def calculate_reminder_date(string):
     string = string.split("in ")[1]
     cal = parsedatetime.Calendar()
     time_struct, parse_status = cal.parse(string)
-    return datetime(*time_struct[:6], tzinfo=pytz.utc)
+    return date(*time_struct[:3])
 
 
 def calculate_time_delta(today, created_on):
