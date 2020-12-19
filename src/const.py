@@ -9,7 +9,7 @@ MAX_TRUNCATED_CHARACTER_COUNT = (
 )
 
 
-DATE_TIME_STRINGS = ["year", "month", "week", "day", "hour", "minutes"]
+DATE_TIME_STRINGS = ["year", "month", "week", "day", "hour", "minutes", "tomorrow"]
 
 CASHTAG = "$"
 
