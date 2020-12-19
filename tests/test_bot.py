@@ -115,7 +115,7 @@ class TestParseTweet:
         assert bot.contains_stock("What is the price of amazon?") is False
 
     @pytest.mark.parametrize(
-        "date_string", ["3 days", "2 months", "1 year", "one week", "two years"]
+        "date_string", ["tomorrow", "3 days", "2 months", "1 year", "one week", "two years"]
     )
     def test_returns_true_when_tweet_contains_date(self, date_string):
 
@@ -144,10 +144,11 @@ class TestParseTweet:
     @pytest.mark.parametrize(
         "string, reminder_date",
         [
-            ("in 3 days", datetime(2020, 12, 16, 11, tzinfo=pytz.utc)),
+            ("Remind me of this tomorrow", datetime(2020, 12, 14, 11, tzinfo=pytz.utc)),
+            ("Remind me of $AMZ in 3 days", datetime(2020, 12, 16, 11, tzinfo=pytz.utc)),
             ("in one week", datetime(2020, 12, 20, 11, tzinfo=pytz.utc)),
             ("in two months", datetime(2021, 2, 13, 11, tzinfo=pytz.utc)),
-            ("in 2 years", datetime(2022, 12, 13, 11, tzinfo=pytz.utc)),
+            ("$MSFT in 2 years", datetime(2022, 12, 13, 11, tzinfo=pytz.utc)),
         ],
     )
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
