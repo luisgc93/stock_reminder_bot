@@ -32,7 +32,7 @@ class TestBot:
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
         assert reminder.created_on == date(2020, 12, 13)
-        assert reminder.remind_on == "2021-03-13 01:00:00+00:00"
+        assert reminder.remind_on == date(2021, 3, 13)
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
 
@@ -43,7 +43,7 @@ class TestBot:
 
         expected_status_call = call().update_status(
             status="@user_name Sure thing buddy! I'll remind you of the price of "
-            "$AMZN on 2021-03-13. I hope you make tons of money! 🤑",
+            "$AMZN on Saturday March 13 2021. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
 
@@ -91,6 +91,19 @@ class TestBot:
 
         mock_tweepy.assert_not_called()
 
+    @pytest.mark.parametrize(
+        "today, created_on, delta",
+        [
+            (date(2021, 1, 16), date(2020, 10, 16), "3 months"),
+            (date(2020, 10, 30), date(2020, 10, 16), "14 days"),
+            (date(2020, 11, 16), date(2020, 5, 16), "6 months"),
+            (date(2020, 1, 16), date(2019, 1, 16), "a year"),
+        ],
+    )
+    def test_calculates_time_delta(self, today, created_on, delta):
+
+        assert bot.calculate_time_delta(today, created_on) == delta
+
 
 class TestParseTweet:
     def test_returns_true_when_tweet_contains_cash_tag(self):
@@ -101,9 +114,12 @@ class TestParseTweet:
 
         assert bot.contains_stock("What is the price of amazon?") is False
 
-    def test_returns_true_when_tweet_contains_date(self):
+    @pytest.mark.parametrize(
+        "date_string", ["3 days", "2 months", "1 year", "one week", "two years"]
+    )
+    def test_returns_true_when_tweet_contains_date(self, date_string):
 
-        assert bot.contains_date("Remind me of $AMZN in one year") is True
+        assert bot.contains_date(f"Remind me of $AMZN in {date_string}") is True
 
     def test_returns_false_when_tweet_does_not_contain_date(self):
 
