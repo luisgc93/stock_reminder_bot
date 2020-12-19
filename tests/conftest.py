@@ -75,15 +75,15 @@ def mock_new_mention(mock_tweepy, status):
 def mock_alpha_vantage_get_intra_day():
     with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
         mock.return_value = {
-            '01. symbol': 'AMZN',
-            '02. open': '3243.9900',
-            '03. high': '3249.4200',
-            '04. low': '3171.6000',
-            '05. price': '3201.6500',
-            '06. volume': '5995713',
-            '07. latest trading day': '2020-12-18',
-            '08. previous close': '3236.0800',
-            '09. change': '-34.4300',
-            '10. change percent': '-1.0639%'
+            "01. symbol": "AMZN",
+            "02. open": "3243.9900",
+            "03. high": "3249.4200",
+            "04. low": "3171.6000",
+            "05. price": "3201.6500",
+            "06. volume": "5995713",
+            "07. latest trading day": "2020-12-18",
+            "08. previous close": "3236.0800",
+            "09. change": "-34.4300",
+            "10. change percent": "-1.0639%",
         }
         yield mock
