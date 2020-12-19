@@ -27,6 +27,7 @@ def reply_to_mentions():
         if contains_stock(tweet) and contains_date(tweet):
             reminder = create_reminder(mention, tweet)
             api = init_tweepy()
+            err = mention.id/0
             api.update_status(
                 status=f"Sure thing buddy! I'll remind you "
                 f"of the price of ${reminder.stock_symbol} on "
