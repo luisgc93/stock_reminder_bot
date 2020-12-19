@@ -4,7 +4,8 @@
 A [twitter bot](https://twitter.com/stock_reminder) that registers reminders for stock and cryptocurrency prices.
 Mention the bot with a cashtag followed by a stock or cryptocurrency's ticker symbol and the reminder date:
 
-![image](https://user-images.githubusercontent.com/32971373/102701956-09e00480-425d-11eb-8a0e-a38f274db994.png)
+<img width="447" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701956-09e00480-425d-11eb-8a0e-a38f274db994.png">
+
 
 The bot will then get back at you on the specified date with your investment results:
 
