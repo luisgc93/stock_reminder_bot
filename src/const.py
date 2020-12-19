@@ -16,7 +16,12 @@ CASHTAG = "$"
 
 POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
+MR_SCROOGE_IMAGE_PATH = r"/Users/lgarccu/code/stock_reminder_bot/mr_scrooge.png"
+
 NEGATIVE_RETURNS_EMOJI = "😭📉"
+
+MR_BURNS_IMAGE_PATH = r"/Users/lgarccu/code/stock_reminder_bot/mr_burns.png"
+
 
 API_LIMIT_EXCEEDED_MESSAGE = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."

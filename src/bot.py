@@ -26,7 +26,6 @@ def reply_to_mentions():
         tweet = mention.text
         if contains_stock(tweet) and contains_date(tweet):
             reminder = create_reminder(mention, tweet)
-            user = mention.user.screen_name
             api = init_tweepy()
             api.update_status(
                 status=f"Sure thing buddy! I'll remind you "
@@ -46,17 +45,24 @@ def reply_to_reminders():
         original_price = reminder.stock_price
         current_price = get_price(reminder.stock_symbol)
         total_returns = calculate_returns(original_price, current_price)
-        if current_price >= original_price:
-            custom_response = const.POSITIVE_RETURNS_EMOJI
-        else:
-            custom_response = const.NEGATIVE_RETURNS_EMOJI
-        api.update_status(
-            status=f"{time_since_created_on} ago you bought "
+        status = (
+            f"{time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
             f"It is now worth ${current_price:.2f}. That's a return of"
-            f" {total_returns}%! {custom_response}",
-            in_reply_to_status_id=reminder.tweet_id,
+            f" {total_returns}%! "
         )
+        if current_price >= original_price:
+            api.update_with_media(
+                filename=const.MR_SCROOGE_IMAGE_PATH,
+                status=status + const.POSITIVE_RETURNS_EMOJI,
+                in_reply_to_status_id=reminder.tweet_id,
+            )
+        else:
+            api.update_with_media(
+                filename=const.MR_BURNS_IMAGE_PATH,
+                status=status + const.NEGATIVE_RETURNS_EMOJI,
+                in_reply_to_status_id=reminder.tweet_id,
+            )
 
 
 def create_reminder(mention, tweet):
