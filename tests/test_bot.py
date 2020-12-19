@@ -152,4 +152,4 @@ class TestParseTweet:
     )
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
         with freeze_time("2020-12-13"):
-            assert bot.calculate_reminder_date(string).date() == reminder_date.date()
+            assert bot.calculate_reminder_date(string) == reminder_date
