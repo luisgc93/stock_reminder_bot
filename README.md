@@ -1,5 +1,5 @@
 # stock_reminder bot 🤖 
-[![Build Status](https://travis-ci.org/luisgc93/ibex35_bot.svg?branch=master)](https://travis-ci.org/luisgc93/ibex35_bot) [![codecov](https://codecov.io/gh/luisgc93/ibex35_bot/branch/master/graph/badge.svg?token=QM9L6HQ3YQ)](https://codecov.io/gh/luisgc93/ibex35_bot)
+[![Build Status](https://travis-ci.org/luisgc93/stock_reminder_bot.svg?branch=master)](https://travis-ci.org/luisgc93/stock_reminder_bot) [![codecov](https://codecov.io/gh/luisgc93/stock_reminder_bot/branch/master/graph/badge.svg?token=2sx6C5pkSW)](https://codecov.io/gh/luisgc93/stock_reminder_bot)
 
 A [twitter bot](https://twitter.com/stock_reminder) that registers reminders for stock and cryptocurrency prices.
 
