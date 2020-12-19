@@ -3,7 +3,6 @@ from os import environ
 from peewee import (
     BigIntegerField,
     DateField,
-    DateTimeField,
     CharField,
     FloatField,
     Model,
@@ -29,7 +28,7 @@ class Mention(BaseModel):
 class Reminder(BaseModel):
     tweet_id = BigIntegerField()
     created_on = DateField()
-    remind_on = DateTimeField()
+    remind_on = DateField()
     stock_symbol = CharField()
     stock_price = FloatField()
 
