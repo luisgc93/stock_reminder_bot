@@ -1,11 +1,9 @@
-from datetime import datetime, date
+from datetime import date
 
 import pytest
 from unittest.mock import call
 
-import pytz
-
-from src import bot
+from src import bot, const
 from src.models import Mention, Reminder
 from freezegun import freeze_time
 
@@ -57,7 +55,8 @@ class TestBot:
         with freeze_time(reminder.remind_on):
             bot.reply_to_reminders()
 
-        expected_status_call = call().update_status(
+        expected_status_call = call().update_with_media(
+            filename=const.MR_SCROOGE_IMAGE_PATH,
             status="3 months ago you bought $AMZN at $2954.91. "
             "It is now worth $3201.65. That's a return of 8.35%! 🚀🤑📈",
             in_reply_to_status_id=1,
@@ -74,7 +73,8 @@ class TestBot:
         with freeze_time(reminder.remind_on):
             bot.reply_to_reminders()
 
-        expected_status_call = call().update_status(
+        expected_status_call = call().update_with_media(
+            filename=const.MR_BURNS_IMAGE_PATH,
             status="3 months ago you bought $AMZN at $3386.12. "
             "It is now worth $3201.65. That's a return of -5.45%! 😭📉",
             in_reply_to_status_id=1,
@@ -115,7 +115,8 @@ class TestParseTweet:
         assert bot.contains_stock("What is the price of amazon?") is False
 
     @pytest.mark.parametrize(
-        "date_string", ["tomorrow", "3 days", "2 months", "1 year", "one week", "two years"]
+        "date_string",
+        ["tomorrow", "3 days", "2 months", "1 year", "one week", "two years"],
     )
     def test_returns_true_when_tweet_contains_date(self, date_string):
 
@@ -144,11 +145,11 @@ class TestParseTweet:
     @pytest.mark.parametrize(
         "string, reminder_date",
         [
-            ("Remind me of this tomorrow", datetime(2020, 12, 14, 11, tzinfo=pytz.utc)),
-            ("Remind me of $AMZ in 3 days", datetime(2020, 12, 16, 11, tzinfo=pytz.utc)),
-            ("in one week", datetime(2020, 12, 20, 11, tzinfo=pytz.utc)),
-            ("in two months", datetime(2021, 2, 13, 11, tzinfo=pytz.utc)),
-            ("$MSFT in 2 years", datetime(2022, 12, 13, 11, tzinfo=pytz.utc)),
+            ("Remind me of this tomorrow", date(2020, 12, 14)),
+            ("Remind me of $AMZ in 3 days", date(2020, 12, 16)),
+            ("in one week", date(2020, 12, 20)),
+            ("in two months", date(2021, 2, 13)),
+            ("$MSFT in 2 years", date(2022, 12, 13)),
         ],
     )
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
