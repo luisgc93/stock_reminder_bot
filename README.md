@@ -14,7 +14,7 @@ The bot will then get back at you on the specified date with your investment res
 <img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701985-8ffc4b00-425d-11eb-980a-e3a97b45e297.png">
 
 ## Implementation 🛠️
-The bot uses [RomelTorres' python wrapper](https://github.com/RomelTorres/alpha_vantage) for the [Alpha Vantage API](https://www.alphavantage.co/documentation/). It's deployed on [Heroku with Docker](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml) 🐳 and uses two separate [clock processes](https://devcenter.heroku.com/articles/clock-processes-python) for posting articles and listening to twitter mentions. To avoid duplicate replies, the bot saves the mention's id into a postgres database table which is queried through [peewee](http://docs.peewee-orm.com/en/latest/)'s ORM.
+The bot uses [RomelTorres' python wrapper](https://github.com/RomelTorres/alpha_vantage) for the [Alpha Vantage API](https://www.alphavantage.co/documentation/). It's deployed on [Heroku with Docker](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml) 🐳 and uses two separate [clock processes](https://devcenter.heroku.com/articles/clock-processes-python) for listening to twitter mentions and posting reminders. To avoid duplicate replies, the bot saves the mention's id into a postgres database table which is queried through [peewee](http://docs.peewee-orm.com/en/latest/)'s ORM.
 
 ## Usage
 Register an account on [Twitter's Developer Platform](https://developer.twitter.com/en) and store your credentials in `/envfiles/local.env`.
