@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  worker:
+    build: .
+    env_file:
+      - envfiles/local.env
+    stdin_open: true
+    tty: true
+    volumes:
+      - './src:/worker/src'
+    ports:
+      - 8000:8000
+  db:
+    image: postgres:13
+    env_file:
+      - envfiles/local.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes:
+  postgres_data:

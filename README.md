@@ -11,9 +11,6 @@ The bot will then get back at you on the specified date with your investment res
 
 <img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701977-70fdb900-425d-11eb-9215-a1038dab2a9f.png">
 
-
-A custom response is returned depending on the outcome:
-
 <img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701985-8ffc4b00-425d-11eb-980a-e3a97b45e297.png">
 
 ## Implementation 🛠️
@@ -22,8 +19,6 @@ The bot uses [RomelTorres' python wrapper](https://github.com/RomelTorres/alpha_
 ## Usage
 Register an account on [Twitter's Developer Platform](https://developer.twitter.com/en) and store your credentials in `/envfiles/local.env`.
 To run the bot locally, start the project containers with `make env-start` and then try out the bot's features with:
-
-`make tweet-article`
 
 `make reply-mentions`
  
