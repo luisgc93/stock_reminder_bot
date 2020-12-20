@@ -35,6 +35,6 @@ API_LIMIT_EXCEEDED_RESPONSE = (
 
 STOCK_NOT_FOUND_RESPONSE = (
     "Sorry, I couldn't find any securities under that ticker 😓. "
-    "I only support NASDAQ stocks : "
+    "I only support NASDAQ stocks and a few cryptocurrencies: "
     "https://www.nasdaq.com/market-activity/stocks/screener."
 )
