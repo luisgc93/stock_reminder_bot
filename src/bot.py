@@ -37,14 +37,13 @@ def reply_to_mentions():
                     f"I hope you make tons of money! 🤑",
                     in_reply_to_status_id=mention.id,
                 )
-            except ValueError:
+            except (ValueError, KeyError) as e:
+                exc_mapper = {
+                    ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
+                    KeyError: const.STOCK_NOT_FOUND_RESPONSE
+                }
                 api.update_status(
-                    status=f"@{user} {const.API_LIMIT_EXCEEDED_RESPONSE}",
-                    in_reply_to_status_id=mention.id,
-                )
-            except KeyError:
-                api.update_status(
-                    status=f"@{user} {const.STOCK_NOT_FOUND_RESPONSE}",
+                    status=f"@{user} {exc_mapper[e.__class__]}",
                     in_reply_to_status_id=mention.id,
                 )
 
