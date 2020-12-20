@@ -40,7 +40,7 @@ def reply_to_mentions():
             except (ValueError, KeyError) as e:
                 exc_mapper = {
                     ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
-                    KeyError: const.STOCK_NOT_FOUND_RESPONSE
+                    KeyError: const.STOCK_NOT_FOUND_RESPONSE,
                 }
                 api.update_status(
                     status=f"@{user} {exc_mapper[e.__class__]}",
@@ -59,8 +59,8 @@ def reply_to_reminders():
         total_returns = calculate_returns(original_price, current_price)
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
-            f"${reminder.stock_symbol} at ${reminder.stock_price:.2f}. "
-            f"It is now worth ${current_price:.2f}. That's a return of"
+            f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}. "
+            f"It is now worth ${'{:,.2f}'.format(current_price)}. That's a return of"
             f" {total_returns}%! "
         )
         if current_price >= original_price:
@@ -138,7 +138,6 @@ def get_price(stock):
         ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = ts.get_quote_endpoint(stock)
         full_price = data["05. price"]
-
     return float(full_price[:-2])
 
 
