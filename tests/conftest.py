@@ -5,6 +5,7 @@ import pytest
 from peewee import SqliteDatabase
 from tweepy import Status, User
 
+from src.const import API_LIMIT_EXCEEDED_ERROR
 from src.models import Mention, Reminder
 
 MODELS = [Mention, Reminder]
@@ -73,7 +74,7 @@ def mock_new_mention(mock_tweepy, status):
 
 
 @pytest.fixture
-def mock_alpha_vantage_get_intra_day():
+def mock_alpha_vantage_get_quote_endpoint():
     with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
         mock.return_value = (
             {
@@ -112,4 +113,21 @@ def mock_alpha_vantage_get_currency_exchange_rate():
             },
             None,
         )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_stock_not_found():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
+        mock.return_value = (
+            {},
+            None,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_max_retries_exceeded():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
+        mock.side_effect = ValueError(API_LIMIT_EXCEEDED_ERROR)
         yield mock
