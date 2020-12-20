@@ -24,21 +24,17 @@ NEGATIVE_RETURNS_EMOJI = "😭📉"
 MR_BURNS_IMAGE_PATH = r"images/mr_burns.png"
 
 
-API_LIMIT_EXCEEDED_MESSAGE = (
+API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
 )
 
 API_LIMIT_EXCEEDED_RESPONSE = (
-    "Se ha excedido el límite de búsquedas (5/minuto y 500/día). "
-    "Vuelve a probar más tarde."
+    "Whoopsies. It looks like my api limit was exceeded. Please try again later "
 )
 
-STOCK_NOT_FOUND_MESSAGE = (
-    "Invalid API call. Please retry or visit the documentation "
-    "(https://www.alphavantage.co/documentation/) for TIME_SERIES_INTRADAY."
-)
 
 STOCK_NOT_FOUND_RESPONSE = (
-    "Sorry, I can only find stocks that are traded on the NASDAQ 😓: "
+    "Sorry, I couldn't find any securities under that ticker 😓. "
+    "I only support NASDAQ stocks : "
     "https://www.nasdaq.com/market-activity/stocks/screener."
 )

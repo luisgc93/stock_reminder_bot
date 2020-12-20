@@ -25,17 +25,28 @@ def reply_to_mentions():
     for mention in new_mentions:
         Mention(tweet_id=mention.id).save()
         tweet = mention.text
+        user = mention.user.screen_name
         if contains_stock(tweet) and contains_date(tweet):
-            reminder = create_reminder(mention, tweet)
-            api = init_tweepy()
-            user = mention.user.screen_name
-            api.update_status(
-                status=f"@{user} Sure thing buddy! I'll remind you "
-                f"of the price of ${reminder.stock_symbol} on "
-                f"{reminder.remind_on.strftime('%A %B %d %Y')}. "
-                f"I hope you make tons of money! 🤑",
-                in_reply_to_status_id=mention.id,
-            )
+            try:
+                reminder = create_reminder(mention, tweet)
+                api = init_tweepy()
+                api.update_status(
+                    status=f"@{user} Sure thing buddy! I'll remind you "
+                    f"of the price of ${reminder.stock_symbol} on "
+                    f"{reminder.remind_on.strftime('%A %B %d %Y')}. "
+                    f"I hope you make tons of money! 🤑",
+                    in_reply_to_status_id=mention.id,
+                )
+            except ValueError:
+                api.update_status(
+                    status=f"@{user} {const.API_LIMIT_EXCEEDED_RESPONSE}",
+                    in_reply_to_status_id=mention.id,
+                )
+            except KeyError:
+                api.update_status(
+                    status=f"@{user} {const.STOCK_NOT_FOUND_RESPONSE}",
+                    in_reply_to_status_id=mention.id,
+                )
 
 
 def reply_to_reminders():
