@@ -9,7 +9,7 @@ Mention the bot with a [cashtag](https://money.cnn.com/2012/07/31/technology/twi
 
 The bot will then get back to you on the specified date with your investment results:
 
-<img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701977-70fdb900-425d-11eb-9215-a1038dab2a9f.png">
+<img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102720078-4ad62880-42f2-11eb-942c-9de18e395dc1.png">
 
 <img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/102701985-8ffc4b00-425d-11eb-980a-e3a97b45e297.png">
 
