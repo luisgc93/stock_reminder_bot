@@ -1,3 +1,5 @@
+import re
+
 import tweepy
 from os import environ
 
@@ -28,12 +30,18 @@ def reply_to_mentions():
         user = mention.user.screen_name
         if contains_stock(tweet) and contains_date(tweet):
             try:
-                reminder = create_reminder(mention, tweet)
+                stocks = parse_stock_symbols(tweet)
+                remind_on = calculate_reminder_date(tweet)
+                for stock in stocks:
+                    create_reminder(mention, tweet, stock)
                 api = init_tweepy()
+                if len(stocks) > 1:
+                    stocks[-1] = "and " + stocks[-1]
+                    stocks[:-2] = [stock + "," for stock in stocks[:-2]]
                 api.update_status(
                     status=f"@{user} Sure thing buddy! I'll remind you "
-                    f"of the price of ${reminder.stock_symbol} on "
-                    f"{reminder.remind_on.strftime('%A %B %d %Y')}. "
+                    f"of the price of {' '.join(stocks)} on "
+                    f"{remind_on.strftime('%A %B %d %Y')}. "
                     f"I hope you make tons of money! 🤑",
                     in_reply_to_status_id=mention.id,
                 )
@@ -77,15 +85,14 @@ def reply_to_reminders():
             )
 
 
-def create_reminder(mention, tweet):
-    stock = parse_stock_symbol(tweet)
+def create_reminder(mention, tweet, stock):
     price = get_price(stock)
     return Reminder.create(
         user_name=mention.user.screen_name,
         tweet_id=mention.id,
         created_on=date.today(),
         remind_on=calculate_reminder_date(tweet),
-        stock_symbol=stock,
+        stock_symbol=stock.replace("$", ""),
         stock_price=price,
     )
 
@@ -113,14 +120,17 @@ def contains_date(tweet):
         return False
 
 
-def parse_stock_symbol(string):
-    name = string.split("$")[1].split(" ")[0]
-    return "".join([x for x in name if x.isalpha()])
+def parse_stock_symbols(tweet):
+    return re.findall(r"[$][A-Z]*", tweet)
 
 
-def calculate_reminder_date(string):
+def remove_lower_case_chars(string):
+    return "".join(char for char in string if char.isupper())
+
+
+def calculate_reminder_date(tweet):
     cal = parsedatetime.Calendar()
-    time_struct, parse_status = cal.parse(string)
+    time_struct, parse_status = cal.parse(tweet)
     return date(*time_struct[:3])
 
 
