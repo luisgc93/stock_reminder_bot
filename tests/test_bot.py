@@ -39,6 +39,26 @@ class TestBot:
         assert reminder.stock_price == 3201.65
 
     @pytest.mark.usefixtures(
+        "mock_new_mention_with_multiple_stocks", "mock_alpha_vantage_get_quote_endpoint"
+    )
+    def test_creates_reminders_when_new_mention_contains_multiple_stocks_and_date(
+        self,
+    ):
+        assert Reminder.select().count() == 0
+
+        with freeze_time("2020-12-13"):
+            bot.reply_to_mentions()
+
+        reminders = Reminder.select()
+        assert reminders.count() == 4
+        assert [reminder.stock_symbol for reminder in reminders] == [
+            "AMZN",
+            "MSFT",
+            "AAPL",
+            "BABA",
+        ]
+
+    @pytest.mark.usefixtures(
         "mock_new_mention", "mock_alpha_vantage_get_quote_endpoint"
     )
     def test_replies_to_new_mention_when_reminder_created(self, mock_tweepy):
@@ -52,6 +72,23 @@ class TestBot:
         )
 
         assert Reminder.select().count() == 1
+        assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures(
+        "mock_new_mention_with_multiple_stocks", "mock_alpha_vantage_get_quote_endpoint"
+    )
+    def test_replies_to_new_mention_when_multiple_reminders_created(self, mock_tweepy):
+        with freeze_time("2020-12-13"):
+            bot.reply_to_mentions()
+
+        expected_status_call = call().update_status(
+            status="@user_name Sure thing buddy! I'll remind you of the price of "
+            "$AMZN, $MSFT, $AAPL and $BABA on Saturday March 13 2021. I hope you "
+            "make tons of money! 🤑",
+            in_reply_to_status_id=1,
+        )
+
+        assert Reminder.select().count() == 4
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_stock_not_found")
@@ -159,14 +196,25 @@ class TestParseTweet:
         assert bot.contains_date("Hello there!") is False
 
     @pytest.mark.parametrize(
-        "tweet, stock_name",
+        "tweet, stock_tickers",
         [
-            ("What is the price of $AMZN?", "AMZN"),
-            ("How much is $WMT right now?", "WMT"),
+            ("$AMZN in 7 months", ["$AMZN"]),
+            (
+                "Remind me next year of: $VEEV $ABBV $DOCU $ADYEN $GOOG $IRM $DLR",
+                ["$VEEV", "$ABBV", "$DOCU", "$ADYEN", "$GOOG", "$IRM", "$DLR"],
+            ),
+            (
+                "Remind me of $AMZN, $AAPL and $BABA in 3 months.",
+                ["$AMZN", "$AAPL", "$BABA"],
+            ),
+            ("$DDOG and $SNOW in 6 months", ["$DDOG", "$SNOW"]),
         ],
     )
-    def test_returns_stock_name_when_tweet_contains_cash_tag(self, tweet, stock_name):
-        assert bot.parse_stock_symbol(tweet) == stock_name
+    def test_returns_stock_tickers_when_tweet_contains_multiple_stocks(
+        self, tweet, stock_tickers
+    ):
+
+        assert bot.parse_stock_symbols(tweet) == stock_tickers
 
     def test_returns_price_for_stock(self, mock_alpha_vantage_get_quote_endpoint):
         price = bot.get_price("AMZN")

@@ -68,8 +68,25 @@ def status(twitter_user):
 
 
 @pytest.fixture
+def status_with_multiple_stocks(twitter_user):
+    tweet = Status()
+    tweet.id = 1
+    tweet.text = "Remind me of $AMZN, $MSFT, $AAPL and $BABA in 3 months."
+    tweet.user = twitter_user
+    return tweet
+
+
+@pytest.fixture
 def mock_new_mention(mock_tweepy, status):
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
+    return mock_tweepy
+
+
+@pytest.fixture
+def mock_new_mention_with_multiple_stocks(mock_tweepy, status_with_multiple_stocks):
+    mock_tweepy.return_value.mentions_timeline.return_value = [
+        status_with_multiple_stocks
+    ]
     return mock_tweepy
 
 
