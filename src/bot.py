@@ -45,10 +45,10 @@ def reply_to_mentions():
                     f"I hope you make tons of money! 🤑",
                     in_reply_to_status_id=mention.id,
                 )
-            except (ValueError, KeyError) as e:
+            except (ValueError, IndexError) as e:
                 exc_mapper = {
                     ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
-                    KeyError: const.STOCK_NOT_FOUND_RESPONSE,
+                    IndexError: const.STOCK_NOT_FOUND_RESPONSE,
                 }
                 api.update_status(
                     status=f"@{user} {exc_mapper[e.__class__]}",
@@ -146,8 +146,9 @@ def get_price(stock):
 
     else:
         ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
-        data, _ = ts.get_quote_endpoint(stock)
-        full_price = data["05. price"]
+        data, meta_data = ts.get_intraday(stock)
+        key = list(data.keys())[0]
+        full_price = data[key]["1. open"]
     return float(full_price[:-2])
 
 
