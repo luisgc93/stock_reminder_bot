@@ -18,8 +18,10 @@ class TestBot:
         mock_tweepy.assert_has_calls([call().mentions_timeline(since_id=None)])
         assert Mention.select().count() == 1
 
-    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intraday")
-    def test_creates_reminder_when_new_mention_contains_stock_and_date(self):
+    @pytest.mark.usefixtures("mock_new_mention")
+    def test_creates_reminder_when_new_mention_contains_stock_and_date(
+        self, mock_alpha_vantage_get_intraday
+    ):
         assert Reminder.select().count() == 0
 
         with freeze_time("2020-12-13"):
@@ -33,6 +35,7 @@ class TestBot:
         assert reminder.remind_on == date(2021, 3, 13)
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
+        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
         "mock_new_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"

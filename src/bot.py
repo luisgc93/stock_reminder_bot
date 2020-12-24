@@ -33,7 +33,7 @@ def reply_to_mentions():
                 stocks = parse_stock_symbols(tweet)
                 remind_on = calculate_reminder_date(tweet)
                 for stock in stocks:
-                    create_reminder(mention, tweet, stock)
+                    create_reminder(mention, tweet, stock.replace("$", ""))
                 api = init_tweepy()
                 if len(stocks) > 1:
                     stocks[-1] = "and " + stocks[-1]
@@ -92,7 +92,7 @@ def create_reminder(mention, tweet, stock):
         tweet_id=mention.id,
         created_on=date.today(),
         remind_on=calculate_reminder_date(tweet),
-        stock_symbol=stock.replace("$", ""),
+        stock_symbol=stock,
         stock_price=price,
     )
 
