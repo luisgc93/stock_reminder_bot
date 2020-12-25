@@ -59,7 +59,7 @@ def reply_to_mentions():
             )
 
 
-def reply_to_reminders():
+def publish_reminders():
     today = date.today()
     reminders = Reminder.select().where(Reminder.remind_on == today)
     for reminder in reminders:

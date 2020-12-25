@@ -121,7 +121,7 @@ class TestBot:
         self, reminder, mock_tweepy
     ):
         with freeze_time(reminder.remind_on):
-            bot.reply_to_reminders()
+            bot.publish_reminders()
 
         expected_status_call = call().update_with_media(
             filename=const.MR_SCROOGE_IMAGE_PATH,
@@ -139,7 +139,7 @@ class TestBot:
         reminder.stock_price = 3386.12
         reminder.save()
         with freeze_time(reminder.remind_on):
-            bot.reply_to_reminders()
+            bot.publish_reminders()
 
         expected_status_call = call().update_with_media(
             filename=const.MR_BURNS_IMAGE_PATH,
@@ -155,7 +155,7 @@ class TestBot:
         self, mock_tweepy
     ):
         with freeze_time("2020-12-14"):
-            bot.reply_to_reminders()
+            bot.publish_reminders()
 
         mock_tweepy.assert_not_called()
 
