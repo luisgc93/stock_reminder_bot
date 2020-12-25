@@ -9,8 +9,8 @@ from freezegun import freeze_time
 
 
 class TestBot:
-    @pytest.mark.usefixtures("mock_new_mention")
-    def test_creates_reminder_when_new_mention_contains_stock_and_date(
+    @pytest.mark.usefixtures("mock_mention")
+    def test_creates_reminder_when_mention_contains_stock_and_date(
         self, mock_alpha_vantage_get_intraday
     ):
         assert Reminder.select().count() == 0
@@ -29,9 +29,9 @@ class TestBot:
         mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
-        "mock_new_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
+        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
     )
-    def test_creates_reminders_when_new_mention_contains_multiple_stocks_and_date(
+    def test_creates_reminders_when_mention_contains_multiple_stocks_and_date(
         self,
     ):
         assert Reminder.select().count() == 0
@@ -48,8 +48,8 @@ class TestBot:
             "BABA",
         ]
 
-    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intraday")
-    def test_replies_to_new_mention_when_reminder_created(self, mock_tweepy):
+    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday")
+    def test_replies_to_mention_when_reminder_created(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
@@ -63,9 +63,9 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures(
-        "mock_new_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
+        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
     )
-    def test_replies_to_new_mention_when_multiple_reminders_created(self, mock_tweepy):
+    def test_replies_to_mention_when_multiple_reminders_created(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
@@ -79,8 +79,8 @@ class TestBot:
         assert Reminder.select().count() == 4
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mock_new_mention_with_invalid_format")
-    def test_replies_to_new_mention_when_mention_is_not_valid(self, mock_tweepy):
+    @pytest.mark.usefixtures("mock_mention_with_invalid_format")
+    def test_replies_to_mention_when_mention_is_not_valid(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
@@ -92,8 +92,8 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
         assert Reminder.select().count() == 0
 
-    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_stock_not_found")
-    def test_replies_to_new_mention_when_stock_is_not_found(self, mock_tweepy):
+    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
+    def test_replies_to_mention_when_stock_is_not_found(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
@@ -104,10 +104,8 @@ class TestBot:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures(
-        "mock_new_mention", "mock_alpha_vantage_max_retries_exceeded"
-    )
-    def test_replies_to_new_mention_when_api_limit_exceeded(self, mock_tweepy):
+    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_max_retries_exceeded")
+    def test_replies_to_mention_when_api_limit_exceeded(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
 
@@ -119,7 +117,7 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
-    def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_up(
+    def test_replies_to_mention_when_reminder_date_is_today_and_stock_went_up(
         self, reminder, mock_tweepy
     ):
         with freeze_time(reminder.remind_on):
@@ -135,7 +133,7 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
-    def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_down(
+    def test_replies_to_mention_when_reminder_date_is_today_and_stock_went_down(
         self, reminder, mock_tweepy
     ):
         reminder.stock_price = 3386.12
@@ -153,8 +151,8 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("reminder")
-    def test_does_not_reply_to_old_mention_when_reminder_date_is_not_today(
-        self, reminder, mock_tweepy
+    def test_does_not_reply_to_mention_when_reminder_date_is_not_today(
+        self, mock_tweepy
     ):
         with freeze_time("2020-12-14"):
             bot.reply_to_reminders()

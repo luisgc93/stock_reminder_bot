@@ -73,13 +73,13 @@ def status_with_multiple_stocks(twitter_user):
 
 
 @pytest.fixture
-def mock_new_mention(mock_tweepy, status):
+def mock_mention(mock_tweepy, status):
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
     return mock_tweepy
 
 
 @pytest.fixture
-def mock_new_mention_with_multiple_stocks(mock_tweepy, status_with_multiple_stocks):
+def mock_mention_with_multiple_stocks(mock_tweepy, status_with_multiple_stocks):
     mock_tweepy.return_value.mentions_timeline.return_value = [
         status_with_multiple_stocks
     ]
@@ -87,7 +87,7 @@ def mock_new_mention_with_multiple_stocks(mock_tweepy, status_with_multiple_stoc
 
 
 @pytest.fixture
-def mock_new_mention_with_invalid_format(mock_tweepy, status):
+def mock_mention_with_invalid_format(mock_tweepy, status):
     status.text = "What stocks should I buy?"
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
     return mock_tweepy
