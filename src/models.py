@@ -18,13 +18,6 @@ class BaseModel(Model):
         database = db
 
 
-class Mention(BaseModel):
-    tweet_id = BigIntegerField()
-
-    class Meta:
-        table_name = "mentions"
-
-
 class Reminder(BaseModel):
     user_name = CharField()
     tweet_id = BigIntegerField()
@@ -39,8 +32,8 @@ class Reminder(BaseModel):
 
 def migrate():
     tables = db.get_tables()
-    if [Mention, Reminder] not in tables:
-        db.create_tables([Mention, Reminder])
+    if [Reminder] not in tables:
+        db.create_tables([Reminder])
 
 
 if __name__ == "__main__":
