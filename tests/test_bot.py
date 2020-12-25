@@ -90,6 +90,7 @@ class TestBot:
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
+        assert Reminder.select().count() == 0
 
     @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_to_new_mention_when_stock_is_not_found(self, mock_tweepy):
