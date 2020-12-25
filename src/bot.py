@@ -23,7 +23,7 @@ def init_tweepy():
 
 def reply_to_mentions():
     api = init_tweepy()
-    new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id())
+    new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
     for mention in new_mentions:
         tweet = mention.text
         user = mention.user.screen_name
@@ -100,9 +100,8 @@ def create_reminder(mention, tweet, stock):
     )
 
 
-def get_last_replied_tweet_id():
-    api = init_tweepy()
-    return api.user_timeline(id=environ["BOT_USER_ID"], count=1)[0].id
+def get_last_replied_tweet_id(client):
+    return client.user_timeline(id=environ["BOT_USER_ID"], count=1)[0].id
 
 
 def is_valid(tweet):
