@@ -4,20 +4,11 @@ import pytest
 from unittest.mock import call
 
 from src import bot, const
-from src.models import Mention, Reminder
+from src.models import Reminder
 from freezegun import freeze_time
 
 
 class TestBot:
-    @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_get_intraday")
-    def test_saves_new_mentions(self, mock_tweepy):
-        assert Mention.select().count() == 0
-
-        bot.reply_to_mentions()
-
-        mock_tweepy.assert_has_calls([call().mentions_timeline(since_id=None)])
-        assert Mention.select().count() == 1
-
     @pytest.mark.usefixtures("mock_new_mention")
     def test_creates_reminder_when_new_mention_contains_stock_and_date(
         self, mock_alpha_vantage_get_intraday
@@ -114,7 +105,7 @@ class TestBot:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mention", "mock_alpha_vantage_get_intraday")
+    @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
     def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_up(
         self, reminder, mock_tweepy
     ):
@@ -130,7 +121,7 @@ class TestBot:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mention", "mock_alpha_vantage_get_intraday")
+    @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
     def test_replies_to_old_mention_when_reminder_date_is_today_and_stock_went_down(
         self, reminder, mock_tweepy
     ):
@@ -148,7 +139,7 @@ class TestBot:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mention")
+    @pytest.mark.usefixtures("reminder")
     def test_does_not_reply_to_old_mention_when_reminder_date_is_not_today(
         self, reminder, mock_tweepy
     ):

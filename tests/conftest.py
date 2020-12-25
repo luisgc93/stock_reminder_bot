@@ -6,9 +6,9 @@ from peewee import SqliteDatabase
 from tweepy import Status, User
 
 from src.const import API_LIMIT_EXCEEDED_ERROR
-from src.models import Mention, Reminder
+from src.models import Reminder
 
-MODELS = [Mention, Reminder]
+MODELS = [Reminder]
 
 
 @pytest.fixture(autouse=True)
@@ -26,6 +26,7 @@ def mock_env_variables(monkeypatch):
     monkeypatch.setenv("ACCESS_TOKEN", "123")
     monkeypatch.setenv("ACCESS_TOKEN_SECRET", "123")
     monkeypatch.setenv("ALPHA_VANTAGE_API_KEY", "123")
+    monkeypatch.setenv("BOT_USER_ID", "123")
 
 
 @pytest.fixture(autouse=True)
@@ -42,15 +43,10 @@ def twitter_user():
 
 
 @pytest.fixture
-def mention():
-    return Mention.create(tweet_id=1)
-
-
-@pytest.fixture
-def reminder(mention):
+def reminder():
     return Reminder.create(
         user_name="user_name",
-        tweet_id=mention.id,
+        tweet_id=1,
         created_on=date(2020, 10, 16),
         remind_on=date(2021, 1, 16),
         stock_symbol="AMZN",
