@@ -87,6 +87,13 @@ def mock_new_mention_with_multiple_stocks(mock_tweepy, status_with_multiple_stoc
 
 
 @pytest.fixture
+def mock_new_mention_with_invalid_format(mock_tweepy, status):
+    status.text = "What stocks should I buy?"
+    mock_tweepy.return_value.mentions_timeline.return_value = [status]
+    return mock_tweepy
+
+
+@pytest.fixture
 def mock_alpha_vantage_get_intraday():
     with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
         mock.return_value = (

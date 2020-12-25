@@ -79,6 +79,18 @@ class TestBot:
         assert Reminder.select().count() == 4
         assert expected_status_call in mock_tweepy.mock_calls
 
+    @pytest.mark.usefixtures("mock_new_mention_with_invalid_format")
+    def test_replies_to_new_mention_when_mention_is_not_valid(self, mock_tweepy):
+        with freeze_time("2020-12-13"):
+            bot.reply_to_mentions()
+
+        expected_status_call = call().update_status(
+            status=f"@user_name {const.INVALID_MENTION_RESPONSE}",
+            in_reply_to_status_id=1,
+        )
+
+        assert expected_status_call in mock_tweepy.mock_calls
+
     @pytest.mark.usefixtures("mock_new_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_to_new_mention_when_stock_is_not_found(self, mock_tweepy):
         with freeze_time("2020-12-13"):
