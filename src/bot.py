@@ -129,7 +129,7 @@ def remove_lower_case_chars(string):
 
 
 def calculate_reminder_date(tweet):
-    cal = parsedatetime.Calendar()
+    cal = parsedatetime.Calendar(version=parsedatetime.VERSION_CONTEXT_STYLE)
     time_struct, parse_status = cal.parse(tweet)
     return date(*time_struct[:3])
 
