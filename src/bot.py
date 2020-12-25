@@ -7,7 +7,7 @@ from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.foreignexchange import ForeignExchange
 
 from . import const
-from .models import Mention, Reminder
+from .models import Reminder
 from dateutil.parser import parse
 from datetime import date
 import humanize
@@ -23,9 +23,8 @@ def init_tweepy():
 
 def reply_to_mentions():
     api = init_tweepy()
-    new_mentions = api.mentions_timeline(since_id=get_last_replied_mention_id())
+    new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id())
     for mention in new_mentions:
-        Mention(tweet_id=mention.id).save()
         tweet = mention.text
         user = mention.user.screen_name
         if contains_stock(tweet) and contains_date(tweet):
@@ -97,13 +96,9 @@ def create_reminder(mention, tweet, stock):
     )
 
 
-def get_last_replied_mention_id():
-    if not Mention.select().exists():
-        return
-    last_replied_mention_id = (
-        Mention.select().order_by(Mention.id.desc()).get().tweet_id
-    )
-    return last_replied_mention_id
+def get_last_replied_tweet_id():
+    api = init_tweepy()
+    return api.user_timeline(id=environ["BOT_USER_ID"], count=1)[0].id
 
 
 def contains_stock(tweet):
