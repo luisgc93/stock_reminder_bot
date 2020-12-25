@@ -60,10 +60,10 @@ def reply_to_mentions():
 
 
 def reply_to_reminders():
+    api = init_tweepy()
     today = date.today()
     reminders = Reminder.select().where(Reminder.remind_on == today)
     for reminder in reminders:
-        api = init_tweepy()
         time_since_created_on = calculate_time_delta(today, reminder.created_on)
         original_price = reminder.stock_price
         current_price = get_price(reminder.stock_symbol)
