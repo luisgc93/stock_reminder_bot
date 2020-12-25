@@ -27,32 +27,37 @@ def reply_to_mentions():
     for mention in new_mentions:
         tweet = mention.text
         user = mention.user.screen_name
-        if contains_stock(tweet) and contains_date(tweet):
-            try:
-                stocks = parse_stock_symbols(tweet)
-                remind_on = calculate_reminder_date(tweet)
-                for stock in stocks:
-                    create_reminder(mention, tweet, stock.replace("$", ""))
-                api = init_tweepy()
-                if len(stocks) > 1:
-                    stocks[-1] = "and " + stocks[-1]
-                    stocks[:-2] = [stock + "," for stock in stocks[:-2]]
-                api.update_status(
-                    status=f"@{user} Sure thing buddy! I'll remind you "
-                    f"of the price of {' '.join(stocks)} on "
-                    f"{remind_on.strftime('%A %B %d %Y')}. "
-                    f"I hope you make tons of money! 🤑",
-                    in_reply_to_status_id=mention.id,
-                )
-            except (ValueError, IndexError) as e:
-                exc_mapper = {
-                    ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
-                    IndexError: const.STOCK_NOT_FOUND_RESPONSE,
-                }
-                api.update_status(
-                    status=f"@{user} {exc_mapper[e.__class__]}",
-                    in_reply_to_status_id=mention.id,
-                )
+        if not is_valid(tweet):
+            api.update_status(
+                status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
+                in_reply_to_status_id=mention.id,
+            )
+            return
+        try:
+            stocks = parse_stock_symbols(tweet)
+            remind_on = calculate_reminder_date(tweet)
+            for stock in stocks:
+                create_reminder(mention, tweet, stock.replace("$", ""))
+            api = init_tweepy()
+            if len(stocks) > 1:
+                stocks[-1] = "and " + stocks[-1]
+                stocks[:-2] = [stock + "," for stock in stocks[:-2]]
+            api.update_status(
+                status=f"@{user} Sure thing buddy! I'll remind you "
+                f"of the price of {' '.join(stocks)} on "
+                f"{remind_on.strftime('%A %B %d %Y')}. "
+                f"I hope you make tons of money! 🤑",
+                in_reply_to_status_id=mention.id,
+            )
+        except (ValueError, IndexError) as e:
+            exc_mapper = {
+                ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
+                IndexError: const.STOCK_NOT_FOUND_RESPONSE,
+            }
+            api.update_status(
+                status=f"@{user} {exc_mapper[e.__class__]}",
+                in_reply_to_status_id=mention.id,
+            )
 
 
 def reply_to_reminders():
@@ -99,6 +104,10 @@ def create_reminder(mention, tweet, stock):
 def get_last_replied_tweet_id():
     api = init_tweepy()
     return api.user_timeline(id=environ["BOT_USER_ID"], count=1)[0].id
+
+
+def is_valid(tweet):
+    return contains_stock(tweet) and contains_date(tweet)
 
 
 def contains_stock(tweet):
