@@ -1,14 +1,3 @@
-TW_CHAR_LIMIT = 280
-
-SHORTENED_URL_LENGTH = 23
-
-TRUNCATED_TEXT_STRING = "(...) "
-
-MAX_TRUNCATED_CHARACTER_COUNT = (
-    TW_CHAR_LIMIT - SHORTENED_URL_LENGTH - len(TRUNCATED_TEXT_STRING)
-)
-
-
 DATE_TIME_STRINGS = ["year", "month", "week", "day", "hour", "minutes", "tomorrow"]
 
 CASHTAG = "$"
