@@ -177,8 +177,8 @@ class TestPublishReminders:
         expected_status_call = call().update_with_media(
             filename=const.MR_SCROOGE_IMAGE_PATH,
             status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
-                   "($437.25 after adjusting for the stock split). It is "
-                   "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
+            "($437.25 after adjusting for the stock split). It is "
+            "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
 

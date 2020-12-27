@@ -80,8 +80,8 @@ def publish_reminders():
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
-            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}. "
-            f"That's a return of {rate_of_return}%! "
+            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}."
+            f" That's a return of {rate_of_return}%! "
         )
         if rate_of_return >= 0:
             api.update_with_media(
