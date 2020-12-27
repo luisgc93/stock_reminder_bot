@@ -94,7 +94,7 @@ def mock_mention_with_invalid_format(mock_tweepy, status):
 
 
 @pytest.fixture
-def mock_alpha_vantage_get_intraday():
+def mock_alpha_vantage_get_intraday_amazon():
     with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
         mock.return_value = (
             {
@@ -122,6 +122,101 @@ def mock_alpha_vantage_get_intraday():
                 "5. Output Size": "Compact",
                 "6. Time Zone": "US/Eastern",
             },
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_intraday_tesla():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
+        mock.return_value = (
+            {
+                "2020-12-24 17:00:00": {
+                    "1. open": "661.7000",
+                    "2. high": "661.7000",
+                    "3. low": "661.7000",
+                    "4. close": "661.7000",
+                    "5. volume": "336",
+                },
+                "2020-12-24 16:55:00": {
+                    "1. open": "661.7000",
+                    "2. high": "661.7000",
+                    "3. low": "661.7000",
+                    "4. close": "661.7000",
+                    "5. volume": "276",
+                },
+            },
+            {
+                "1. Information": "Intraday (5min) open, high, low, "
+                "close prices and volume",
+                "2. Symbol": "TSLA",
+                "3. Last Refreshed": "2020-12-24 17:00:00",
+                "4. Interval": "5min",
+                "5. Output Size": "Compact",
+                "6. Time Zone": "US/Eastern",
+            },
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_company_overview_tesla():
+    with patch(
+        "alpha_vantage.fundamentaldata.FundamentalData.get_company_overview"
+    ) as mock:
+        mock.return_value = (
+            {
+                "Symbol": "TSLA",
+                "AssetType": "Common Stock",
+                "Name": "Tesla, Inc",
+                "Description": "Tesla makes fancy electric cars.",
+                "Exchange": "NASDAQ",
+                "MarketCapitalization": "627292438528",
+                "EBITDA": "4019000064",
+                "PERatio": "1265.3346",
+                "PEGRatio": "1.3336",
+                "DividendPerShare": "None",
+                "DividendYield": "0",
+                "ForwardAnnualDividendRate": "0",
+                "ForwardAnnualDividendYield": "0",
+                "PayoutRatio": "0",
+                "DividendDate": "None",
+                "ExDividendDate": "None",
+                "LastSplitFactor": "5:1",
+                "LastSplitDate": "2020-08-31",
+            },
+            None,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_company_overview_amazon():
+    with patch(
+        "alpha_vantage.fundamentaldata.FundamentalData.get_company_overview"
+    ) as mock:
+        mock.return_value = (
+            {
+                "Symbol": "AMZN",
+                "AssetType": "Common Stock",
+                "Name": "Amazon.com, Inc",
+                "Description": "It basically sells stuff online.",
+                "Exchange": "NASDAQ",
+                "MarketCapitalization": "1591900372992",
+                "EBITDA": "43707998208",
+                "PERatio": "92.7633",
+                "PEGRatio": "1.2263",
+                "DividendPerShare": "None",
+                "DividendYield": "0",
+                "ForwardAnnualDividendRate": "0",
+                "ForwardAnnualDividendYield": "0",
+                "PayoutRatio": "0",
+                "DividendDate": "None",
+                "ExDividendDate": "None",
+                "LastSplitFactor": "2:1",
+                "LastSplitDate": "1999-09-02",
+            },
+            None,
         )
         yield mock
 

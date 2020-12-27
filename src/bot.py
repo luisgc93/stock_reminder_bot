@@ -5,11 +5,12 @@ from os import environ
 
 from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.foreignexchange import ForeignExchange
+from alpha_vantage.fundamentaldata import FundamentalData
 
 from . import const
 from .models import Reminder
 from dateutil.parser import parse
-from datetime import date
+from datetime import date, datetime
 import humanize
 
 import parsedatetime
@@ -64,17 +65,25 @@ def publish_reminders():
     reminders = Reminder.select().where(Reminder.remind_on == today)
     for reminder in reminders:
         api = init_tweepy()
-        time_since_created_on = calculate_time_delta(today, reminder.created_on)
-        original_price = reminder.stock_price
+        split_factor = get_split_factor(reminder)
+        original_adjusted_price = reminder.stock_price / split_factor
         current_price = get_price(reminder.stock_symbol)
-        total_returns = calculate_returns(original_price, current_price)
+        rate_of_return = calculate_returns(original_adjusted_price, current_price)
+        stock_split_message = "."
+        if split_factor != 1.0:
+            stock_split_message = (
+                f" (${'{:,.2f}'.format(original_adjusted_price)} "
+                f"after adjusting for the stock split)."
+            )
+
+        time_since_created_on = calculate_time_delta(today, reminder.created_on)
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
-            f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}. "
-            f"It is now worth ${'{:,.2f}'.format(current_price)}. That's a return of"
-            f" {total_returns}%! "
+            f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
+            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}. "
+            f"That's a return of {rate_of_return}%! "
         )
-        if current_price >= original_price:
+        if rate_of_return >= 0:
             api.update_with_media(
                 filename=const.MR_SCROOGE_IMAGE_PATH,
                 status=status + const.POSITIVE_RETURNS_EMOJI,
@@ -152,6 +161,22 @@ def get_price(stock):
         key = list(data.keys())[0]
         full_price = data[key]["1. open"]
     return float(full_price[:-2])
+
+
+def get_split_factor(reminder):
+    if reminder.stock_symbol in const.CRYPTO_CURRENCIES:
+        return 1.0
+
+    fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
+    data, _ = fd.get_company_overview(reminder.stock_symbol)
+
+    if data["LastSplitDate"] == "None":
+        return 1.0
+    split_date = datetime.strptime(data["LastSplitDate"], "%Y-%m-%d").date()
+    stock_was_split = reminder.created_on < split_date < date.today()
+    if stock_was_split:
+        return float(data["LastSplitFactor"][0]) / float(data["LastSplitFactor"][2])
+    return 1.0
 
 
 def calculate_returns(original_price, current_price):

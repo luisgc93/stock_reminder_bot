@@ -11,7 +11,7 @@ from freezegun import freeze_time
 class TestReplyToMentions:
     @pytest.mark.usefixtures("mock_mention")
     def test_creates_reminder_when_mention_contains_stock_and_date(
-        self, mock_alpha_vantage_get_intraday
+        self, mock_alpha_vantage_get_intraday_amazon
     ):
         assert Reminder.select().count() == 0
 
@@ -26,10 +26,10 @@ class TestReplyToMentions:
         assert reminder.remind_on == date(2021, 3, 13)
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
-        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
+        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
-        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
+        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_creates_reminders_when_mention_contains_multiple_stocks_and_date(
         self,
@@ -48,7 +48,7 @@ class TestReplyToMentions:
             "BABA",
         ]
 
-    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday")
+    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy):
         with freeze_time("2020-12-13"):
             bot.reply_to_mentions()
@@ -63,7 +63,7 @@ class TestReplyToMentions:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures(
-        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
+        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_replies_to_mention_when_multiple_reminders_created(self, mock_tweepy):
         with freeze_time("2020-12-13"):
@@ -118,7 +118,10 @@ class TestReplyToMentions:
 
 
 class TestPublishReminders:
-    @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_company_overview_amazon",
+    )
     def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_up(
         self, reminder, mock_tweepy
     ):
@@ -134,7 +137,10 @@ class TestPublishReminders:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_company_overview_amazon",
+    )
     def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_down(
         self, reminder, mock_tweepy
     ):
@@ -147,6 +153,32 @@ class TestPublishReminders:
             filename=const.MR_BURNS_IMAGE_PATH,
             status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
             "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
+            in_reply_to_status_id=1,
+        )
+
+        assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_tesla",
+        "mock_alpha_vantage_get_company_overview_tesla",
+    )
+    def test_publishes_reminder_when_reminder_date_is_today_and_stock_was_split(
+        self, reminder, mock_tweepy
+    ):
+        reminder.created_on = date(2020, 8, 1)
+        reminder.remind_on = date(2020, 12, 27)
+        reminder.stock_symbol = "TSLA"
+        reminder.stock_price = 2186.27
+        reminder.save()
+
+        with freeze_time(reminder.remind_on):
+            bot.publish_reminders()
+
+        expected_status_call = call().update_with_media(
+            filename=const.MR_SCROOGE_IMAGE_PATH,
+            status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
+                   "($437.25 after adjusting for the stock split). It is "
+                   "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
 
@@ -216,11 +248,11 @@ class TestParseTweet:
 
         assert bot.parse_stock_symbols(tweet) == stock_tickers
 
-    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday):
+    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday_amazon):
         price = bot.get_price("AMZN")
 
         assert price == 3112.70
-        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
+        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     def test_returns_price_for_cryptocurrency(
         self, mock_alpha_vantage_get_currency_exchange_rate
