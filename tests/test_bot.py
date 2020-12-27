@@ -8,7 +8,7 @@ from src.models import Reminder
 from freezegun import freeze_time
 
 
-class TestBot:
+class TestReplyToMentions:
     @pytest.mark.usefixtures("mock_mention")
     def test_creates_reminder_when_mention_contains_stock_and_date(
         self, mock_alpha_vantage_get_intraday
@@ -116,8 +116,10 @@ class TestBot:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
+
+class TestPublishReminders:
     @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
-    def test_replies_to_mention_when_reminder_date_is_today_and_stock_went_up(
+    def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_up(
         self, reminder, mock_tweepy
     ):
         with freeze_time(reminder.remind_on):
@@ -133,7 +135,7 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_alpha_vantage_get_intraday")
-    def test_replies_to_mention_when_reminder_date_is_today_and_stock_went_down(
+    def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_down(
         self, reminder, mock_tweepy
     ):
         reminder.stock_price = 3386.12
@@ -151,9 +153,7 @@ class TestBot:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("reminder")
-    def test_does_not_reply_to_mention_when_reminder_date_is_not_today(
-        self, mock_tweepy
-    ):
+    def test_does_publish_reminder_when_reminder_date_is_not_today(self, mock_tweepy):
         with freeze_time("2020-12-14"):
             bot.publish_reminders()
 
@@ -169,7 +169,6 @@ class TestBot:
         ],
     )
     def test_calculates_time_delta(self, today, created_on, delta):
-
         assert bot.calculate_time_delta(today, created_on) == delta
 
 
