@@ -153,7 +153,7 @@ class TestPublishReminders:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("reminder")
-    def test_does_publish_reminder_when_reminder_date_is_not_today(self, mock_tweepy):
+    def test_does_not_publish_reminder_when_reminder_date_is_not_today(self, mock_tweepy):
         with freeze_time("2020-12-14"):
             bot.publish_reminders()
 
