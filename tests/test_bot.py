@@ -1,7 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 from unittest.mock import call
+
+import pytz
 
 from src import bot, const
 from src.models import Reminder
@@ -15,7 +17,7 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         assert Reminder.select().count() == 1
@@ -23,7 +25,7 @@ class TestReplyToMentions:
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
         assert reminder.created_on == date(2020, 12, 13)
-        assert reminder.remind_on == date(2021, 3, 13)
+        assert reminder.remind_on == '2021-03-13 15:32:00+00:00'
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
         assert reminder.is_finished is False
@@ -37,7 +39,7 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         reminders = Reminder.select()
@@ -51,7 +53,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -67,7 +69,7 @@ class TestReplyToMentions:
         "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_replies_to_mention_when_multiple_reminders_created(self, mock_tweepy):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -82,7 +84,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention_with_invalid_format")
     def test_replies_to_mention_when_mention_is_not_valid(self, mock_tweepy):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -95,7 +97,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_to_mention_when_stock_is_not_found(self, mock_tweepy):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -107,7 +109,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_max_retries_exceeded")
     def test_replies_to_mention_when_api_limit_exceeded(self, mock_tweepy):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -169,7 +171,7 @@ class TestPublishReminders:
         self, reminder, mock_tweepy
     ):
         reminder.created_on = date(2020, 8, 1)
-        reminder.remind_on = date(2020, 12, 27)
+        reminder.remind_on = datetime(2020, 12, 27, 12, 0)
         reminder.stock_symbol = "TSLA"
         reminder.stock_price = 2186.27
         reminder.save()
@@ -191,7 +193,7 @@ class TestPublishReminders:
     def test_does_not_publish_reminder_when_reminder_date_is_not_today(
         self, reminder, mock_tweepy
     ):
-        with freeze_time("2020-12-14"):
+        with freeze_time("2020-12-14T15:32:00Z"):
             bot.publish_reminders()
 
         mock_tweepy.assert_not_called()

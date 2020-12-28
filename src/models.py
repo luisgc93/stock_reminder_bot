@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from os import environ
 
 from peewee import (
@@ -25,7 +25,7 @@ class Reminder(BaseModel):
     user_name = CharField()
     tweet_id = BigIntegerField()
     created_on = DateField()
-    remind_on = DateField()
+    remind_on = DateTimeField()
     remind_on_new = DateTimeField(null=True)
     stock_symbol = CharField()
     stock_price = FloatField()
@@ -41,7 +41,7 @@ class Reminder(BaseModel):
     @classmethod
     def due_today(cls):
         return cls.select().where(
-            cls.remind_on == date.today(), cls.is_finished == False  # noqa
+            cls.remind_on == datetime.today(), cls.is_finished == False  # noqa
         )
 
 
