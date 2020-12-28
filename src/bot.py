@@ -132,7 +132,7 @@ def contains_date(tweet):
 
 
 def parse_stock_symbols(tweet):
-    return re.findall(r"[$][A-Z]*", tweet)
+    return re.findall(r"[$][A-Za-z]*", tweet)
 
 
 def remove_lower_case_chars(string):

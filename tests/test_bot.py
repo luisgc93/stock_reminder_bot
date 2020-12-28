@@ -231,6 +231,7 @@ class TestParseTweet:
         "tweet, stock_tickers",
         [
             ("$AMZN in 7 months", ["$AMZN"]),
+            ("$msft 1/28/2021", ["$msft"]),
             (
                 "Remind me next year of: $VEEV $ABBV $DOCU $ADYEN $GOOG $IRM $DLR",
                 ["$VEEV", "$ABBV", "$DOCU", "$ADYEN", "$GOOG", "$IRM", "$DLR"],
@@ -242,7 +243,7 @@ class TestParseTweet:
             ("$DDOG and $SNOW in 6 months", ["$DDOG", "$SNOW"]),
         ],
     )
-    def test_returns_stock_tickers_when_tweet_contains_multiple_stocks(
+    def test_returns_stock_tickers_when_tweet_contains_stocks(
         self, tweet, stock_tickers
     ):
 
