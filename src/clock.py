@@ -11,7 +11,6 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job("interval", minutes=2)
 def timed_job():
-    bot.update_reminders()
     bot.reply_to_mentions()
 
 
