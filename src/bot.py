@@ -22,14 +22,6 @@ def init_tweepy():
     return tweepy.API(auth)
 
 
-def update_reminders():
-    for reminder in Reminder.select():
-        reminder.remind_on_new = datetime.combine(
-            reminder.remind_on, datetime.min.time()
-        ) + timedelta(hours=12)
-        reminder.save()
-
-
 def reply_to_mentions():
     api = init_tweepy()
     new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
@@ -69,7 +61,6 @@ def reply_to_mentions():
 
 
 def publish_reminders():
-    update_reminders()
     for reminder in Reminder.due_today():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
