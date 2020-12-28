@@ -26,6 +26,7 @@ class TestReplyToMentions:
         assert reminder.remind_on == date(2021, 3, 13)
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
+        assert reminder.is_finished is False
         mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
@@ -136,6 +137,7 @@ class TestPublishReminders:
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
+        assert Reminder().get_by_id(reminder.id).is_finished is True
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_amazon",
@@ -157,6 +159,7 @@ class TestPublishReminders:
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
+        assert Reminder().get_by_id(reminder.id).is_finished is True
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_tesla",
@@ -183,27 +186,16 @@ class TestPublishReminders:
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
+        assert Reminder().get_by_id(reminder.id).is_finished is True
 
-    @pytest.mark.usefixtures("reminder")
     def test_does_not_publish_reminder_when_reminder_date_is_not_today(
-        self, mock_tweepy
+        self, reminder, mock_tweepy
     ):
         with freeze_time("2020-12-14"):
             bot.publish_reminders()
 
         mock_tweepy.assert_not_called()
-
-    @pytest.mark.parametrize(
-        "today, created_on, delta",
-        [
-            (date(2021, 1, 16), date(2020, 10, 16), "3 months"),
-            (date(2020, 10, 30), date(2020, 10, 16), "14 days"),
-            (date(2020, 11, 16), date(2020, 5, 16), "6 months"),
-            (date(2020, 1, 16), date(2019, 1, 16), "a year"),
-        ],
-    )
-    def test_calculates_time_delta(self, today, created_on, delta):
-        assert bot.calculate_time_delta(today, created_on) == delta
+        assert Reminder().get_by_id(reminder.id).is_finished is False
 
 
 class TestParseTweet:
@@ -278,3 +270,15 @@ class TestParseTweet:
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
         with freeze_time("2020-12-13"):
             assert bot.calculate_reminder_date(string) == reminder_date
+
+    @pytest.mark.parametrize(
+        "today, created_on, delta",
+        [
+            (date(2021, 1, 16), date(2020, 10, 16), "3 months"),
+            (date(2020, 10, 30), date(2020, 10, 16), "14 days"),
+            (date(2020, 11, 16), date(2020, 5, 16), "6 months"),
+            (date(2020, 1, 16), date(2019, 1, 16), "a year"),
+        ],
+    )
+    def test_calculates_time_delta(self, today, created_on, delta):
+        assert bot.calculate_time_delta(today, created_on) == delta

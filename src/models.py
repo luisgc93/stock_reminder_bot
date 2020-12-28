@@ -1,3 +1,4 @@
+from datetime import date
 from os import environ
 
 from peewee import (
@@ -6,6 +7,7 @@ from peewee import (
     CharField,
     FloatField,
     Model,
+    BooleanField,
 )
 from playhouse.db_url import connect
 
@@ -25,9 +27,20 @@ class Reminder(BaseModel):
     remind_on = DateField()
     stock_symbol = CharField()
     stock_price = FloatField()
+    is_finished = BooleanField(default=False)
 
     class Meta:
         table_name = "reminders"
+
+    def finish(self):
+        self.is_finished = True
+        self.save()
+
+    @classmethod
+    def due_today(cls):
+        return cls.select().where(
+            cls.remind_on == date.today(), cls.is_finished == False  # noqa
+        )
 
 
 def migrate():

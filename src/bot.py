@@ -61,9 +61,7 @@ def reply_to_mentions():
 
 
 def publish_reminders():
-    today = date.today()
-    reminders = Reminder.select().where(Reminder.remind_on == today)
-    for reminder in reminders:
+    for reminder in Reminder.due_today():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
         original_adjusted_price = reminder.stock_price / split_factor
@@ -76,7 +74,7 @@ def publish_reminders():
                 f"after adjusting for the stock split)."
             )
 
-        time_since_created_on = calculate_time_delta(today, reminder.created_on)
+        time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
@@ -95,6 +93,8 @@ def publish_reminders():
                 status=status + const.NEGATIVE_RETURNS_EMOJI,
                 in_reply_to_status_id=reminder.tweet_id,
             )
+
+        reminder.finish()
 
 
 def create_reminder(mention, tweet, stock):

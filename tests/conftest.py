@@ -51,6 +51,7 @@ def reminder():
         remind_on=date(2021, 1, 16),
         stock_symbol="AMZN",
         stock_price=2954.91,
+        is_finished=False,
     )
 
 
