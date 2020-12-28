@@ -44,9 +44,7 @@ class Reminder(BaseModel):
 
 
 def migrate():
-    tables = db.get_tables()
-    if [Reminder] not in tables:
-        db.create_tables([Reminder])
+    db.create_tables([Reminder])
 
 
 if __name__ == "__main__":
