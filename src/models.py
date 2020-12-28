@@ -4,6 +4,7 @@ from os import environ
 from peewee import (
     BigIntegerField,
     DateField,
+    DateTimeField,
     CharField,
     FloatField,
     Model,
@@ -25,6 +26,7 @@ class Reminder(BaseModel):
     tweet_id = BigIntegerField()
     created_on = DateField()
     remind_on = DateField()
+    remind_on_new = DateTimeField(null=True)
     stock_symbol = CharField()
     stock_price = FloatField()
     is_finished = BooleanField(default=False)
