@@ -57,7 +57,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status="@luisgc93 Sure thing buddy! I'll remind you of the price of "
+            status="@user_name Sure thing buddy! I'll remind you of the price of "
             "$AMZN on Saturday March 13 2021. I hope you make tons of money! 🤑",
             in_reply_to_status_id=1,
         )
@@ -73,7 +73,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status="@luisgc93 Sure thing buddy! I'll remind you of the price of "
+            status="@user_name Sure thing buddy! I'll remind you of the price of "
             "$AMZN, $MSFT, $AAPL and $BABA on Saturday March 13 2021. I hope you "
             "make tons of money! 🤑",
             in_reply_to_status_id=1,
@@ -88,7 +88,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status=f"@luisgc93 {const.INVALID_MENTION_RESPONSE}",
+            status=f"@user_name {const.INVALID_MENTION_RESPONSE}",
             in_reply_to_status_id=1,
         )
 
@@ -101,7 +101,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status=f"@luisgc93 {const.STOCK_NOT_FOUND_RESPONSE}",
+            status=f"@user_name {const.STOCK_NOT_FOUND_RESPONSE}",
             in_reply_to_status_id=1,
         )
 
@@ -113,7 +113,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status=f"@luisgc93 {const.API_LIMIT_EXCEEDED_RESPONSE}",
+            status=f"@user_name {const.API_LIMIT_EXCEEDED_RESPONSE}",
             in_reply_to_status_id=1,
         )
 
@@ -133,7 +133,7 @@ class TestPublishReminders:
 
         expected_status_call = call().update_with_media(
             filename=const.MR_SCROOGE_IMAGE_PATH,
-            status="@luisgc93 3 months ago you bought $AMZN at $2,954.91. "
+            status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
             "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
             in_reply_to_status_id=1,
         )
@@ -155,7 +155,7 @@ class TestPublishReminders:
 
         expected_status_call = call().update_with_media(
             filename=const.MR_BURNS_IMAGE_PATH,
-            status="@luisgc93 3 months ago you bought $AMZN at $3,386.12. "
+            status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
             "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
             in_reply_to_status_id=1,
         )
@@ -181,7 +181,7 @@ class TestPublishReminders:
 
         expected_status_call = call().update_with_media(
             filename=const.MR_SCROOGE_IMAGE_PATH,
-            status="@luisgc93 4 months ago you bought $TSLA at $2,186.27 "
+            status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
             "($437.25 after adjusting for the stock split). It is "
             "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
             in_reply_to_status_id=1,

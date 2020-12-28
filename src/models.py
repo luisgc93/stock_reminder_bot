@@ -43,7 +43,6 @@ class Reminder(BaseModel):
         lower = datetime.now() - timedelta(minutes=3)
 
         return cls.select().where(
-            cls.user_name == "luisgc93",
             lower <= cls.remind_on <= upper,
             cls.is_finished == False,  # noqa
         )
