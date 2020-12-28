@@ -260,15 +260,18 @@ class TestParseTweet:
     @pytest.mark.parametrize(
         "string, reminder_date",
         [
-            ("Remind me of this tomorrow", date(2020, 12, 14)),
-            ("Remind me of $AMZ in 3 days", date(2020, 12, 16)),
-            ("in one week", date(2020, 12, 20)),
-            ("in two months", date(2021, 2, 13)),
-            ("$MSFT in 2 years", date(2022, 12, 13)),
+            ("tomorrow", datetime(2020, 12, 14, 9, 0, tzinfo=pytz.utc)),
+            ("In 3 days", datetime(2020, 12, 16, 15, 32, tzinfo=pytz.utc)),
+            ("in one week", datetime(2020, 12, 20, 15, 32, tzinfo=pytz.utc)),
+            ("in two months", datetime(2021, 2, 13, 15, 32, tzinfo=pytz.utc)),
+            ("$MSFT in 2 years", datetime(2022, 12, 13, 15, 32, tzinfo=pytz.utc)),
+            ("$BTC in 1 hour", datetime(2020, 12, 13, 16, 32, tzinfo=pytz.utc)),
+            ("$BTC in 2 hours", datetime(2020, 12, 13, 17, 32, tzinfo=pytz.utc)),
+            ("$BTC in 20 minutes", datetime(2020, 12, 13, 15, 52, tzinfo=pytz.utc)),
         ],
     )
     def test_calculates_reminder_date_from_string(self, string, reminder_date):
-        with freeze_time("2020-12-13"):
+        with freeze_time("2020-12-13T15:32:00Z"):
             assert bot.calculate_reminder_date(string) == reminder_date
 
     @pytest.mark.parametrize(

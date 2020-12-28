@@ -1,5 +1,6 @@
 import re
 
+import pytz
 import tweepy
 from os import environ
 
@@ -147,8 +148,8 @@ def remove_lower_case_chars(string):
 
 def calculate_reminder_date(tweet):
     cal = parsedatetime.Calendar(version=parsedatetime.VERSION_CONTEXT_STYLE)
-    time_struct, parse_status = cal.parse(tweet)
-    return date(*time_struct[:3])
+    result, _ = cal.parseDT(tweet, tzinfo=pytz.utc, sourceTime=datetime.now())
+    return result
 
 
 def calculate_time_delta(today, created_on):
