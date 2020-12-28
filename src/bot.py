@@ -10,7 +10,7 @@ from alpha_vantage.fundamentaldata import FundamentalData
 from . import const
 from .models import Reminder
 from dateutil.parser import parse
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import humanize
 
 import parsedatetime
@@ -20,6 +20,14 @@ def init_tweepy():
     auth = tweepy.OAuthHandler(environ["CONSUMER_KEY"], environ["CONSUMER_SECRET"])
     auth.set_access_token(environ["ACCESS_TOKEN"], environ["ACCESS_TOKEN_SECRET"])
     return tweepy.API(auth)
+
+
+def update_reminders():
+    for reminder in Reminder.select():
+        reminder.remind_on_new = datetime.combine(
+            reminder.remind_on, datetime.min.time()
+        ) + timedelta(hours=12)
+        reminder.save()
 
 
 def reply_to_mentions():
@@ -61,6 +69,7 @@ def reply_to_mentions():
 
 
 def publish_reminders():
+    update_reminders()
     for reminder in Reminder.due_today():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
