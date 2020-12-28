@@ -67,7 +67,6 @@ def reply_to_mentions():
 
 
 def publish_reminders():
-    update_reminders()
     for reminder in Reminder.due_today():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
