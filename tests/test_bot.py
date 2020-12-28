@@ -25,7 +25,7 @@ class TestReplyToMentions:
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
         assert reminder.created_on == date(2020, 12, 13)
-        assert reminder.remind_on == '2021-03-13 15:32:00+00:00'
+        assert reminder.remind_on == "2021-03-13 15:32:00+00:00"
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
         assert reminder.is_finished is False
