@@ -38,14 +38,14 @@ def mock_tweepy():
 @pytest.fixture
 def twitter_user():
     user = User()
-    user.screen_name = "user_name"
+    user.screen_name = "luisgc93"
     return user
 
 
 @pytest.fixture
 def reminder():
     return Reminder.create(
-        user_name="user_name",
+        user_name="luisgc93",
         tweet_id=1,
         created_on=date(2020, 10, 16),
         remind_on=datetime(2021, 1, 16, 12, 0),

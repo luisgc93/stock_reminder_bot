@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import environ
 
 from peewee import (
@@ -38,9 +38,14 @@ class Reminder(BaseModel):
         self.save()
 
     @classmethod
-    def due_today(cls):
+    def is_due(cls):
+        upper = datetime.now() + timedelta(minutes=3)
+        lower = datetime.now() - timedelta(minutes=3)
+
         return cls.select().where(
-            cls.remind_on == datetime.today(), cls.is_finished == False  # noqa
+            cls.user_name == "luisgc93",
+            lower <= cls.remind_on <= upper,
+            cls.is_finished == False,  # noqa
         )
 
 

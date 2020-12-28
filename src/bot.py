@@ -62,7 +62,7 @@ def reply_to_mentions():
 
 
 def publish_reminders():
-    for reminder in Reminder.due_today():
+    for reminder in Reminder.is_due():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
         original_adjusted_price = reminder.stock_price / split_factor
