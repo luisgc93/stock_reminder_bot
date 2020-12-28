@@ -12,7 +12,6 @@ sched = BlockingScheduler()
 @sched.scheduled_job("interval", minutes=2)
 def timed_job():
     bot.reply_to_mentions()
-    bot.update_reminders()
 
 
 @sched.scheduled_job("cron", day_of_week="mon-sun", hour=12)

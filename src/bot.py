@@ -23,12 +23,6 @@ def init_tweepy():
     return tweepy.API(auth)
 
 
-def update_reminders():
-    for reminder in Reminder.select():
-        reminder.remind_on = reminder.remind_on_new
-        reminder.save()
-
-
 def reply_to_mentions():
     api = init_tweepy()
     new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
