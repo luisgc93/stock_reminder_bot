@@ -26,6 +26,6 @@ To run all the tests use:
  
 `make test`
 
-To check for code formatting:
+To check code formatting:
 
 `make linting`
