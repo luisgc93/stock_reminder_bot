@@ -126,13 +126,13 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_company_overview_amazon",
     )
     def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_up(
-        self, reminder, mock_tweepy, mock_giphy_positive_returns
+        self, reminder, mock_tweepy
     ):
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=mock_giphy_positive_returns.return_value),
+            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
             call().update_status(
                 status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
                 "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
@@ -149,7 +149,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_company_overview_amazon",
     )
     def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_down(
-        self, reminder, mock_tweepy, mock_giphy_negative_returns
+        self, reminder, mock_tweepy
     ):
         reminder.stock_price = 3386.12
         reminder.save()
@@ -157,7 +157,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=mock_giphy_negative_returns.return_value),
+            call().media_upload(filename=const.MR_BURNS_IMAGE_PATH),
             call().update_status(
                 status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
                 "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
@@ -174,7 +174,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_company_overview_tesla",
     )
     def test_publishes_reminder_when_reminder_date_is_today_and_stock_was_split(
-        self, reminder, mock_tweepy, mock_giphy_positive_returns
+        self, reminder, mock_tweepy
     ):
         reminder.created_on = date(2020, 8, 1)
         reminder.remind_on = datetime(2020, 12, 27, 12, 0)
@@ -186,7 +186,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=mock_giphy_positive_returns.return_value),
+            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
             call().update_status(
                 status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
                 "($437.25 after adjusting for the stock split). It is "

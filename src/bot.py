@@ -1,4 +1,3 @@
-import random
 import re
 
 import pytz
@@ -16,7 +15,6 @@ from datetime import date, datetime
 import humanize
 
 import parsedatetime
-import requests
 
 
 def init_tweepy():
@@ -85,14 +83,14 @@ def publish_reminders():
             f" That's a return of {rate_of_return}%! "
         )
         if rate_of_return >= 0:
-            media = api.media_upload(filename=get_giphy(const.SUCCESS_STRINGS))
+            media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
             api.update_status(
                 status=status + const.POSITIVE_RETURNS_EMOJI,
                 media_ids=[media.media_id],
                 in_reply_to_status_id=reminder.tweet_id,
             )
         else:
-            media = api.media_upload(filename=get_giphy(const.FAILURE_STRINGS))
+            media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
             api.update_status(
                 status=status + const.NEGATIVE_RETURNS_EMOJI,
                 media_ids=[media.id],
@@ -185,13 +183,3 @@ def get_split_factor(reminder):
 
 def calculate_returns(original_price, current_price):
     return round(((current_price - original_price) / original_price) * 100, 2)
-
-
-def get_giphy(strings):
-    url = "http://api.giphy.com/v1/gifs/random"
-    q_param = random.choice(strings)
-    params = {"q": q_param, "api_key": environ["GIPHY_API_KEY"], "limit": "1"}
-
-    response = requests.get(url, params)
-
-    return fr"{response.json()['data']['url']}"

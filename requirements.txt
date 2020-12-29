@@ -13,4 +13,3 @@ python-dateutil
 parsedatetime
 freezegun
 humanize
-requests

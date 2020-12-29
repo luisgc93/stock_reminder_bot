@@ -27,7 +27,6 @@ def mock_env_variables(monkeypatch):
     monkeypatch.setenv("ACCESS_TOKEN_SECRET", "123")
     monkeypatch.setenv("ALPHA_VANTAGE_API_KEY", "123")
     monkeypatch.setenv("BOT_USER_ID", "123")
-    monkeypatch.setenv("GIPHY_API_KEY", "123")
 
 
 @pytest.fixture(autouse=True)
@@ -259,22 +258,4 @@ def mock_alpha_vantage_stock_not_found():
 def mock_alpha_vantage_max_retries_exceeded():
     with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
         mock.side_effect = ValueError(API_LIMIT_EXCEEDED_ERROR)
-        yield mock
-
-
-@pytest.fixture
-def mock_giphy_positive_returns():
-    with patch("src.bot.get_giphy") as mock:
-        mock.return_value = (
-            "https://giphy.com/gifs/spongebob-squarepants-money-squidward-SsTcO55LJDBsI"
-        )
-        yield mock
-
-
-@pytest.fixture
-def mock_giphy_negative_returns():
-    with patch("src.bot.get_giphy") as mock:
-        mock.return_value = (
-            "https://giphy.com/gifs/season-12-the-simpsons-12x4-3orifdO6eKr9YBdOBq"
-        )
         yield mock
