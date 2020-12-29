@@ -131,7 +131,7 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().update_with_media(
+        expected_status_call = call().media_upload(
             filename=const.MR_SCROOGE_IMAGE_PATH,
             status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
             "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
@@ -153,7 +153,7 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().update_with_media(
+        expected_status_call = call().media_upload(
             filename=const.MR_BURNS_IMAGE_PATH,
             status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
             "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
@@ -179,7 +179,7 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().update_with_media(
+        expected_status_call = call().media_upload(
             filename=const.MR_SCROOGE_IMAGE_PATH,
             status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
             "($437.25 after adjusting for the stock split). It is "
