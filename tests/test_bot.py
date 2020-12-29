@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from unittest import mock
 
 import pytest
 from unittest.mock import call
@@ -131,14 +132,17 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().media_upload(
-            filename=const.MR_SCROOGE_IMAGE_PATH,
-            status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
-            "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
-            in_reply_to_status_id=1,
-        )
+        expected_calls = [
+            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().update_status(
+                status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
+                "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
+                media_ids=[mock.ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
 
-        assert expected_status_call in mock_tweepy.mock_calls
+        assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
     @pytest.mark.usefixtures(
@@ -153,14 +157,17 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().media_upload(
-            filename=const.MR_BURNS_IMAGE_PATH,
-            status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
-            "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
-            in_reply_to_status_id=1,
-        )
+        expected_calls = [
+            call().media_upload(filename=const.MR_BURNS_IMAGE_PATH),
+            call().update_status(
+                status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
+                "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
+                media_ids=[mock.ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
 
-        assert expected_status_call in mock_tweepy.mock_calls
+        assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
     @pytest.mark.usefixtures(
@@ -179,15 +186,18 @@ class TestPublishReminders:
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
-        expected_status_call = call().media_upload(
-            filename=const.MR_SCROOGE_IMAGE_PATH,
-            status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
-            "($437.25 after adjusting for the stock split). It is "
-            "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
-            in_reply_to_status_id=1,
-        )
+        expected_calls = [
+            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().update_status(
+                status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
+                "($437.25 after adjusting for the stock split). It is "
+                "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
+                media_ids=[mock.ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
 
-        assert expected_status_call in mock_tweepy.mock_calls
+        assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
     def test_does_not_publish_reminder_when_reminder_date_is_not_today(
