@@ -84,18 +84,16 @@ def publish_reminders():
         )
         if rate_of_return >= 0:
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
-            api.update_status(
-                status=status + const.POSITIVE_RETURNS_EMOJI,
-                media_ids=[media.media_id],
-                in_reply_to_status_id=reminder.tweet_id,
-            )
+            emoji = const.POSITIVE_RETURNS_EMOJI
         else:
             media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
-            api.update_status(
-                status=status + const.NEGATIVE_RETURNS_EMOJI,
-                media_ids=[media.media_id],
-                in_reply_to_status_id=reminder.tweet_id,
-            )
+            emoji = const.NEGATIVE_RETURNS_EMOJI
+
+        api.update_status(
+            status=status + emoji,
+            media_ids=[media.media_id],
+            in_reply_to_status_id=reminder.tweet_id,
+        )
         reminder.finish()
 
 
