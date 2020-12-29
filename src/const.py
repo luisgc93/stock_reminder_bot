@@ -1,8 +1,8 @@
-DATE_TIME_STRINGS = ["year", "month", "week", "day", "hour", "minutes", "tomorrow"]
+DATE_TIME_STRINGS = ("year", "month", "week", "day", "hour", "minutes", "tomorrow")
 
 CASHTAG = "$"
 
-CRYPTO_CURRENCIES = ["BTC", "ETH", "XRP", "LTC", "NEO", "IOTA"]
+CRYPTO_CURRENCIES = ("BTC", "ETH", "XRP", "LTC", "NEO", "IOTA")
 
 POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
@@ -11,6 +11,10 @@ NEGATIVE_RETURNS_EMOJI = "😭📉"
 MR_SCROOGE_IMAGE_PATH = r"images/mr_scrooge.png"
 
 MR_BURNS_IMAGE_PATH = r"images/mr_burns.png"
+
+SUCCESS_STRINGS = ("money", "rich")
+
+FAILURE_STRINGS = ("poor", "broke")
 
 API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
