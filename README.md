@@ -25,3 +25,7 @@ To run the bot locally, start the project containers with `make env-start` and t
 To run all the tests use:
  
 `make test`
+
+To check code formatting:
+
+`make linting`
