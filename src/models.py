@@ -38,7 +38,7 @@ class Reminder(BaseModel):
         self.save()
 
     @classmethod
-    def is_due(cls):
+    def due_now(cls):
         upper = datetime.now() + timedelta(minutes=3)
         lower = datetime.now() - timedelta(minutes=3)
 

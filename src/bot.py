@@ -62,7 +62,7 @@ def reply_to_mentions():
 
 
 def publish_reminders():
-    for reminder in Reminder.is_due():
+    for reminder in Reminder.due_now():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
         original_adjusted_price = reminder.stock_price / split_factor
@@ -93,7 +93,7 @@ def publish_reminders():
             media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
             api.update_status(
                 status=status + const.NEGATIVE_RETURNS_EMOJI,
-                media_ids=[media.id],
+                media_ids=[media.media_id],
                 in_reply_to_status_id=reminder.tweet_id,
             )
         reminder.finish()
