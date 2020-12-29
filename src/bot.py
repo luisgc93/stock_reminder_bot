@@ -82,7 +82,7 @@ def publish_reminders():
             f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}."
             f" That's a return of {rate_of_return}%! "
         )
-        if rate_of_return >= 0:
+        if rate_of_return > 0:
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
             emoji = const.POSITIVE_RETURNS_EMOJI
         else:
