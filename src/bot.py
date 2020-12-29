@@ -193,4 +193,5 @@ def get_giphy(strings):
     params = {"q": q_param, "api_key": environ["GIPHY_API_KEY"], "limit": "1"}
 
     response = requests.get(url, params)
-    return response.json()["data"]["url"]
+
+    return fr"{response.json()['data']['url']}"
