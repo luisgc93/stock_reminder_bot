@@ -87,14 +87,14 @@ def publish_reminders():
             api.update_status(
                 status=status + const.POSITIVE_RETURNS_EMOJI,
                 media_ids=[media.id],
-                in_reply_to_status_id=reminder.tweet_id
+                in_reply_to_status_id=reminder.tweet_id,
             )
         else:
             media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
             api.update_status(
                 status=status + const.NEGATIVE_RETURNS_EMOJI,
                 media_ids=[media.id],
-                in_reply_to_status_id=reminder.tweet_id
+                in_reply_to_status_id=reminder.tweet_id,
             )
         reminder.finish()
 
