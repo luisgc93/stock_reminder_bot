@@ -39,8 +39,8 @@ class Reminder(BaseModel):
 
     @classmethod
     def is_due(cls):
-        upper = datetime.now() + timedelta(minutes=5)
-        lower = datetime.now() - timedelta(minutes=5)
+        upper = datetime.now() + timedelta(minutes=3)
+        lower = datetime.now() - timedelta(minutes=3)
 
         return cls.select().where(
             lower <= cls.remind_on <= upper,
