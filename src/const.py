@@ -8,7 +8,7 @@ POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
 NEGATIVE_RETURNS_EMOJI = "😭📉"
 
-POSITIVE_RETURNS_TAGS = ["money", "rich", "cash"]
+POSITIVE_RETURNS_TAGS = ["money", "rich", "cash", "dollars"]
 
 NEGATIVE_RETURNS_TAGS = ["poor", "broke", "no money"]
 
