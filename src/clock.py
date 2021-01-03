@@ -15,6 +15,7 @@ def timed_job():
     bot.publish_reminders()
     bot.tweet_gif()
 
+
 @sched.scheduled_job("cron", day_of_week="mon-sun", hour=12)
 def scheduled_job():
     bot.publish_reminders()
