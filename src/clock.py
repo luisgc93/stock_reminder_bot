@@ -11,8 +11,8 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job("interval", minutes=2)
 def timed_job():
-    # bot.reply_to_mentions()
-    # bot.publish_reminders()
+    bot.reply_to_mentions()
+    bot.publish_reminders()
     bot.tweet_gif()
 
 
