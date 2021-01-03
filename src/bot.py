@@ -1,4 +1,5 @@
 import os
+import random
 import re
 
 import giphy_client
@@ -219,7 +220,7 @@ def calculate_returns(original_price, current_price, dividend):
 
 def download_random_gif(tags):
     giphy_api = giphy_client.DefaultApi()
-    tag = " ".join(tags)
+    tag = random.choice(tags)
     rating = "g"
     fmt = "json"
     open("test.gif", "w")
