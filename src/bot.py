@@ -235,3 +235,14 @@ def download_random_gif(tags):
         .images.original.url
     )
     urllib.request.urlretrieve(gif_url, "test.gif")
+
+
+def tweet_gif():
+    download_random_gif(const.POSITIVE_RETURN_TAGS)
+    api = init_tweepy()
+    gif_upload = api.media_upload("test.gif")
+    api.update_status(
+        status="Test",
+        media_ids=[gif_upload.media_id],
+    )
+    os.remove("test.gif")
