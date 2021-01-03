@@ -35,3 +35,8 @@ class TestReminder:
     ):
         with freeze_time(time):
             assert Reminder.due_now().count() == 0
+
+    def test_does_not_return_finished_reminders(self, reminder):
+        reminder.finish()
+
+        assert Reminder.due_now().count() == 0
