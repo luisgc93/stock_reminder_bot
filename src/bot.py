@@ -48,13 +48,17 @@ def reply_to_mentions():
             if len(stocks) > 1:
                 stocks[-1] = "and " + stocks[-1]
                 stocks[:-2] = [stock + "," for stock in stocks[:-2]]
+            download_random_gif(const.FINGERS_CROSSED_GIF_TAG)
+            media = api.media_upload("random.gif")
             api.update_status(
                 status=f"@{user} Sure thing buddy! I'll remind you "
                 f"of the price of {' '.join(stocks)} on "
                 f"{remind_on.strftime('%A %B %d %Y')}. "
                 f"I hope you make tons of money! 🤑",
                 in_reply_to_status_id=mention.id,
+                media_ids=[media.media_id],
             )
+            os.remove("random.gif") if os.path.exists("random.gif") else None
         except (ValueError, IndexError) as e:
             exc_mapper = {
                 ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
