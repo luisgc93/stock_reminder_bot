@@ -220,14 +220,15 @@ def calculate_returns(original_price, current_price, dividend):
 
 def download_random_gif(tags):
     giphy_api = giphy_client.DefaultApi()
-    tag = random.choice(tags)
-    rating = "g"
-    fmt = "json"
     open("test.gif", "w")
-    api_response = giphy_api.gifs_random_get(
-        environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
+    gif_url = (
+        giphy_api.gifs_search_get(
+            environ["GIPHY_API_KEY"], random.choice(tags), limit=3, offset=3, fmt="json"
+        )
+        .data[random.choice(range(3))]
+        .url
     )
-    urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
+    urllib.request.urlretrieve(gif_url, "test.gif")
 
 
 def tweet_gif():
