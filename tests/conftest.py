@@ -161,32 +161,34 @@ def mock_alpha_vantage_get_intraday_tesla():
 
 
 @pytest.fixture
-def mock_alpha_vantage_get_company_overview_tesla():
-    with patch(
-        "alpha_vantage.fundamentaldata.FundamentalData.get_company_overview"
-    ) as mock:
+def mock_alpha_vantage_get_intraday_jnj():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_intraday") as mock:
         mock.return_value = (
             {
-                "Symbol": "TSLA",
-                "AssetType": "Common Stock",
-                "Name": "Tesla, Inc",
-                "Description": "Tesla makes fancy electric cars.",
-                "Exchange": "NASDAQ",
-                "MarketCapitalization": "627292438528",
-                "EBITDA": "4019000064",
-                "PERatio": "1265.3346",
-                "PEGRatio": "1.3336",
-                "DividendPerShare": "None",
-                "DividendYield": "0",
-                "ForwardAnnualDividendRate": "0",
-                "ForwardAnnualDividendYield": "0",
-                "PayoutRatio": "0",
-                "DividendDate": "None",
-                "ExDividendDate": "None",
-                "LastSplitFactor": "5:1",
-                "LastSplitDate": "2020-08-31",
+                "2020-12-31 19:35:00": {
+                    "1. open": "157.1100",
+                    "2. high": "157.1100",
+                    "3. low": "157.1100",
+                    "4. close": "157.1100",
+                    "5. volume": "100",
+                },
+                "2020-12-31 19:30:00": {
+                    "1. open": "157.5000",
+                    "2. high": "157.5000",
+                    "3. low": "157.5000",
+                    "4. close": "157.5000",
+                    "5. volume": "400",
+                },
             },
-            None,
+            {
+                "1. Information": "Intraday (5min) open, high, low, "
+                "close prices and volume",
+                "2. Symbol": "JNJ",
+                "3. Last Refreshed": "2020-12-31 17:00:00",
+                "4. Interval": "5min",
+                "5. Output Size": "Compact",
+                "6. Time Zone": "US/Eastern",
+            },
         )
         yield mock
 
@@ -219,6 +221,182 @@ def mock_alpha_vantage_get_company_overview_amazon():
             },
             None,
         )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_company_overview_tesla():
+    with patch(
+        "alpha_vantage.fundamentaldata.FundamentalData.get_company_overview"
+    ) as mock:
+        mock.return_value = (
+            {
+                "Symbol": "TSLA",
+                "AssetType": "Common Stock",
+                "Name": "Tesla, Inc",
+                "Description": "Tesla makes fancy electric cars.",
+                "Exchange": "NASDAQ",
+                "MarketCapitalization": "627292438528",
+                "EBITDA": "4019000064",
+                "PERatio": "1265.3346",
+                "PEGRatio": "1.3336",
+                "DividendPerShare": "None",
+                "DividendYield": "0",
+                "ForwardAnnualDividendRate": "0",
+                "ForwardAnnualDividendYield": "0",
+                "PayoutRatio": "0",
+                "DividendDate": "None",
+                "ExDividendDate": "None",
+                "LastSplitFactor": "5:1",
+                "LastSplitDate": "2020-08-31",
+            },
+            None,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_company_overview_jnj():
+    with patch(
+        "alpha_vantage.fundamentaldata.FundamentalData.get_company_overview"
+    ) as mock:
+        mock.return_value = (
+            {
+                "Symbol": "JNJ",
+                "AssetType": "Common Stock",
+                "Name": "Johnson & Johnson",
+                "Description": "Johnson & Johnson makes top-notch shampoos",
+                "Exchange": "NASDAQ",
+                "MarketCapitalization": "414309154816",
+                "EBITDA": "27264000000",
+                "PERatio": "24.7453",
+                "PEGRatio": "2.8436",
+                "DividendPerShare": "4.04",
+                "DividendYield": "0.0257",
+                "ForwardAnnualDividendRate": "4.04",
+                "ForwardAnnualDividendYield": "0.0257",
+                "PayoutRatio": "0.4944",
+                "DividendDate": "2020-12-08",
+                "ExDividendDate": "2020-11-23",
+                "LastSplitFactor": "2:1",
+                "LastSplitDate": "2001-06-13",
+            },
+            None,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_daily_adjusted_amazon():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_daily_adjusted") as mock:
+        mock.return_value = (
+            {
+                "2020-12-31": {
+                    "1. open": "3275.0",
+                    "2. high": "3282.9219",
+                    "3. low": "3241.2",
+                    "4. close": "3256.93",
+                    "5. adjusted close": "3256.93",
+                    "6. volume": "2957206",
+                    "7. dividend amount": "0.0000",
+                    "8. split coefficient": "1.0",
+                },
+                "2020-12-30": {
+                    "1. open": "3341.0",
+                    "2. high": "3342.1",
+                    "3. low": "3282.47",
+                    "4. close": "3285.85",
+                    "5. adjusted close": "3285.85",
+                    "6. volume": "3209310",
+                    "7. dividend amount": "0.0000",
+                    "8. split coefficient": "1.0",
+                },
+            },
+            {
+                "1. Information": "Daily Time Series with Splits and Dividend Events",
+                "2. Symbol": "AMZN",
+                "3. Last Refreshed": "2020-12-31",
+                "4. Output Size": "Compact",
+                "5. Time Zone": "US/Eastern",
+            },
+        )
+
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_daily_adjusted_tesla():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_daily_adjusted") as mock:
+        mock.return_value = (
+            {
+                "2020-12-31": {
+                    "1. open": "699.99",
+                    "2. high": "718.72",
+                    "3. low": "691.12",
+                    "4. close": "705.67",
+                    "5. adjusted close": "705.67",
+                    "6. volume": "49649928",
+                    "7. dividend amount": "0.0000",
+                    "8. split coefficient": "1.0",
+                },
+                "2020-12-30": {
+                    "1. open": "672.0",
+                    "2. high": "696.6",
+                    "3. low": "668.3603",
+                    "4. close": "694.78",
+                    "5. adjusted close": "694.78",
+                    "6. volume": "42846021",
+                    "7. dividend amount": "0.0000",
+                    "8. split coefficient": "1.0",
+                },
+            },
+            {
+                "1. Information": "Daily Time Series with Splits and Dividend Events",
+                "2. Symbol": "TSLA",
+                "3. Last Refreshed": "2020-12-31",
+                "4. Output Size": "Compact",
+                "5. Time Zone": "US/Eastern",
+            },
+        )
+
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_get_daily_adjusted_jnj():
+    with patch("alpha_vantage.timeseries.TimeSeries.get_daily_adjusted") as mock:
+        mock.return_value = (
+            {
+                "2020-12-31": {
+                    "1. open": "156.53",
+                    "2. high": "157.66",
+                    "3. low": "155.1098",
+                    "4. close": "157.38",
+                    "5. adjusted close": "157.38",
+                    "6. volume": "5099880",
+                    "7. dividend amount": "0.0000",
+                    "8. split coefficient": "1.0",
+                },
+                "2020-12-30": {
+                    "1. open": "154.74",
+                    "2. high": "156.38",
+                    "3. low": "154.6",
+                    "4. close": "156.05",
+                    "5. adjusted close": "156.05",
+                    "6. volume": "5412775",
+                    "7. dividend amount": "1.0100",
+                    "8. split coefficient": "1.0",
+                },
+            },
+            {
+                "1. Information": "Daily Time Series with Splits and Dividend Events",
+                "2. Symbol": "JNJ",
+                "3. Last Refreshed": "2020-12-31",
+                "4. Output Size": "Compact",
+                "5. Time Zone": "US/Eastern",
+            },
+        )
+
         yield mock
 
 
