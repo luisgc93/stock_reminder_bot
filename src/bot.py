@@ -3,8 +3,9 @@ import re
 
 import pytz
 import giphy_client
-import sys
 import urllib.request
+
+import requests
 import tweepy
 from os import environ
 
@@ -94,9 +95,11 @@ def publish_reminders():
             f"{dividend_message}. That's a return of {rate_of_return}%! "
         )
         if rate_of_return > 0:
+            download_random_gif(const.POSITIVE_RETURNS_TAGS)
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
             emoji = const.POSITIVE_RETURNS_EMOJI
         else:
+            download_random_gif(const.NEGATIVE_RETURNS_TAGS)
             media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
             emoji = const.NEGATIVE_RETURNS_EMOJI
 
@@ -218,17 +221,15 @@ def calculate_returns(original_price, current_price, dividend):
 
 
 def download_random_gif():
-    giphy_api = giphy_client.DefaultApi()
-    tags = ["money", "rich"]
-    tags.extend(sys.argv[1:])
-    tag = " ".join(tags)
-    rating = "g"
-    fmt = "json"
-    open("test.gif", "w")
-    api_response = giphy_api.gifs_random_get(
-        environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
-    )
-    urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
+    endpoint_url = "http://api.giphy.com/v1/gifs/random"
+    params = {
+        "tag": "rich",
+        "rating": "g",
+        "api_key": "YytKhzmxgDt6rv88rqgN87ijIHpvonpW",
+    }
+    response = requests.get(endpoint_url, params)
+    with open("test.gif", "wb") as f:
+        f.write(response.content)
 
 
 def tweet_gif():
