@@ -237,6 +237,7 @@ def download_random_gif():
 
 
 def tweet_gif():
+    download_random_gif()
     api = init_tweepy()
     gif_upload = api.media_upload(gif_filename)
     api.update_status(
