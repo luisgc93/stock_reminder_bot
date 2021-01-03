@@ -15,11 +15,6 @@ def timed_job():
     bot.publish_reminders()
 
 
-@sched.scheduled_job("cron", day_of_week="mon-sun", hour=12)
-def scheduled_job():
-    bot.publish_reminders()
-
-
 def main():
     models.migrate()
     sched.start()
