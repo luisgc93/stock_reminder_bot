@@ -217,31 +217,26 @@ def calculate_returns(original_price, current_price, dividend):
     )
 
 
-gif_filename = "test.gif"
-
-
 def download_random_gif():
     giphy_api = giphy_client.DefaultApi()
-    giphy_api_key = "YytKhzmxgDt6rv88rqgN87ijIHpvonpW"
     tags = ["money", "rich"]
     tags.extend(sys.argv[1:])
     tag = " ".join(tags)
     rating = "g"
     fmt = "json"
-    open(gif_filename, "w")
-    while os.path.getsize(gif_filename) == 0 or os.path.getsize(gif_filename) > 5242880:
-        api_response = giphy_api.gifs_random_get(
-            giphy_api_key, rating=rating, tag=tag, fmt=fmt
-        )
-        urllib.request.urlretrieve(api_response.data.image_url, gif_filename)
+    open("test.gif", "w")
+    api_response = giphy_api.gifs_random_get(
+        environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
+    )
+    urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
 
 
 def tweet_gif():
     download_random_gif()
     api = init_tweepy()
-    gif_upload = api.media_upload(gif_filename)
+    gif_upload = api.media_upload("test.gif")
     api.update_status(
         status="Test",
         media_ids=[gif_upload.media_id],
     )
-    os.remove(gif_filename)
+    os.remove("test.gif")
