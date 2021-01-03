@@ -27,11 +27,18 @@ def mock_env_variables(monkeypatch):
     monkeypatch.setenv("ACCESS_TOKEN_SECRET", "123")
     monkeypatch.setenv("ALPHA_VANTAGE_API_KEY", "123")
     monkeypatch.setenv("BOT_USER_ID", "123")
+    monkeypatch.setenv("GIPHY_API_KEY", "123")
 
 
 @pytest.fixture(autouse=True)
 def mock_tweepy():
     with patch("src.bot.init_tweepy") as mock:
+        yield mock
+
+
+@pytest.fixture(autouse=True)
+def mock_giphy():
+    with patch("src.bot.download_random_gif") as mock:
         yield mock
 
 

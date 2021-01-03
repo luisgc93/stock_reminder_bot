@@ -95,18 +95,20 @@ def publish_reminders():
             f"{dividend_message}. That's a return of {rate_of_return}%! "
         )
         if rate_of_return > 0:
-            media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
+            download_random_gif(const.POSITIVE_RETURN_TAGS)
             emoji = const.POSITIVE_RETURNS_EMOJI
         else:
-            media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
+            download_random_gif(const.NEGATIVE_RETURN_TAGS)
             emoji = const.NEGATIVE_RETURNS_EMOJI
 
+        media = api.media_upload("random.gif")
         api.update_status(
             status=status + emoji,
             media_ids=[media.media_id],
             in_reply_to_status_id=reminder.tweet_id,
         )
         reminder.finish()
+        os.remove("random.gif") if os.path.exists("random.gif") else None
 
 
 def create_reminder(mention, tweet, stock):
@@ -220,7 +222,7 @@ def calculate_returns(original_price, current_price, dividend):
 
 def download_random_gif(tags):
     giphy_api = giphy_client.DefaultApi()
-    open("test.gif", "w")
+    open("random.gif", "w")
     gif_url = (
         giphy_api.gifs_search_get(
             environ["GIPHY_API_KEY"], random.choice(tags), limit=3, offset=3, fmt="json"
@@ -229,14 +231,3 @@ def download_random_gif(tags):
         .images.original.url
     )
     urllib.request.urlretrieve(gif_url, "test.gif")
-
-
-def tweet_gif():
-    download_random_gif(const.POSITIVE_RETURNS_TAGS)
-    api = init_tweepy()
-    gif_upload = api.media_upload("test.gif")
-    api.update_status(
-        status="Test",
-        media_ids=[gif_upload.media_id],
-    )
-    os.remove("test.gif")

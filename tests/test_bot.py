@@ -127,13 +127,13 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
     def test_publishes_reminder_when_remind_on_is_today_and_stock_went_up(
-        self, reminder, mock_tweepy
+        self, reminder, mock_tweepy, mock_giphy
     ):
         with freeze_time(reminder.remind_on):
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
                 "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
@@ -142,6 +142,7 @@ class TestPublishReminders:
             ),
         ]
 
+        mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
@@ -151,7 +152,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
     def test_publishes_reminder_when_remind_on_is_today_and_stock_went_down(
-        self, reminder, mock_tweepy
+        self, reminder, mock_tweepy, mock_giphy
     ):
         reminder.stock_price = 3386.12
         reminder.save()
@@ -159,7 +160,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=const.MR_BURNS_IMAGE_PATH),
+            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
                 "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
@@ -168,6 +169,7 @@ class TestPublishReminders:
             ),
         ]
 
+        mock_giphy.assert_called_once_with(const.NEGATIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
@@ -177,7 +179,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_daily_adjusted_tesla",
     )
     def test_publishes_reminder_when_remind_on_is_today_and_stock_was_split(
-        self, reminder, mock_tweepy
+        self, reminder, mock_tweepy, mock_giphy
     ):
         reminder.created_on = date(2020, 8, 1)
         reminder.remind_on = datetime(2020, 12, 27, 12, 0)
@@ -189,7 +191,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
                 "($437.25 after adjusting for the stock split). It is "
@@ -199,6 +201,7 @@ class TestPublishReminders:
             ),
         ]
 
+        mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
@@ -208,7 +211,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_daily_adjusted_jnj",
     )
     def test_publishes_reminder_when_remind_on_is_today_and_dividend_was_paid(
-        self, reminder, mock_tweepy
+        self, reminder, mock_tweepy, mock_giphy
     ):
 
         reminder.created_on = date(2020, 6, 1)
@@ -221,7 +224,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         expected_calls = [
-            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name 6 months ago you bought $JNJ at $149.60. "
                 "It is now worth $157.11 and a total dividend of "
@@ -231,6 +234,7 @@ class TestPublishReminders:
             ),
         ]
 
+        mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 

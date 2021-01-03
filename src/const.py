@@ -8,9 +8,11 @@ POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
 NEGATIVE_RETURNS_EMOJI = "😭📉"
 
-POSITIVE_RETURNS_TAGS = ["money", "rich", "cash", "dollars"]
+FINGERS_CROSSED_GIF_TAG = "fingers crossed"
 
-NEGATIVE_RETURNS_TAGS = ["poor", "broke", "no money"]
+POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
+
+NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
 
 MR_SCROOGE_IMAGE_PATH = r"images/mr_scrooge.png"
 
