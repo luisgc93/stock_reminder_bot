@@ -226,7 +226,7 @@ def download_random_gif(tags):
             environ["GIPHY_API_KEY"], random.choice(tags), limit=3, offset=3, fmt="json"
         )
         .data[random.choice(range(3))]
-        .url
+        .images.original.url
     )
     urllib.request.urlretrieve(gif_url, "test.gif")
 
