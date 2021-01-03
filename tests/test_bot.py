@@ -124,8 +124,9 @@ class TestPublishReminders:
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_amazon",
         "mock_alpha_vantage_get_company_overview_amazon",
+        "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
-    def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_up(
+    def test_publishes_reminder_when_remind_on_is_today_and_stock_went_up(
         self, reminder, mock_tweepy
     ):
         with freeze_time(reminder.remind_on):
@@ -147,8 +148,9 @@ class TestPublishReminders:
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_amazon",
         "mock_alpha_vantage_get_company_overview_amazon",
+        "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
-    def test_publishes_reminder_when_reminder_date_is_today_and_stock_went_down(
+    def test_publishes_reminder_when_remind_on_is_today_and_stock_went_down(
         self, reminder, mock_tweepy
     ):
         reminder.stock_price = 3386.12
@@ -172,8 +174,9 @@ class TestPublishReminders:
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_tesla",
         "mock_alpha_vantage_get_company_overview_tesla",
+        "mock_alpha_vantage_get_daily_adjusted_tesla",
     )
-    def test_publishes_reminder_when_reminder_date_is_today_and_stock_was_split(
+    def test_publishes_reminder_when_remind_on_is_today_and_stock_was_split(
         self, reminder, mock_tweepy
     ):
         reminder.created_on = date(2020, 8, 1)
@@ -199,6 +202,38 @@ class TestPublishReminders:
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_jnj",
+        "mock_alpha_vantage_get_company_overview_jnj",
+        "mock_alpha_vantage_get_daily_adjusted_jnj",
+    )
+    def test_publishes_reminder_when_remind_on_is_today_and_dividend_was_paid(
+        self, reminder, mock_tweepy
+    ):
+
+        reminder.created_on = date(2020, 6, 1)
+        reminder.remind_on = datetime(2020, 12, 31, 12, 0)
+        reminder.stock_symbol = "JNJ"
+        reminder.stock_price = 149.60
+        reminder.save()
+
+        with freeze_time(reminder.remind_on):
+            bot.publish_reminders()
+
+        expected_calls = [
+            call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
+            call().update_status(
+                status="@user_name 6 months ago you bought $JNJ at $149.60. "
+                "It is now worth $157.11 and a total dividend of "
+                "$1.01 was paid out. That's a return of 5.7%! 🚀🤑📈",
+                media_ids=[ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
+
+        assert expected_calls in mock_tweepy.mock_calls
+        assert Reminder().get_by_id(reminder.id).is_finished is True
+
     def test_does_not_publish_reminder_when_reminder_date_is_not_today(
         self, reminder, mock_tweepy
     ):
@@ -207,6 +242,9 @@ class TestPublishReminders:
 
         mock_tweepy.assert_not_called()
         assert Reminder().get_by_id(reminder.id).is_finished is False
+
+    def test_get_dividend(self, reminder):
+        bot.get_dividend(reminder)
 
 
 class TestParseTweet:
