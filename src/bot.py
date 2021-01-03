@@ -223,11 +223,10 @@ def download_random_gif(tags):
     rating = "g"
     fmt = "json"
     open("test.gif", "w")
-    while os.path.getsize("test.gif") == 0 or os.path.getsize("test.gif") > 5242880:
-        api_response = giphy_api.gifs_random_get(
-            environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
-        )
-        urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
+    api_response = giphy_api.gifs_random_get(
+        environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
+    )
+    urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
 
 
 def tweet_gif():
