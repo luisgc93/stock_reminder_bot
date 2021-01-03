@@ -2,8 +2,6 @@ import os
 import re
 
 import pytz
-import giphy_client
-import urllib.request
 
 import requests
 import tweepy
