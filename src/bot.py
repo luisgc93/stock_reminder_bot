@@ -65,22 +65,27 @@ def publish_reminders():
     for reminder in Reminder.due_now():
         api = init_tweepy()
         split_factor = get_split_factor(reminder)
+        dividend = get_dividend(reminder)
         original_adjusted_price = reminder.stock_price / split_factor
         current_price = get_price(reminder.stock_symbol)
-        rate_of_return = calculate_returns(original_adjusted_price, current_price)
+        rate_of_return = calculate_returns(
+            original_adjusted_price, current_price, dividend
+        )
         stock_split_message = "."
+        dividend_message = ""
         if split_factor != 1.0:
             stock_split_message = (
                 f" (${'{:,.2f}'.format(original_adjusted_price)} "
                 f"after adjusting for the stock split)."
             )
-
+        if dividend:
+            dividend_message = f" and a total dividend of ${dividend} was paid out"
         time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
-            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}."
-            f" That's a return of {rate_of_return}%! "
+            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
+            f"{dividend_message}. That's a return of {rate_of_return}%! "
         )
         if rate_of_return > 0:
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
@@ -173,11 +178,34 @@ def get_split_factor(reminder):
     if data["LastSplitDate"] == "None":
         return 1.0
     split_date = datetime.strptime(data["LastSplitDate"], "%Y-%m-%d").date()
-    stock_was_split = reminder.created_on < split_date < date.today()
+    stock_was_split = reminder.created_on < split_date <= date.today()
     if stock_was_split:
         return float(data["LastSplitFactor"][0]) / float(data["LastSplitFactor"][2])
     return 1.0
 
 
-def calculate_returns(original_price, current_price):
-    return round(((current_price - original_price) / original_price) * 100, 2)
+def get_dividend(reminder):
+    if reminder.stock_symbol in const.CRYPTO_CURRENCIES:
+        return 0.0
+
+    delta = reminder.remind_on.date() - reminder.created_on
+    if delta.days > 90:
+        outputsize = "full"
+    else:
+        outputsize = "compact"
+    ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
+    data, _ = ts.get_daily_adjusted(reminder.stock_symbol, outputsize=outputsize)
+    keys = list(data.keys())
+    dividend = 0.0
+    for key in keys:
+        dividend_date = datetime.strptime(key, "%Y-%m-%d").date()
+        if reminder.created_on < dividend_date <= reminder.remind_on.date():
+            dividend += float(data[key]["7. dividend amount"])
+
+    return dividend
+
+
+def calculate_returns(original_price, current_price, dividend):
+    return round(
+        ((current_price - original_price + dividend) / original_price) * 100, 2
+    )
