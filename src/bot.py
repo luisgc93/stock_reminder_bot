@@ -95,11 +95,9 @@ def publish_reminders():
             f"{dividend_message}. That's a return of {rate_of_return}%! "
         )
         if rate_of_return > 0:
-            download_random_gif(const.POSITIVE_RETURNS_TAGS)
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)
             emoji = const.POSITIVE_RETURNS_EMOJI
         else:
-            download_random_gif(const.NEGATIVE_RETURNS_TAGS)
             media = api.media_upload(filename=const.MR_BURNS_IMAGE_PATH)
             emoji = const.NEGATIVE_RETURNS_EMOJI
 
