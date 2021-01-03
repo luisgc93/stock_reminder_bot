@@ -79,7 +79,9 @@ def publish_reminders():
                 f"after adjusting for the stock split)."
             )
         if dividend:
-            dividend_message = f" and a total dividend of ${dividend} was paid out"
+            dividend_message = (
+                f" and a total dividend of ${'{:.2f}'.format(dividend)} was paid out"
+            )
         time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "

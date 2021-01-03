@@ -243,9 +243,6 @@ class TestPublishReminders:
         mock_tweepy.assert_not_called()
         assert Reminder().get_by_id(reminder.id).is_finished is False
 
-    def test_get_dividend(self, reminder):
-        bot.get_dividend(reminder)
-
 
 class TestParseTweet:
     def test_returns_true_when_tweet_contains_cash_tag(self):
