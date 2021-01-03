@@ -13,4 +13,4 @@ python-dateutil
 parsedatetime
 freezegun
 humanize
-requests
+giphy_client

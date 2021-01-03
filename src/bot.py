@@ -1,9 +1,10 @@
 import os
 import re
 
+import giphy_client
 import pytz
 
-import requests
+import urllib.request
 import tweepy
 from os import environ
 
@@ -216,20 +217,20 @@ def calculate_returns(original_price, current_price, dividend):
     )
 
 
-def download_random_gif():
-    endpoint_url = "http://api.giphy.com/v1/gifs/random"
-    params = {
-        "tag": "rich",
-        "rating": "g",
-        "api_key": "YytKhzmxgDt6rv88rqgN87ijIHpvonpW",
-    }
-    response = requests.get(endpoint_url, params)
-    with open("test.gif", "wb") as f:
-        f.write(response.content)
+def download_random_gif(tags):
+    giphy_api = giphy_client.DefaultApi()
+    tag = " ".join(tags)
+    rating = "g"
+    fmt = "json"
+    open("test.gif", "w")
+    api_response = giphy_api.gifs_random_get(
+        environ["GIPHY_API_KEY"], rating=rating, tag=tag, fmt=fmt
+    )
+    urllib.request.urlretrieve(api_response.data.image_url, "test.gif")
 
 
 def tweet_gif():
-    download_random_gif()
+    download_random_gif(const.POSITIVE_RETURNS_TAGS)
     api = init_tweepy()
     gif_upload = api.media_upload("test.gif")
     api.update_status(

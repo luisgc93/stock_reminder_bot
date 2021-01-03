@@ -8,6 +8,10 @@ POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
 NEGATIVE_RETURNS_EMOJI = "😭📉"
 
+POSITIVE_RETURNS_TAGS = ["money", "rich", "cash"]
+
+NEGATIVE_RETURNS_TAGS = ["poor", "broke", "no money"]
+
 MR_SCROOGE_IMAGE_PATH = r"images/mr_scrooge.png"
 
 MR_BURNS_IMAGE_PATH = r"images/mr_burns.png"
