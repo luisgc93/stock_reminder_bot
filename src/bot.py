@@ -1,6 +1,10 @@
+import os
 import re
 
 import pytz
+import giphy_client
+import sys
+import urllib.request
 import tweepy
 from os import environ
 
@@ -211,3 +215,32 @@ def calculate_returns(original_price, current_price, dividend):
     return round(
         ((current_price - original_price + dividend) / original_price) * 100, 2
     )
+
+
+gif_filename = "test.gif"
+
+
+def download_random_gif():
+    giphy_api = giphy_client.DefaultApi()
+    giphy_api_key = "YytKhzmxgDt6rv88rqgN87ijIHpvonpW"
+    tags = ["money", "rich"]
+    tags.extend(sys.argv[1:])
+    tag = " ".join(tags)
+    rating = "g"
+    fmt = "json"
+    open(gif_filename, "w")
+    while os.path.getsize(gif_filename) == 0 or os.path.getsize(gif_filename) > 5242880:
+        api_response = giphy_api.gifs_random_get(
+            giphy_api_key, rating=rating, tag=tag, fmt=fmt
+        )
+        urllib.request.urlretrieve(api_response.data.image_url, gif_filename)
+
+
+def tweet_gif():
+    api = init_tweepy()
+    gif_upload = api.media_upload(gif_filename)
+    api.update_status(
+        status="Test",
+        media_ids=[gif_upload.media_id],
+    )
+    os.remove(gif_filename)
