@@ -13,7 +13,6 @@ sched = BlockingScheduler()
 def timed_job():
     bot.reply_to_mentions()
     bot.publish_reminders()
-    bot.tweet_gif()
 
 
 @sched.scheduled_job("cron", day_of_week="mon-sun", hour=12)
