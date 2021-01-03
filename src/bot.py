@@ -86,8 +86,8 @@ def publish_reminders():
         status = (
             f"@{reminder.user_name} {time_since_created_on} ago you bought "
             f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
-            f"{stock_split_message}\nIt is now worth ${'{:,.2f}'.format(current_price)}"
-            f"{dividend_message}.\nThat's a return of {rate_of_return}%! "
+            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
+            f"{dividend_message}. That's a return of {rate_of_return}%! "
         )
         if rate_of_return > 0:
             media = api.media_upload(filename=const.MR_SCROOGE_IMAGE_PATH)

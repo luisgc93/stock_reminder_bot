@@ -135,8 +135,8 @@ class TestPublishReminders:
         expected_calls = [
             call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
             call().update_status(
-                status="@user_name 3 months ago you bought $AMZN at $2,954.91."
-                "\nIt is now worth $3,112.70.\nThat's a return of 5.34%! 🚀🤑📈",
+                status="@user_name 3 months ago you bought $AMZN at $2,954.91. "
+                "It is now worth $3,112.70. That's a return of 5.34%! 🚀🤑📈",
                 media_ids=[ANY],
                 in_reply_to_status_id=1,
             ),
@@ -161,8 +161,8 @@ class TestPublishReminders:
         expected_calls = [
             call().media_upload(filename=const.MR_BURNS_IMAGE_PATH),
             call().update_status(
-                status="@user_name 3 months ago you bought $AMZN at $3,386.12."
-                "\nIt is now worth $3,112.70.\nThat's a return of -8.07%! 😭📉",
+                status="@user_name 3 months ago you bought $AMZN at $3,386.12. "
+                "It is now worth $3,112.70. That's a return of -8.07%! 😭📉",
                 media_ids=[ANY],
                 in_reply_to_status_id=1,
             ),
@@ -192,8 +192,8 @@ class TestPublishReminders:
             call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
             call().update_status(
                 status="@user_name 4 months ago you bought $TSLA at $2,186.27 "
-                "($437.25 after adjusting for the stock split).\nIt is "
-                "now worth $661.70.\nThat's a return of 51.33%! 🚀🤑📈",
+                "($437.25 after adjusting for the stock split). It is "
+                "now worth $661.70. That's a return of 51.33%! 🚀🤑📈",
                 media_ids=[ANY],
                 in_reply_to_status_id=1,
             ),
@@ -223,9 +223,9 @@ class TestPublishReminders:
         expected_calls = [
             call().media_upload(filename=const.MR_SCROOGE_IMAGE_PATH),
             call().update_status(
-                status="@user_name 6 months ago you bought $JNJ at $149.60."
-                "\nIt is now worth $157.11 and a total dividend of "
-                "$1.01 was paid out.\nThat's a return of 5.7%! 🚀🤑📈",
+                status="@user_name 6 months ago you bought $JNJ at $149.60. "
+                "It is now worth $157.11 and a total dividend of "
+                "$1.01 was paid out. That's a return of 5.7%! 🚀🤑📈",
                 media_ids=[ANY],
                 in_reply_to_status_id=1,
             ),
