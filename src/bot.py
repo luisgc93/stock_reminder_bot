@@ -176,12 +176,11 @@ def generate_company_report(stock):
 
     img = Image.new("RGB", (700, 600), color=(255, 255, 255))
 
-    fnt = ImageFont.truetype("arial.ttf", 15)
     d = ImageDraw.Draw(img)
     text = "\n ".join("{!s}={!r}".format(key, val) for (key, val) in data.items())
     text.replace("=", ":")
     text.replace("'", "")
-    d.text((14, 14), text, font=fnt, fill=(0, 0, 0))
+    d.text((14, 14), text, font=ImageFont.load_default(), fill=(0, 0, 0))
     img.save("report.png")
 
 
