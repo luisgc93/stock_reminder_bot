@@ -180,7 +180,7 @@ def generate_company_report(stock):
     d = ImageDraw.Draw(img)
     text = "\n ".join("{!s}={!r}".format(key, val) for (key, val) in data.items())
     text = text.replace("=", ":").replace("'", "")
-    font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeMono.ttf")
+    font = ImageFont.truetype("fonts/Arimo-BoldItalic.ttf", 16)
     d.text((14, 14), text, font=font, fill=(0, 0, 0))
     img.save("report.png")
 
