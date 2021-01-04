@@ -179,7 +179,8 @@ def generate_company_report(stock):
     table.header = False
     table.hrules = True
     for key, val in data.items():
-        table.add_row([key, val])
+        if key in const.REPORT_FIELDS:
+            table.add_row([key, val])
 
     img = Image.new("RGB", (600, 700), color=(255, 255, 255))
     d = ImageDraw.Draw(img)
