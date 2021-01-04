@@ -176,23 +176,21 @@ def demands_report(tweet):
 def generate_company_report(stock):
     fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
     data, _ = fd.get_company_overview(stock)
-    for (key, val) in data.items():
+    for (key, val) in list(data.items()):
         if val.isnumeric():
             data[key] = "${:,.2f}".format(float(val))
+        if key not in const.REPORT_FIELDS:
+            data.pop(key)
 
     if data["DividendPerShare"] == "None":
         for key in [key for key in data.keys() if "dividend" in key.lower()]:
             data.pop(key)
             data["DividendPerShare"] = "None"
 
-    img = Image.new("RGB", (600, 16 * len(data)), color=(255, 255, 255))
+    img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
 
     d = ImageDraw.Draw(img)
-    text = "\n\n ".join(
-        "{!s}={!s}".format(key, val)
-        for (key, val) in data.items()
-        if key in const.REPORT_FIELDS
-    )
+    text = "\n\n ".join("{!s}={!s}".format(key, val) for (key, val) in data.items())
 
     text = text.replace("=", ": ").replace("'", "")
     font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
