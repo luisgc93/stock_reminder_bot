@@ -300,7 +300,7 @@ class TestParseTweet:
 
     @pytest.mark.parametrize(
         "tweet",
-        ["report for $JNJ", "send me a report with $AMZN info"],
+        ["report for $JNJ", "analyse $AMZN info"],
     )
     def test_returns_true_when_tweet_contains_report(self, tweet):
         assert bot.demands_report(tweet) is True

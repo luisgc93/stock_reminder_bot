@@ -14,6 +14,8 @@ POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
 
 NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
 
+REPORT_KEYWORDS = ["report", "analyse", "analyze"]
+
 REPORT_FIELDS = [
     "Name",
     "Industry",

@@ -168,7 +168,9 @@ def parse_stock_symbols(tweet):
 
 
 def demands_report(tweet):
-    return "report" in tweet.lower() and contains_stock(tweet)
+    return any(
+        keyword in tweet.lower() for keyword in const.REPORT_KEYWORDS
+    ) and contains_stock(tweet)
 
 
 def generate_company_report(stock):
