@@ -133,7 +133,8 @@ class TestReplyToMentions:
         "mock_alpha_vantage_get_company_overview_amazon", "mock_mention_with_report"
     )
     def test_replies_with_company_report_when_mention_contains_report_and_stock(
-        self, mock_tweepy
+        self,
+        mock_tweepy,
     ):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()

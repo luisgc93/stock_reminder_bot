@@ -38,7 +38,7 @@ def reply_to_mentions():
         user = mention.user.screen_name
         if demands_report(tweet):
             stock = parse_stock_symbols(tweet)[0]
-            generate_company_report(stock)
+            generate_company_report(stock.replace("$", ""))
             media = api.media_upload("report.png")
             api.update_status(
                 status=f"@{user} Knowledge is power! Here is your company "
