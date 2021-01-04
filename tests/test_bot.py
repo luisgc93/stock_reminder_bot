@@ -140,7 +140,7 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status="@user_name Knowledge is power! Here "
+            status="@user_name Knowledge is power! 🧠💪 Here "
             "is your company report for $AMZN:",
             in_reply_to_status_id=1,
             media_ids=[ANY],
