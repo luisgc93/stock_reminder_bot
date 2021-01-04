@@ -41,8 +41,7 @@ def reply_to_mentions():
             generate_company_report(stock.replace("$", ""))
             media = api.media_upload("report.png")
             api.update_status(
-                status=f"@{user} Knowledge is power! Here is your company "
-                f"report for {stock}:",
+                status=f"@{user} {const.REPORT_RESPONSE} {stock}:",
                 in_reply_to_status_id=mention.id,
                 media_ids=[media.media_id],
             )

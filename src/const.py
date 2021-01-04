@@ -45,6 +45,8 @@ REPORT_FIELDS = [
     "LastSplitDate",
 ]
 
+REPORT_RESPONSE = "Knowledge is power! Here is your company report for"
+
 API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
 )
