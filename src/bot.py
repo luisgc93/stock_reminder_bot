@@ -47,6 +47,7 @@ def reply_to_mentions():
                 media_ids=[media.media_id],
             )
             os.remove("report.png") if os.path.exists("report.png") else None
+            return
         if not is_valid(tweet):
             api.update_status(
                 status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
