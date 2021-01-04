@@ -16,8 +16,6 @@ NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
 
 REPORT_FIELDS = [
     "Name",
-    "Currency",
-    "Country",
     "Industry",
     "MarketCapitalization",
     "EBITDA",
