@@ -73,9 +73,7 @@ class TestReplyToMentions:
     @pytest.mark.usefixtures(
         "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
-    def test_replies_to_mention_when_multiple_reminders_created(
-        self, mock_tweepy, mock_giphy
-    ):
+    def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
@@ -95,7 +93,7 @@ class TestReplyToMentions:
         assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_mention_with_invalid_format")
-    def test_replies_to_mention_when_mention_is_not_valid(self, mock_tweepy):
+    def test_replies_when_mention_is_not_valid(self, mock_tweepy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
@@ -108,7 +106,7 @@ class TestReplyToMentions:
         assert Reminder.select().count() == 0
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
-    def test_replies_to_mention_when_stock_is_not_found(self, mock_tweepy):
+    def test_replies_when_stock_is_not_found(self, mock_tweepy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
@@ -120,7 +118,7 @@ class TestReplyToMentions:
         assert expected_status_call in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_max_retries_exceeded")
-    def test_replies_to_mention_when_api_limit_exceeded(self, mock_tweepy):
+    def test_replies_when_api_limit_exceeded(self, mock_tweepy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
@@ -130,6 +128,24 @@ class TestReplyToMentions:
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_company_overview_amazon", "mock_mention_with_report"
+    )
+    def test_replies_with_company_report_when_mention_contains_report_and_stock(
+        self, mock_tweepy
+    ):
+        with freeze_time("2020-12-13T15:32:00Z"):
+            bot.reply_to_mentions()
+
+            expected_status_call = call().update_status(
+                status="@user_name Knowledge is power! Here "
+                "is your company report for $AMZN:",
+                in_reply_to_status_id=1,
+                media_ids=[ANY],
+            )
+
+            assert expected_status_call in mock_tweepy.mock_calls
 
 
 class TestPublishReminders:
@@ -280,6 +296,13 @@ class TestParseTweet:
     def test_returns_false_when_tweet_does_not_contain_date(self):
 
         assert bot.contains_date("Hello there!") is False
+
+    @pytest.mark.parametrize(
+        "tweet",
+        ["report for $JNJ", "send me a report with $AMZN info"],
+    )
+    def test_returns_true_when_tweet_contains_report(self, tweet):
+        assert bot.demands_report(tweet) is True
 
     @pytest.mark.parametrize(
         "tweet, stock_tickers",

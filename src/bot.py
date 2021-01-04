@@ -21,6 +21,8 @@ import humanize
 
 import parsedatetime
 
+from PIL import Image, ImageDraw, ImageFont
+
 
 def init_tweepy():
     auth = tweepy.OAuthHandler(environ["CONSUMER_KEY"], environ["CONSUMER_SECRET"])
@@ -34,6 +36,17 @@ def reply_to_mentions():
     for mention in new_mentions:
         tweet = mention.text
         user = mention.user.screen_name
+        if demands_report(tweet):
+            stock = parse_stock_symbols(tweet)[0]
+            generate_company_report(stock)
+            media = api.media_upload("report.png")
+            api.update_status(
+                status=f"@{user} Knowledge is power! Here is your company "
+                f"report for {stock}:",
+                in_reply_to_status_id=mention.id,
+                media_ids=[media.media_id],
+            )
+            os.remove("report.png") if os.path.exists("report.png") else None
         if not is_valid(tweet):
             api.update_status(
                 status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
@@ -151,6 +164,25 @@ def contains_date(tweet):
 
 def parse_stock_symbols(tweet):
     return re.findall(r"[$][A-Za-z]*", tweet)
+
+
+def demands_report(tweet):
+    return "report" in tweet.lower() and contains_stock(tweet)
+
+
+def generate_company_report(stock):
+    fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
+    data, _ = fd.get_company_overview(stock)
+
+    img = Image.new("RGB", (700, 600), color=(255, 255, 255))
+
+    fnt = ImageFont.truetype("/Library/Fonts/Arial.ttf", 15)
+    d = ImageDraw.Draw(img)
+    text = "\n ".join("{!s}={!r}".format(key, val) for (key, val) in data.items())
+    text.replace("=", ":")
+    text.replace("'", "")
+    d.text((14, 14), text, font=fnt, fill=(0, 0, 0))
+    img.save("report.png")
 
 
 def remove_lower_case_chars(string):
