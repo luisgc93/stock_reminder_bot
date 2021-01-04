@@ -12,6 +12,7 @@ from os import environ
 from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.foreignexchange import ForeignExchange
 from alpha_vantage.fundamentaldata import FundamentalData
+from prettytable import PrettyTable
 
 from . import const
 from .models import Reminder
@@ -174,18 +175,16 @@ def demands_report(tweet):
 def generate_company_report(stock):
     fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
     data, _ = fd.get_company_overview(stock)
+    table = PrettyTable()
+    table.header = False
+    table.hrules = True
+    for key, val in data.items():
+        table.add_row([key, val])
 
-    img = Image.new("RGB", (600, 500), color=(255, 255, 255))
-
+    img = Image.new("RGB", (600, 700), color=(255, 255, 255))
     d = ImageDraw.Draw(img)
-    text = "\n\n ".join(
-        "{!s}={!r}".format(key, val)
-        for (key, val) in data.items()
-        if key in const.REPORT_FIELDS
-    )
-    text = text.replace("=", ": ").replace("'", "")
     font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
-    d.text((14, 14), text, font=font, fill=(0, 0, 0))
+    d.text((14, 14), table.get_string(), font=font, fill=(0, 0, 0))
     img.save("report.png")
 
 
