@@ -180,7 +180,11 @@ def generate_company_report(stock):
         if val.isnumeric():
             data[key] = "${:,.2f}".format(float(val))
 
-    img = Image.new("RGB", (600, 800), color=(255, 255, 255))
+    if data["DividendPerShare"] == "None":
+        for key in [key for key in data.keys() if "dividend" in key.lower()]:
+            data.pop(key)
+
+    img = Image.new("RGB", (600, 50 * len(data)), color=(255, 255, 255))
 
     d = ImageDraw.Draw(img)
     text = "\n\n ".join(
