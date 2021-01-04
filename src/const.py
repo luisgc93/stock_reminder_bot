@@ -29,6 +29,7 @@ REPORT_FIELDS = [
     "DividendPerShare",
     "DividendYield",
     "EPS",
+    "DilutedEPSTTM",
     "RevenuePerShareTTM",
     "ProfitMargin",
     "TrailingPE",
@@ -48,8 +49,11 @@ API_LIMIT_EXCEEDED_ERROR = (
 )
 
 INVALID_MENTION_RESPONSE = (
-    "To create a reminder, mention me with one or more ticker symbols and a date. "
-    'E.g. "Remind me of $BTC in 3 months".'
+    "To create a reminder, mention me with one or more ticker "
+    "symbols and a date. E.g. 'Remind me of $BTC in 3 months'. "
+    "If you'd like me to analyse a company for you, mention me "
+    "with the words 'analyse' or 'report' plus the company's "
+    "ticker symbol. E.g. 'Analyse $AMZN'."
 )
 
 API_LIMIT_EXCEEDED_RESPONSE = (
