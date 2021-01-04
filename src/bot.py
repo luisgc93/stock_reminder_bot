@@ -175,15 +175,15 @@ def generate_company_report(stock):
     fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
     data, _ = fd.get_company_overview(stock)
 
-    img = Image.new("RGB", (700, 600), color=(255, 255, 255))
+    img = Image.new("RGB", (600, 500), color=(255, 255, 255))
 
     d = ImageDraw.Draw(img)
-    text = "\n ".join(
+    text = "\n\n ".join(
         "{!s}={!r}".format(key, val)
         for (key, val) in data.items()
         if key in const.REPORT_FIELDS
     )
-    text = text.replace("=", ":").replace("'", "")
+    text = text.replace("=", ": ").replace("'", "")
     font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
     d.text((14, 14), text, font=font, fill=(0, 0, 0))
     img.save("report.png")
