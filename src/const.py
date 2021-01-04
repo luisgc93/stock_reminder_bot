@@ -14,9 +14,33 @@ POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
 
 NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
 
-MR_SCROOGE_IMAGE_PATH = r"images/mr_scrooge.png"
-
-MR_BURNS_IMAGE_PATH = r"images/mr_burns.png"
+REPORT_FIELDS = [
+    "Symbol",
+    "Name",
+    "Exchange",
+    "Currency",
+    "Country",
+    "Sector",
+    "Industry",
+    "MarketCapitalization",
+    "EBITDA",
+    "PERatio",
+    "PEGRatio",
+    "BookValue",
+    "DividendPerShare",
+    "DividendYield" "EPS",
+    "RevenuePerShareTTM",
+    "ProfitMargin",
+    "TrailingPE",
+    "52WeekHigh",
+    "52WeekLow",
+    "ForwardAnnualDividendRate",
+    "ForwardAnnualDividendYield",
+    "PayoutRatio" "DividendDate",
+    "ExDividendDate",
+    "LastSplitFactor",
+    "LastSplitDate",
+]
 
 API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
