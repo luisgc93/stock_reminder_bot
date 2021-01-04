@@ -183,6 +183,7 @@ def generate_company_report(stock):
     if data["DividendPerShare"] == "None":
         for key in [key for key in data.keys() if "dividend" in key.lower()]:
             data.pop(key)
+            data["DividendPerShare"] = "None"
 
     img = Image.new("RGB", (600, 50 * len(data)), color=(255, 255, 255))
 
