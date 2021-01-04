@@ -178,7 +178,7 @@ def generate_company_report(stock):
         if val.isnumeric():
             data[key] = "${:,.2f}".format(float(val))
 
-    img = Image.new("RGB", (600, 600), color=(255, 255, 255))
+    img = Image.new("RGB", (600, 800), color=(255, 255, 255))
 
     d = ImageDraw.Draw(img)
     text = "\n\n ".join(
