@@ -185,7 +185,7 @@ def generate_company_report(stock):
             data.pop(key)
             data["DividendPerShare"] = "None"
 
-    img = Image.new("RGB", (600, 800), color=(255, 255, 255))
+    img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
 
     d = ImageDraw.Draw(img)
     text = "\n\n ".join(
