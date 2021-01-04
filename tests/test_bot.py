@@ -139,14 +139,14 @@ class TestReplyToMentions:
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
-            expected_status_call = call().update_status(
-                status="@user_name Knowledge is power! Here "
-                "is your company report for $AMZN:",
-                in_reply_to_status_id=1,
-                media_ids=[ANY],
-            )
+        expected_status_call = call().update_status(
+            status="@user_name Knowledge is power! Here "
+            "is your company report for $AMZN:",
+            in_reply_to_status_id=1,
+            media_ids=[ANY],
+        )
 
-            assert expected_status_call in mock_tweepy.mock_calls
+        assert expected_status_call in mock_tweepy.mock_calls
 
 
 class TestPublishReminders:
