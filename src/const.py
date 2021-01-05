@@ -21,6 +21,7 @@ REPORT_FIELDS = [
     "Industry",
     "MarketCapitalization",
     "EBITDA",
+    "EVToEBITDA",
     "PERatio",
     "PriceToBookRatio",
     "ReturnOnEquityTTM",
