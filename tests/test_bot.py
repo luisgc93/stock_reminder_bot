@@ -161,7 +161,7 @@ class TestReplyToMentions:
 
         expected_status_call = call().update_status(
             status="@user_name Knowledge is power! 🧠💪 Here "
-            "is your company report for $ETH:",
+            "is your crypto ratings report for $ETH:",
             in_reply_to_status_id=1,
             media_ids=[ANY],
         )

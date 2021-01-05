@@ -41,8 +41,13 @@ def reply_to_mentions():
             stock = parse_stock_symbols(tweet)[0]
             generate_company_report(stock.replace("$", ""))
             media = api.media_upload("report.png")
+            response = (
+                const.CRYPTO_REPORT_RESPONSE
+                if stock.replace("$", "") in const.CRYPTO_CURRENCIES
+                else const.REPORT_RESPONSE
+            )
             api.update_status(
-                status=f"@{user} {const.REPORT_RESPONSE} {stock}:",
+                status=f"@{user} {response} {stock}:",
                 in_reply_to_status_id=mention.id,
                 media_ids=[media.media_id],
             )
@@ -174,7 +179,7 @@ def demands_report(tweet):
 
 
 def generate_company_report(stock):
-    if stock in const.CRYPTO_CURRENCIES:
+    if stock.replace("$", "") in const.CRYPTO_CURRENCIES:
         crypto = CryptoCurrencies(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = crypto.get_digital_crypto_rating(stock)
     else:
