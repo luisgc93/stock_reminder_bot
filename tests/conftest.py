@@ -85,8 +85,15 @@ def mock_mention_with_multiple_stocks(mock_tweepy, status):
 
 
 @pytest.fixture
-def mock_mention_with_report(mock_tweepy, status):
+def mock_mention_asking_for_report(mock_tweepy, status):
     status.text = "Report for $AMZN"
+    mock_tweepy.return_value.mentions_timeline.return_value = [status]
+    return mock_tweepy
+
+
+@pytest.fixture
+def mock_mention_asking_for_crypto_report(mock_tweepy, status):
+    status.text = "Report for $ETH"
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
     return mock_tweepy
 
@@ -420,6 +427,28 @@ def mock_alpha_vantage_get_currency_exchange_rate():
                 "7. Time Zone": "UTC",
                 "8. Bid Price": "23930.67000000",
                 "9. Ask Price": "23933.49000000",
+            },
+            None,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_alpha_vantage_crypto_rating():
+    with patch(
+        "alpha_vantage.cryptocurrencies.CryptoCurrencies.get_digital_crypto_rating"
+    ) as mock:
+        mock.return_value = (
+            {
+                "1. symbol": "ETH",
+                "2. name": "Ethereum",
+                "3. fcas rating": "Superb",
+                "4. fcas score": "970",
+                "5. developer score": "965",
+                "6. market maturity score": "876",
+                "7. utility score": "996",
+                "8. last refreshed": "2021-01-05 00:00:00",
+                "9. timezone": "UTC",
             },
             None,
         )

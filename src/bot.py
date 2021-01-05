@@ -9,6 +9,7 @@ import urllib.request
 import tweepy
 from os import environ
 
+from alpha_vantage.cryptocurrencies import CryptoCurrencies
 from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.foreignexchange import ForeignExchange
 from alpha_vantage.fundamentaldata import FundamentalData
@@ -173,21 +174,24 @@ def demands_report(tweet):
 
 
 def generate_company_report(stock):
-    fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
-    data, _ = fd.get_company_overview(stock)
-    for (key, val) in list(data.items()):
-        if val.isnumeric():
-            data[key] = "${:,.2f}".format(float(val))
-        if key not in const.REPORT_FIELDS:
-            data.pop(key)
+    if stock in const.CRYPTO_CURRENCIES:
+        crypto = CryptoCurrencies(key=environ["ALPHA_VANTAGE_API_KEY"])
+        data, _ = crypto.get_digital_crypto_rating(stock)
+    else:
+        fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
+        data, _ = fd.get_company_overview(stock)
+        for (key, val) in list(data.items()):
+            if val.isnumeric():
+                data[key] = "${:,.2f}".format(float(val))
+            if key not in const.REPORT_FIELDS:
+                data.pop(key)
 
-    if data["DividendPerShare"] == "None":
-        for key in [key for key in data.keys() if "dividend" in key.lower()]:
-            data.pop(key)
-            data["DividendPerShare"] = "None"
+        if data["DividendPerShare"] == "None":
+            for key in [key for key in data.keys() if "dividend" in key.lower()]:
+                data.pop(key)
+                data["DividendPerShare"] = "None"
 
     img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
-
     d = ImageDraw.Draw(img)
     text = "\n\n ".join("{!s}={!s}".format(key, val) for (key, val) in data.items())
 
