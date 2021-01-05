@@ -6,6 +6,8 @@ import giphy_client
 import pytz
 
 import urllib.request
+
+import requests
 import tweepy
 from os import environ
 
@@ -23,6 +25,8 @@ import humanize
 import parsedatetime
 
 from PIL import Image, ImageDraw, ImageFont
+import pandas as pd
+import dataframe_image as dfi
 
 
 def init_tweepy():
@@ -38,20 +42,23 @@ def reply_to_mentions():
         tweet = mention.text
         user = mention.user.screen_name
         if demands_report(tweet):
-            stock = parse_stock_symbols(tweet)[0]
-            generate_report(stock.replace("$", ""))
+            stock = parse_stock_symbols(tweet)[0].replace("$", "")
+            generate_report(stock)
             media = api.media_upload("report.png")
+            media_2 = api.media_upload("rating_table.png")
             response = (
                 const.CRYPTO_REPORT_RESPONSE
-                if stock.replace("$", "") in const.CRYPTO_CURRENCIES
+                if stock in const.CRYPTO_CURRENCIES
                 else const.REPORT_RESPONSE
             )
+
             api.update_status(
-                status=f"@{user} {response} {stock}:",
+                status=f"@{user} {response} ${stock}:",
                 in_reply_to_status_id=mention.id,
-                media_ids=[media.media_id],
+                media_ids=[media.media_id, media_2.media_id],
             )
             os.remove("report.png") if os.path.exists("report.png") else None
+            os.remove("rating_table.png") if os.path.exists("rating_table.png") else None
             return
         if not is_valid(tweet):
             api.update_status(
@@ -195,7 +202,12 @@ def generate_report(stock):
             for key in [key for key in data.keys() if "dividend" in key.lower()]:
                 data.pop(key)
                 data["DividendPerShare"] = "None"
-
+        rating_response = requests.get(
+            f'{const.FMP_API_RATING_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
+        )
+        rating_data = rating_response.json()
+        data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
+        dfi.export(data_formatted, "rating_table.png")
     save_report_to_image(data)
 
 

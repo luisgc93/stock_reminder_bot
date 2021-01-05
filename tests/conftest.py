@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from unittest.mock import patch
+import responses
+from unittest.mock import patch, Mock
 
 import pytest
 from peewee import SqliteDatabase
@@ -28,6 +29,7 @@ def mock_env_variables(monkeypatch):
     monkeypatch.setenv("ALPHA_VANTAGE_API_KEY", "123")
     monkeypatch.setenv("BOT_USER_ID", "123")
     monkeypatch.setenv("GIPHY_API_KEY", "123")
+    monkeypatch.setenv("FMP_API_KEY", "123")
 
 
 @pytest.fixture(autouse=True)
@@ -39,6 +41,32 @@ def mock_tweepy():
 @pytest.fixture(autouse=True)
 def mock_giphy():
     with patch("src.bot.download_random_gif") as mock:
+        yield mock
+
+
+@pytest.fixture(autouse=True)
+def mock_fmp_api_response():
+    with patch("requests.get") as mock:
+        json_response = {
+            "symbol": "AMZN",
+            "rating": {"score": 4, "rating": "A+", "recommendation": "Buy"},
+            "ratingDetails": {
+                "P/B": {"score": 5, "recommendation": "Strong Buy"},
+                "ROA": {"score": 4, "recommendation": "Neutral"},
+                "DCF": {"score": 3, "recommendation": "Neutral"},
+                "P/E": {"score": 5, "recommendation": "Strong Buy"},
+                "ROE": {"score": 4, "recommendation": "Buy"},
+                "D/E": {"score": 3, "recommendation": "Buy"},
+            },
+        }
+        mock.return_value = Mock()
+        mock.return_value.json.return_value = json_response
+        responses.add(
+            responses.GET,
+            "https://financialmodelingprep.com/api/v3/company/rating/AMZN?apikey=123",
+            json={},
+            status=200,
+        )
         yield mock
 
 

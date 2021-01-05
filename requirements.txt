@@ -15,3 +15,5 @@ freezegun
 humanize
 giphy_client
 Pillow
+responses
+pandas
