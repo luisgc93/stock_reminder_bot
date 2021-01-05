@@ -39,7 +39,7 @@ def reply_to_mentions():
         user = mention.user.screen_name
         if demands_report(tweet):
             stock = parse_stock_symbols(tweet)[0]
-            generate_company_report(stock.replace("$", ""))
+            generate_report(stock.replace("$", ""))
             media = api.media_upload("report.png")
             response = (
                 const.CRYPTO_REPORT_RESPONSE
@@ -178,7 +178,7 @@ def demands_report(tweet):
     ) and contains_stock(tweet)
 
 
-def generate_company_report(stock):
+def generate_report(stock):
     if stock.replace("$", "") in const.CRYPTO_CURRENCIES:
         crypto = CryptoCurrencies(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = crypto.get_digital_crypto_rating(stock)
@@ -196,10 +196,13 @@ def generate_company_report(stock):
                 data.pop(key)
                 data["DividendPerShare"] = "None"
 
+    save_report_to_image(data)
+
+
+def save_report_to_image(data):
     img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
     d = ImageDraw.Draw(img)
     text = "\n\n ".join("{!s}={!s}".format(key, val) for (key, val) in data.items())
-
     text = text.replace("=", ": ").replace("'", "")
     font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
     d.text((14, 14), text, font=font, fill=(0, 0, 0))
