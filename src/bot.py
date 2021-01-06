@@ -37,58 +37,77 @@ def reply_to_mentions():
     new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
     for mention in new_mentions:
         tweet = mention.text
-        user = mention.user.screen_name
-        if demands_report(tweet):
-            stock = parse_stock_symbols(tweet)[0].replace("$", "")
-            generate_report(stock)
-            media = api.media_upload(const.REPORT_FILE_NAME)
-            response = (
-                const.CRYPTO_REPORT_RESPONSE
-                if stock in const.CRYPTO_CURRENCIES
-                else const.REPORT_RESPONSE
-            )
-
-            api.update_status(
-                status=f"@{user} {response} ${stock}:",
-                in_reply_to_status_id=mention.id,
-                media_ids=[media.media_id],
-            )
-            remove_file(const.REPORT_FILE_NAME)
+        if not is_valid(mention.text):
+            reply_with_help_message(mention)
             return
-        if not is_valid(tweet):
-            api.update_status(
-                status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
-                in_reply_to_status_id=mention.id,
-            )
+        stocks = parse_stock_symbols(tweet)
+        if demands_report(tweet):
+            stock = stocks[0].replace("$", "")
+            reply_with_report(mention, stock)
             return
         try:
-            stocks = parse_stock_symbols(tweet)
             remind_on = calculate_reminder_date(tweet)
             for stock in stocks:
-                create_reminder(mention, tweet, stock.replace("$", ""))
-            if len(stocks) > 1:
-                stocks[-1] = "and " + stocks[-1]
-                stocks[:-2] = [stock + "," for stock in stocks[:-2]]
-            download_random_gif(const.FINGERS_CROSSED_GIF_TAG)
-            media = api.media_upload(const.GIF_FILE_NAME)
-            api.update_status(
-                status=f"@{user} Sure thing buddy! I'll remind you "
-                f"of the price of {' '.join(stocks)} on "
-                f"{remind_on.strftime('%A %B %d %Y')}. "
-                f"I hope you make tons of money! 🤑",
-                in_reply_to_status_id=mention.id,
-                media_ids=[media.media_id],
-            )
-            remove_file(const.GIF_FILE_NAME)
+                create_reminder(mention, stock.replace("$", ""))
+            reply_with_reminder_message(mention, remind_on)
         except (ValueError, IndexError) as e:
-            exc_mapper = {
-                ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
-                IndexError: const.STOCK_NOT_FOUND_RESPONSE,
-            }
-            api.update_status(
-                status=f"@{user} {exc_mapper[e.__class__]}",
-                in_reply_to_status_id=mention.id,
-            )
+            reply_with_error_message(e, mention)
+
+
+def reply_with_reminder_message(mention, remind_on):
+    stocks = parse_stock_symbols(mention.text)
+    api = init_tweepy()
+    if len(stocks) > 1:
+        stocks[-1] = "and " + stocks[-1]
+        stocks[:-2] = [stock + "," for stock in stocks[:-2]]
+    download_random_gif(const.FINGERS_CROSSED_GIF_TAG)
+    media = api.media_upload(const.GIF_FILE_NAME)
+    api.update_status(
+        status=f"@{mention.user.screen_name} "
+        f"Sure thing buddy! I'll remind you "
+        f"of the price of {' '.join(stocks)} on "
+        f"{remind_on.strftime('%A %B %d %Y')}. "
+        f"I hope you make tons of money! 🤑",
+        in_reply_to_status_id=mention.id,
+        media_ids=[media.media_id],
+    )
+    remove_file(const.GIF_FILE_NAME)
+
+
+def reply_with_help_message(mention):
+    user = mention.user.screen_name
+    init_tweepy().update_status(
+        status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
+        in_reply_to_status_id=mention.id,
+    )
+
+
+def reply_with_report(mention, stock):
+    generate_report(stock)
+    user = mention.user.screen_name
+    media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
+    response = (
+        const.CRYPTO_REPORT_RESPONSE
+        if stock in const.CRYPTO_CURRENCIES
+        else const.REPORT_RESPONSE
+    )
+    init_tweepy().update_status(
+        status=f"@{user} {response} ${stock}:",
+        in_reply_to_status_id=mention.id,
+        media_ids=[media.media_id],
+    )
+    remove_file(const.REPORT_FILE_NAME)
+
+
+def reply_with_error_message(e, mention):
+    exc_mapper = {
+        ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
+        IndexError: const.STOCK_NOT_FOUND_RESPONSE,
+    }
+    init_tweepy().update_status(
+        status=f"@{mention.user.screen_name} {exc_mapper[e.__class__]}",
+        in_reply_to_status_id=mention.id,
+    )
 
 
 def publish_reminders():
@@ -136,13 +155,13 @@ def publish_reminders():
         remove_file(const.GIF_FILE_NAME)
 
 
-def create_reminder(mention, tweet, stock):
+def create_reminder(mention, stock):
     price = get_price(stock)
     return Reminder.create(
         user_name=mention.user.screen_name,
         tweet_id=mention.id,
         created_on=date.today(),
-        remind_on=calculate_reminder_date(tweet),
+        remind_on=calculate_reminder_date(mention.text),
         stock_symbol=stock,
         stock_price=price,
     )
@@ -153,7 +172,7 @@ def get_last_replied_tweet_id(client):
 
 
 def is_valid(tweet):
-    return contains_stock(tweet) and contains_date(tweet)
+    return demands_report(tweet) or contains_stock(tweet) and contains_date(tweet)
 
 
 def contains_stock(tweet):
