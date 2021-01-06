@@ -202,21 +202,17 @@ def generate_report(stock):
 
 def save_report_to_image(data):
     img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
-    d = ImageDraw.Draw(img)
-    c = 0
-    for key, val in data.items():
-        font_bold = ImageFont.truetype("fonts/Arimo-Bold.ttf", 14)
-        d.text(
-            (14, c * 25), "\n\n " + "{!s}:".format(key), font=font_bold, fill=(0, 0, 0)
-        )
-        font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
-        d.text(
-            (6 * len(key) + 46, c * 25),
-            "\n\n " + "{!s}".format(val),
+    draw = ImageDraw.Draw(img)
+    count = 0
+    font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
+    for key, value in data.items():
+        draw.text(
+            (14, count * 25),
+            "\n\n " + "{!s}: {!s}:".format(key, value),
             font=font,
             fill=(0, 0, 0),
         )
-        c += 1
+        count += 1
     img.save("report.png")
 
 
