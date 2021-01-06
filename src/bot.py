@@ -243,19 +243,11 @@ def generate_rating(stock):
 
 
 def save_report_to_image(data):
-    img = Image.new("RGB", (600, 35 * len(data)), color=const.REPORT_BACKGROUND_COLOR)
+    img = Image.new("RGB", (600, 38 * len(data)), color=const.REPORT_BACKGROUND_COLOR)
     draw = ImageDraw.Draw(img)
-    count = 0
-    font = ImageFont.truetype(const.REPORT_FONT_PATH, 14)
-    for key, value in data.items():
-        key.capitalize()
-        draw.text(
-            (14, count * 25),
-            "\n\n " + "{!s}: {!s}:".format(key, value),
-            font=font,
-            fill=const.REPORT_FONT_COLOR,
-        )
-        count += 1
+    font = ImageFont.truetype(const.REPORT_FONT_PATH, 15)
+    text = "\n\n ".join("{!s}: {!s}".format(key, val) for (key, val) in data.items())
+    draw.text((14, 14), text, font=font, fill=const.REPORT_FONT_COLOR)
     img.save(const.REPORT_FILE_NAME)
 
 
