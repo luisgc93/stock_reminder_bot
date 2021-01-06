@@ -58,7 +58,9 @@ def reply_to_mentions():
                 media_ids=[media.media_id, media_2.media_id],
             )
             os.remove("report.png") if os.path.exists("report.png") else None
-            os.remove("rating_table.png") if os.path.exists("rating_table.png") else None
+            os.remove("rating_table.png") if os.path.exists(
+                "rating_table.png"
+            ) else None
             return
         if not is_valid(tweet):
             api.update_status(
@@ -207,7 +209,9 @@ def generate_report(stock):
         )
         rating_data = rating_response.json()
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        dfi.export(data_formatted, "rating_table.png")
+        dfi.export(
+            data_formatted, "rating_table.png", chrome_path=environ["CHROMEDRIVER_PATH"]
+        )
     save_report_to_image(data)
 
 
