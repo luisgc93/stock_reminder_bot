@@ -144,7 +144,7 @@ class TestReplyToMentions:
             status="@user_name Knowledge is power! 🧠💪 Here "
             "is your company report for $AMZN:",
             in_reply_to_status_id=1,
-            media_ids=[ANY, ANY],
+            media_ids=[ANY],
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
@@ -163,7 +163,7 @@ class TestReplyToMentions:
             status="@user_name Knowledge is power! 🧠💪 Here "
             "is your crypto ratings report for $ETH:",
             in_reply_to_status_id=1,
-            media_ids=[ANY, ANY],
+            media_ids=[ANY],
         )
 
         assert expected_status_call in mock_tweepy.mock_calls
