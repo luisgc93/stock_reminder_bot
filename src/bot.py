@@ -41,7 +41,7 @@ def reply_to_mentions():
         if demands_report(tweet):
             stock = parse_stock_symbols(tweet)[0].replace("$", "")
             generate_report(stock)
-            media = api.media_upload("report.png")
+            media = api.media_upload(const.REPORT_FILE_NAME)
             response = (
                 const.CRYPTO_REPORT_RESPONSE
                 if stock in const.CRYPTO_CURRENCIES
@@ -53,7 +53,7 @@ def reply_to_mentions():
                 in_reply_to_status_id=mention.id,
                 media_ids=[media.media_id],
             )
-            os.remove("report.png") if os.path.exists("report.png") else None
+            remove_file(const.REPORT_FILE_NAME)
             return
         if not is_valid(tweet):
             api.update_status(
@@ -70,7 +70,7 @@ def reply_to_mentions():
                 stocks[-1] = "and " + stocks[-1]
                 stocks[:-2] = [stock + "," for stock in stocks[:-2]]
             download_random_gif(const.FINGERS_CROSSED_GIF_TAG)
-            media = api.media_upload("random.gif")
+            media = api.media_upload(const.GIF_FILE_NAME)
             api.update_status(
                 status=f"@{user} Sure thing buddy! I'll remind you "
                 f"of the price of {' '.join(stocks)} on "
@@ -79,7 +79,7 @@ def reply_to_mentions():
                 in_reply_to_status_id=mention.id,
                 media_ids=[media.media_id],
             )
-            os.remove("random.gif") if os.path.exists("random.gif") else None
+            remove_file(const.GIF_FILE_NAME)
         except (ValueError, IndexError) as e:
             exc_mapper = {
                 ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
@@ -126,14 +126,14 @@ def publish_reminders():
             download_random_gif(const.NEGATIVE_RETURN_TAGS)
             emoji = const.NEGATIVE_RETURNS_EMOJI
 
-        media = api.media_upload("random.gif")
+        media = api.media_upload(const.GIF_FILE_NAME)
         api.update_status(
             status=status + emoji,
             media_ids=[media.media_id],
             in_reply_to_status_id=reminder.tweet_id,
         )
         reminder.finish()
-        os.remove("random.gif") if os.path.exists("random.gif") else None
+        remove_file(const.GIF_FILE_NAME)
 
 
 def create_reminder(mention, tweet, stock):
@@ -201,19 +201,19 @@ def generate_report(stock):
 
 
 def save_report_to_image(data):
-    img = Image.new("RGB", (600, 35 * len(data)), color=(255, 255, 255))
+    img = Image.new("RGB", (600, 35 * len(data)), color=const.REPORT_BACKGROUND_COLOR)
     draw = ImageDraw.Draw(img)
     count = 0
-    font = ImageFont.truetype("fonts/Arimo-Regular.ttf", 14)
+    font = ImageFont.truetype(const.REPORT_FONT_PATH, 14)
     for key, value in data.items():
         draw.text(
             (14, count * 25),
             "\n\n " + "{!s}: {!s}:".format(key, value),
             font=font,
-            fill=(0, 0, 0),
+            fill=const.REPORT_FONT_COLOR,
         )
         count += 1
-    img.save("report.png")
+    img.save(const.REPORT_FILE_NAME)
 
 
 def remove_lower_case_chars(string):
@@ -289,7 +289,7 @@ def calculate_returns(original_price, current_price, dividend):
 
 def download_random_gif(tags):
     giphy_api = giphy_client.DefaultApi()
-    open("random.gif", "w")
+    open(const.GIF_FILE_NAME, "w")
     gif_url = (
         giphy_api.gifs_search_get(
             environ["GIPHY_API_KEY"], random.choice(tags), limit=3, offset=3, fmt="json"
@@ -297,4 +297,8 @@ def download_random_gif(tags):
         .data[random.choice(range(3))]
         .images.original.url
     )
-    urllib.request.urlretrieve(gif_url, "random.gif")
+    urllib.request.urlretrieve(gif_url, const.GIF_FILE_NAME)
+
+
+def remove_file(file):
+    os.remove(file) if os.path.exists(file) else None

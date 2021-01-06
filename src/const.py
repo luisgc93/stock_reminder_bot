@@ -10,6 +10,8 @@ NEGATIVE_RETURNS_EMOJI = "😭📉"
 
 FINGERS_CROSSED_GIF_TAG = ["fingers crossed"]
 
+GIF_FILE_NAME = "random.gif"
+
 POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
 
 NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
@@ -45,6 +47,14 @@ REPORT_FIELDS = [
     "LastSplitFactor",
     "LastSplitDate",
 ]
+
+REPORT_FONT_PATH = "fonts/Arimo-Regular.ttf"
+
+REPORT_FONT_COLOR = (0, 0, 0)
+
+REPORT_BACKGROUND_COLOR = (255, 255, 255)
+
+REPORT_FILE_NAME = "report.png"
 
 REPORT_RESPONSE = "Knowledge is power! 🧠💪 Here is your company report for"
 
