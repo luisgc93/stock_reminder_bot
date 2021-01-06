@@ -207,7 +207,7 @@ def generate_report(stock):
         )
         rating_data = rating_response.json()
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        dfi.export(data_formatted, "rating_table.png", table_conversion="matplotlib")
+        dfi.export(data_formatted, "rating_table.png")
     save_report_to_image(data)
 
 
