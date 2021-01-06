@@ -42,7 +42,6 @@ def reply_to_mentions():
             stock = parse_stock_symbols(tweet)[0].replace("$", "")
             generate_report(stock)
             media = api.media_upload("report.png")
-            media_2 = api.media_upload("rating_table.png")
             response = (
                 const.CRYPTO_REPORT_RESPONSE
                 if stock in const.CRYPTO_CURRENCIES
@@ -52,12 +51,9 @@ def reply_to_mentions():
             api.update_status(
                 status=f"@{user} {response} ${stock}:",
                 in_reply_to_status_id=mention.id,
-                media_ids=[media.media_id, media_2.media_id],
+                media_ids=[media.media_id],
             )
             os.remove("report.png") if os.path.exists("report.png") else None
-            os.remove("rating_table.png") if os.path.exists(
-                "rating_table.png"
-            ) else None
             return
         if not is_valid(tweet):
             api.update_status(
