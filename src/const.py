@@ -56,9 +56,11 @@ REPORT_BACKGROUND_COLOR = (255, 255, 255)
 
 REPORT_FILE_NAME = "report.png"
 
-REPORT_RESPONSE = "Knowledge is power! 🧠💪 Here is your company report for"
+REPORT_RESPONSE = "Knowledge is power! 🧠💪 Here is your company report for $"
 
-CRYPTO_REPORT_RESPONSE = "Knowledge is power! 🧠💪 Here is your crypto ratings report for"
+CRYPTO_REPORT_RESPONSE = (
+    "Knowledge is power! 🧠💪 Here is your crypto ratings report for $"
+)
 
 FMP_API_RATING_ENDPOINT = "https://financialmodelingprep.com/api/v3/company/rating/"
 

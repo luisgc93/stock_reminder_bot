@@ -7,6 +7,7 @@ import pytz
 
 import urllib.request
 
+import requests
 import tweepy
 from os import environ
 
@@ -86,13 +87,14 @@ def reply_with_report(mention, stock):
     generate_report(stock)
     user = mention.user.screen_name
     media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
+
     response = (
-        const.CRYPTO_REPORT_RESPONSE
+        const.CRYPTO_REPORT_RESPONSE + stock + ":"
         if stock in const.CRYPTO_CURRENCIES
-        else const.REPORT_RESPONSE
+        else (const.REPORT_RESPONSE + stock + " - " + generate_rating(stock))
     )
     init_tweepy().update_status(
-        status=f"@{user} {response} ${stock}:",
+        status=f"@{user} {response}",
         in_reply_to_status_id=mention.id,
         media_ids=[media.media_id],
     )
@@ -226,6 +228,17 @@ def generate_report(stock):
                 data.pop(key)
                 data["DividendPerShare"] = "None"
     save_report_to_image(data)
+
+
+def generate_rating(stock):
+    rating_response = requests.get(
+        f'{const.FMP_API_RATING_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
+    )
+    rating_data = rating_response.json()["rating"]
+    ratings_list = [
+        (key.capitalize() + ": " + str(value)) for key, value in rating_data.items()
+    ]
+    return ", ".join(ratings_list)
 
 
 def save_report_to_image(data):
