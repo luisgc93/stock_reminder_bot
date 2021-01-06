@@ -91,7 +91,7 @@ def reply_with_report(mention, stock):
     response = (
         const.CRYPTO_REPORT_RESPONSE + stock + ":"
         if stock in const.CRYPTO_CURRENCIES
-        else (const.REPORT_RESPONSE + stock + " - " + generate_rating(stock))
+        else (const.REPORT_RESPONSE + stock + ". " + generate_rating(stock))
     )
     init_tweepy().update_status(
         status=f"@{user} {response}",
@@ -238,6 +238,7 @@ def generate_rating(stock):
     ratings_list = [
         (key.capitalize() + ": " + str(value)) for key, value in rating_data.items()
     ]
+
     return ", ".join(ratings_list)
 
 
@@ -247,6 +248,7 @@ def save_report_to_image(data):
     count = 0
     font = ImageFont.truetype(const.REPORT_FONT_PATH, 14)
     for key, value in data.items():
+        key.capitalize()
         draw.text(
             (14, count * 25),
             "\n\n " + "{!s}: {!s}:".format(key, value),
