@@ -132,7 +132,6 @@ class TestReplyToMentions:
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_mention_asking_for_report",
-        "mock_fmp_api_response",
     )
     def test_replies_with_company_report_when_mention_contains_report_and_stock(
         self,

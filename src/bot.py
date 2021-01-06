@@ -7,7 +7,6 @@ import pytz
 
 import urllib.request
 
-import requests
 import tweepy
 from os import environ
 
@@ -25,8 +24,6 @@ import humanize
 import parsedatetime
 
 from PIL import Image, ImageDraw, ImageFont
-import pandas as pd
-import dataframe_image as dfi
 
 
 def init_tweepy():
@@ -204,12 +201,6 @@ def generate_report(stock):
             for key in [key for key in data.keys() if "dividend" in key.lower()]:
                 data.pop(key)
                 data["DividendPerShare"] = "None"
-        rating_response = requests.get(
-            f'{const.FMP_API_RATING_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
-        )
-        rating_data = rating_response.json()
-        data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        dfi.export(data_formatted, "rating_table.png")
     save_report_to_image(data)
 
 
