@@ -49,12 +49,12 @@ def reply_to_mentions():
             remind_on = calculate_reminder_date(tweet)
             for stock in stocks:
                 create_reminder(mention, stock.replace("$", ""))
-            reply_with_reminder_message(mention, remind_on)
+            reply_with_reminder_created_message(mention, remind_on)
         except (ValueError, IndexError) as e:
             reply_with_error_message(e, mention)
 
 
-def reply_with_reminder_message(mention, remind_on):
+def reply_with_reminder_created_message(mention, remind_on):
     stocks = parse_stock_symbols(mention.text)
     api = init_tweepy()
     if len(stocks) > 1:
@@ -120,24 +120,7 @@ def publish_reminders():
         rate_of_return = calculate_returns(
             original_adjusted_price, current_price, dividend
         )
-        stock_split_message = "."
-        dividend_message = ""
-        if split_factor != 1.0:
-            stock_split_message = (
-                f" (${'{:,.2f}'.format(original_adjusted_price)} "
-                f"after adjusting for the stock split)."
-            )
-        if dividend:
-            dividend_message = (
-                f" and a total dividend of ${'{:.2f}'.format(dividend)} was paid out"
-            )
-        time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
-        status = (
-            f"@{reminder.user_name} {time_since_created_on} ago you bought "
-            f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
-            f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
-            f"{dividend_message}. That's a return of {rate_of_return}%! "
-        )
+        status = generate_investment_results(reminder)
         if rate_of_return > 0:
             download_random_gif(const.POSITIVE_RETURN_TAGS)
             emoji = const.POSITIVE_RETURNS_EMOJI
@@ -153,6 +136,32 @@ def publish_reminders():
         )
         reminder.finish()
         remove_file(const.GIF_FILE_NAME)
+
+
+def generate_investment_results(reminder):
+    split_factor = get_split_factor(reminder)
+    dividend = get_dividend(reminder)
+    original_adjusted_price = reminder.stock_price / split_factor
+    current_price = get_price(reminder.stock_symbol)
+    rate_of_return = calculate_returns(original_adjusted_price, current_price, dividend)
+    stock_split_message = "."
+    dividend_message = ""
+    if split_factor != 1.0:
+        stock_split_message = (
+            f" (${'{:,.2f}'.format(original_adjusted_price)} "
+            f"after adjusting for the stock split)."
+        )
+    if dividend:
+        dividend_message = (
+            f" and a total dividend of ${'{:.2f}'.format(dividend)} was paid out"
+        )
+    time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
+    return (
+        f"@{reminder.user_name} {time_since_created_on} ago you bought "
+        f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
+        f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
+        f"{dividend_message}. That's a return of {rate_of_return}%! "
+    )
 
 
 def create_reminder(mention, stock):
