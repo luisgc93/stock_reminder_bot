@@ -221,6 +221,7 @@ def save_report_to_image(data):
             fill=(0, 0, 0),
         )
         c += 1
+    img.save("report.png")
 
 
 def remove_lower_case_chars(string):
