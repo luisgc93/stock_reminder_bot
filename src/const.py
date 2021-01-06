@@ -2,7 +2,20 @@ DATE_TIME_STRINGS = ("year", "month", "week", "day", "hour", "minutes", "tomorro
 
 CASHTAG = "$"
 
-CRYPTO_CURRENCIES = ("BTC", "ETH", "XRP", "LTC", "NEO", "IOTA")
+CRYPTO_CURRENCIES = (
+    "BTC",
+    "ETH",
+    "XRP",
+    "LTC",
+    "NEO",
+    "EOS",
+    "BNB",
+    "HT",
+    "LINK",
+    "BCH",
+    "TRX",
+    "XTZ",
+)
 
 POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
