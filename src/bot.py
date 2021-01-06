@@ -238,18 +238,8 @@ def generate_rating(stock):
     ratings_list = [
         (key.capitalize() + ": " + str(value)) for key, value in rating_data.items()
     ]
-    details = rating_response.json()["ratingDetails"]
-    output = ""
-    for key, value in details.items():
-        output += key + " - "
-        sub_dict = details[key]
-        sub_dict.pop("recommendation")
-        sub_list = [
-            sub_key + ": " + str(sub_value) for sub_key, sub_value in sub_dict.items()
-        ]
-        output += ", ".join(sub_list) + ". "
 
-    return ", ".join(ratings_list) + ". Details: " + output
+    return ", ".join(ratings_list)
 
 
 def save_report_to_image(data):

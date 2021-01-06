@@ -143,9 +143,7 @@ class TestReplyToMentions:
 
         expected_status_call = call().update_status(
             status="@user_name Knowledge is power! 🧠💪 Here is your company "
-            "report for $AMZN. Score: 4, Rating: A+, Recommendation: Buy. "
-            "Details: P/B - score: 5. ROA - score: 4. DCF - score: 3. P/E"
-            " - score: 5. ROE - score: 4. D/E - score: 3. ",
+            "report for $AMZN. Score: 4, Rating: A+, Recommendation: Buy",
             in_reply_to_status_id=1,
             media_ids=[ANY],
         )
