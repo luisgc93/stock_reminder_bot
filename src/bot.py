@@ -281,6 +281,16 @@ def get_price(stock):
     return float(full_price[:-2])
 
 
+def nasdaq_is_open():
+    now = datetime.now()
+    if now.weekday() in const.WEEKEND_DAYS:
+        return False
+    nyc_time = now.astimezone(pytz.timezone("US/Eastern")).time()
+    open_time = time(hour=9, minute=30)
+    closing_time = time(hour=16, minute=00)
+    return closing_time >= nyc_time >= open_time
+
+
 def get_split_factor(reminder):
     if reminder.stock_symbol in const.CRYPTO_CURRENCIES:
         return 1.0
