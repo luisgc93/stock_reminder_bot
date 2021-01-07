@@ -29,6 +29,14 @@ POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
 
 NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
 
+NEGATIVE_RETURN_GIFS = [
+    "https://media.giphy.com/media/3orieUs03VUeeBa7Wo/giphy.gif",
+    "https://media.giphy.com/media/l2JdWPIgVK83qxB4Y/giphy.gif",
+    "https://media.giphy.com/media/ToMjGppB1bJC04ESjyE/giphy.gif",
+    "https://media.giphy.com/media/3orieVe5VYqTdT16qk/giphy.gif"
+    "https://media.giphy.com/media/S3n6idriKtiFbZyqve/giphy.gif",
+]
+
 REPORT_KEYWORDS = ["report", "analyse", "analyze"]
 
 REPORT_FIELDS = [

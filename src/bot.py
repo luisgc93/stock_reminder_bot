@@ -119,7 +119,8 @@ def publish_reminders():
         if const.POSITIVE_RETURNS_EMOJI in status:
             download_random_gif(const.POSITIVE_RETURN_TAGS)
         else:
-            download_random_gif(const.NEGATIVE_RETURN_TAGS)
+            gif_url = random.choice(const.NEGATIVE_RETURN_GIFS)
+            download_pre_selected_gif(gif_url)
         media = api.media_upload(const.GIF_FILE_NAME)
         api.update_status(
             status=status,
@@ -273,9 +274,10 @@ def get_price(stock):
             full_price = data[key]["1. open"]
         except ValueError:
             response = requests.get(
-                f'{const.FMP_API_GET_PRICE_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
+                f"{const.FMP_API_GET_PRICE_ENDPOINT}"
+                f'{stock}?apikey={environ["FMP_API_KEY"]}'
             )
-            return response.json()[0]['price']
+            return response.json()[0]["price"]
     return float(full_price[:-2])
 
 
@@ -333,6 +335,10 @@ def download_random_gif(tags):
         .images.original.url
     )
     urllib.request.urlretrieve(gif_url, const.GIF_FILE_NAME)
+
+
+def download_pre_selected_gif(url):
+    urllib.request.urlretrieve(url, const.GIF_FILE_NAME)
 
 
 def remove_file(file):
