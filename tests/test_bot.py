@@ -335,31 +335,6 @@ class TestParseTweet:
 
         assert bot.parse_stock_symbols(tweet) == stock_tickers
 
-    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday_amazon):
-        price = bot.get_price("AMZN")
-
-        assert price == 3112.70
-        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
-
-    @pytest.mark.usefixtures("mock_alpha_vantage_max_retries_exceeded")
-    def test_uses_fmp_api_as_backup_when_alpha_vantage_api_limit_exceeded(
-        self, mock_fmp_api_get_price_response
-    ):
-        price = bot.get_price("AAPL")
-
-        assert price == 126.66
-        mock_fmp_api_get_price_response.assert_called_once()
-
-    def test_returns_price_for_cryptocurrency(
-        self, mock_alpha_vantage_get_currency_exchange_rate
-    ):
-        price = bot.get_price("BTC")
-
-        assert price == 23933.49
-        mock_alpha_vantage_get_currency_exchange_rate.assert_called_once_with(
-            "BTC", "USD"
-        )
-
     @pytest.mark.parametrize(
         "string, reminder_date",
         [
@@ -388,3 +363,22 @@ class TestParseTweet:
     )
     def test_calculates_time_delta(self, today, created_on, delta):
         assert bot.calculate_time_delta(today, created_on) == delta
+
+
+class TestGetPrice:
+    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday_amazon):
+        price = bot.get_price("AMZN")
+
+        assert price == 3112.70
+        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
+
+    def test_returns_price_for_cryptocurrency(
+        self, mock_alpha_vantage_get_currency_exchange_rate
+    ):
+        price = bot.get_price("BTC")
+
+        assert price == 23933.49
+        mock_alpha_vantage_get_currency_exchange_rate.assert_called_once_with(
+            "BTC", "USD"
+        )
+
