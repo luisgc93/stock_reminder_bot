@@ -25,8 +25,8 @@ class TestReminder:
     @pytest.mark.parametrize(
         "time",
         [
-            datetime(2020, 4, 15, 20, 32),
-            datetime(2021, 1, 16, 11, 56),
+            datetime(2020, 4, 15, 15, 32),
+            datetime(2021, 1, 15, 16, 48),
         ],
     )
     @pytest.mark.usefixtures("reminder")

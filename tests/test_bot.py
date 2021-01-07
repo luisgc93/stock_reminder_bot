@@ -17,15 +17,15 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-13T15:32:00Z"):
+        with freeze_time("2020-12-11T15:32:00Z"):
             bot.reply_to_mentions()
 
         assert Reminder.select().count() == 1
 
         reminder = Reminder.select().first()
         assert reminder.tweet_id == 1
-        assert reminder.created_on == date(2020, 12, 13)
-        assert reminder.remind_on == "2021-03-13 15:32:00+00:00"
+        assert reminder.created_on == date(2020, 12, 11)
+        assert reminder.remind_on == "2021-03-11 15:32:00+00:00"
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
         assert reminder.is_finished is False
@@ -39,7 +39,7 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-13T15:32:00Z"):
+        with freeze_time("2020-12-11T15:32:00Z"):
             bot.reply_to_mentions()
 
         reminders = Reminder.select()
@@ -53,14 +53,14 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
-        with freeze_time("2020-12-13T15:32:00Z"):
+        with freeze_time("2020-12-11T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_calls = [
             call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name Sure thing buddy! I'll remind you of the price of "
-                "$AMZN on Saturday March 13 2021. I hope you make tons of money! 🤑",
+                "$AMZN on Thursday March 11 2021. I hope you make tons of money! 🤑",
                 in_reply_to_status_id=1,
                 media_ids=[ANY],
             ),
@@ -74,14 +74,14 @@ class TestReplyToMentions:
         "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
-        with freeze_time("2020-12-13T15:32:00Z"):
+        with freeze_time("2020-12-11T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_calls = [
             call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name Sure thing buddy! I'll remind you of the price of "
-                "$AMZN, $MSFT, $AAPL and $BABA on Saturday March 13 2021. I hope you "
+                "$AMZN, $MSFT, $AAPL and $BABA on Thursday March 11 2021. I hope you "
                 "make tons of money! 🤑",
                 in_reply_to_status_id=1,
                 media_ids=[ANY],
@@ -107,7 +107,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_when_stock_is_not_found(self, mock_tweepy):
-        with freeze_time("2020-12-13T15:32:00Z"):
+        with freeze_time("2020-12-11T15:32:00Z"):
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
@@ -219,7 +219,7 @@ class TestPublishReminders:
         self, reminder, mock_tweepy, mock_giphy
     ):
         reminder.created_on = date(2020, 8, 1)
-        reminder.remind_on = datetime(2020, 12, 27, 12, 0)
+        reminder.remind_on = datetime(2020, 12, 21, 16, 0)
         reminder.stock_symbol = "TSLA"
         reminder.stock_price = 2186.27
         reminder.save()
@@ -252,7 +252,7 @@ class TestPublishReminders:
     ):
 
         reminder.created_on = date(2020, 6, 1)
-        reminder.remind_on = datetime(2020, 12, 31, 12, 0)
+        reminder.remind_on = datetime(2020, 12, 30, 16, 0)
         reminder.stock_symbol = "JNJ"
         reminder.stock_price = 149.60
         reminder.save()
