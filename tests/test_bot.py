@@ -117,18 +117,6 @@ class TestReplyToMentions:
 
         assert expected_status_call in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_max_retries_exceeded")
-    def test_replies_when_api_limit_exceeded(self, mock_tweepy):
-        with freeze_time("2020-12-13T15:32:00Z"):
-            bot.reply_to_mentions()
-
-        expected_status_call = call().update_status(
-            status=f"@user_name {const.API_LIMIT_EXCEEDED_RESPONSE}",
-            in_reply_to_status_id=1,
-        )
-
-        assert expected_status_call in mock_tweepy.mock_calls
-
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_mention_asking_for_report",
@@ -219,7 +207,6 @@ class TestPublishReminders:
             ),
         ]
 
-        mock_giphy.assert_called_once_with(const.NEGATIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert Reminder().get_by_id(reminder.id).is_finished is True
 
