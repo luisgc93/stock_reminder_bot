@@ -287,7 +287,7 @@ def get_price(stock):
 
 
 def nasdaq_is_open():
-    now = datetime.now()
+    now = datetime.utcnow()
     if now.weekday() in const.WEEKEND_DAYS:
         return False
     nyc_time = now.astimezone(pytz.timezone("US/Eastern")).time()
