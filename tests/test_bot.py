@@ -393,7 +393,10 @@ class TestGetPrice:
 
     @pytest.mark.parametrize(
         "current_time",
-        ["2021-01-07T15:31:00Z", "2021-01-07T16:52:00Z", "2021-01-07T21:59:00Z"],
+        [
+            datetime(2021, 1, 7, 15, 31, tzinfo=pytz.utc),
+            datetime(2021, 1, 7, 21, 59, tzinfo=pytz.utc),
+        ],
     )
     def test_returns_true_when_market_is_open(self, current_time):
         with freeze_time(current_time):
@@ -401,7 +404,11 @@ class TestGetPrice:
 
     @pytest.mark.parametrize(
         "current_time",
-        ["2021-01-07T09:30:00Z", "2021-01-07T15:29:00Z", "2021-01-09T15:31:00Z"],
+        [
+            datetime(2021, 1, 7, 9, 30, tzinfo=pytz.utc),
+            datetime(2021, 1, 7, 15, 29, tzinfo=pytz.utc),
+            datetime(2021, 1, 9, 15, 31, tzinfo=pytz.utc),
+        ],
     )
     def test_returns_false_when_market_is_closed(self, current_time):
         with freeze_time(current_time):
