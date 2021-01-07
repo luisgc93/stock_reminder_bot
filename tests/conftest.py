@@ -2,7 +2,6 @@ from datetime import date, datetime
 from unittest.mock import patch, Mock
 
 import pytest
-import responses
 from peewee import SqliteDatabase
 from tweepy import Status, User
 
@@ -61,12 +60,6 @@ def mock_fmp_api_rating_response():
         }
         mock.return_value = Mock()
         mock.return_value.json.return_value = json_response
-        responses.add(
-            responses.GET,
-            "https://financialmodelingprep.com/api/v3/company/rating/AMZN?apikey=123",
-            json={},
-            status=200,
-        )
         yield mock
 
 
@@ -91,12 +84,6 @@ def mock_fmp_api_get_price_response():
 
         mock.return_value = Mock()
         mock.return_value.json.return_value = json_response
-        responses.add(
-            responses.GET,
-            "https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=123",
-            json={},
-            status=200,
-        )
         yield mock
 
 
