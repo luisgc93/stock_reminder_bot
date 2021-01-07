@@ -234,7 +234,7 @@ def generate_rating(stock):
         (key.capitalize() + ": " + str(value)) for key, value in rating_data.items()
     ]
 
-    return ", ".join(ratings_list)
+    return ", ".join(ratings_list) + ". Details: "
 
 
 def save_report_to_image(data):
