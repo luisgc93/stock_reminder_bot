@@ -11,6 +11,7 @@ The bot will then get back to you on the specified date with your investment res
 
 <img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/103879153-baf8f280-50d7-11eb-9808-846e3263ceb5.png">
 
+<img width="480" alt="bot_mention" src="https://user-images.githubusercontent.com/32971373/103919831-cf0d1600-5110-11eb-80bb-ae50621b143b.png">
 
 ## Implementation 🛠️
 The bot uses [RomelTorres' python wrapper](https://github.com/RomelTorres/alpha_vantage) for the [Alpha Vantage API](https://www.alphavantage.co/documentation/). It's deployed on [Heroku with Docker](https://devcenter.heroku.com/articles/build-docker-images-heroku-yml) 🐳 and uses two separate [clock processes](https://devcenter.heroku.com/articles/clock-processes-python) for replying to twitter mentions and posting reminders. When a mention is in the correct format, a reminder object is saved into a postgres database through [peewee](http://docs.peewee-orm.com/en/latest/)'s ORM. Every 2 minutes, the bot will check whether any reminders are due and publish an update by replying to the initial tweet with the investment results. Further implementation details can be found in the project's [medium post](https://luisgc93.medium.com/building-a-stock-reminder-twitter-bot-with-python-and-alpha-vantage-api-24189566e705).
