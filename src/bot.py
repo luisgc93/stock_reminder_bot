@@ -115,24 +115,14 @@ def reply_with_error_message(e, mention):
 def publish_reminders():
     for reminder in Reminder.due_now():
         api = init_tweepy()
-        split_factor = get_split_factor(reminder)
-        dividend = get_dividend(reminder)
-        original_adjusted_price = reminder.stock_price / split_factor
-        current_price = get_price(reminder.stock_symbol)
-        rate_of_return = calculate_returns(
-            original_adjusted_price, current_price, dividend
-        )
         status = generate_investment_results(reminder)
-        if rate_of_return > 0:
+        if const.POSITIVE_RETURNS_EMOJI in status:
             download_random_gif(const.POSITIVE_RETURN_TAGS)
-            emoji = const.POSITIVE_RETURNS_EMOJI
         else:
             download_random_gif(const.NEGATIVE_RETURN_TAGS)
-            emoji = const.NEGATIVE_RETURNS_EMOJI
-
         media = api.media_upload(const.GIF_FILE_NAME)
         api.update_status(
-            status=status + emoji,
+            status=status,
             media_ids=[media.media_id],
             in_reply_to_status_id=reminder.tweet_id,
         )
@@ -158,11 +148,15 @@ def generate_investment_results(reminder):
             f" and a total dividend of ${'{:.2f}'.format(dividend)} was paid out"
         )
     time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
+    if rate_of_return > 0:
+        emoji = const.POSITIVE_RETURNS_EMOJI
+    else:
+        emoji = const.NEGATIVE_RETURNS_EMOJI
     return (
         f"@{reminder.user_name} {time_since_created_on} ago you bought "
         f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
         f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
-        f"{dividend_message}. That's a return of {rate_of_return}%! "
+        f"{dividend_message}. That's a return of {rate_of_return}%! {emoji}"
     )
 
 
