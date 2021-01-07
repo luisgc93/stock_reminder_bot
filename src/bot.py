@@ -264,12 +264,18 @@ def get_price(stock):
         fe = ForeignExchange(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = fe.get_currency_exchange_rate(stock, "USD")
         full_price = data["5. Exchange Rate"]
-
+        return float(full_price[:-2])
     else:
-        ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
-        data, meta_data = ts.get_intraday(stock)
-        key = list(data.keys())[0]
-        full_price = data[key]["1. open"]
+        try:
+            ts = TimeSeries(key=environ["ALPHA_VANTAGE_API_KEY"])
+            data, meta_data = ts.get_intraday(stock)
+            key = list(data.keys())[0]
+            full_price = data[key]["1. open"]
+        except ValueError:
+            response = requests.get(
+                f'{const.FMP_API_GET_PRICE_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
+            )
+            return response.json()[0]['price']
     return float(full_price[:-2])
 
 

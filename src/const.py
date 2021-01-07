@@ -77,6 +77,8 @@ CRYPTO_REPORT_RESPONSE = (
 
 FMP_API_RATING_ENDPOINT = "https://financialmodelingprep.com/api/v3/company/rating/"
 
+FMP_API_GET_PRICE_ENDPOINT = "https://financialmodelingprep.com/api/v3/quote/"
+
 API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
 )

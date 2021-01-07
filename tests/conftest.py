@@ -44,8 +44,8 @@ def mock_giphy():
         yield mock
 
 
-@pytest.fixture(autouse=True)
-def mock_fmp_api_response():
+@pytest.fixture
+def mock_fmp_api_rating_response():
     with patch("requests.get") as mock:
         json_response = {
             "symbol": "AMZN",
@@ -64,6 +64,36 @@ def mock_fmp_api_response():
         responses.add(
             responses.GET,
             "https://financialmodelingprep.com/api/v3/company/rating/AMZN?apikey=123",
+            json={},
+            status=200,
+        )
+        yield mock
+
+
+@pytest.fixture
+def mock_fmp_api_get_price_response():
+    with patch("requests.get") as mock:
+        json_response = [
+            {
+                "symbol": "AAPL",
+                "name": "Apple Inc.",
+                "price": 126.66,
+                "dayLow": 126.382,
+                "dayHigh": 131.0499,
+                "yearHigh": 138.79,
+                "yearLow": 53.1525,
+                "volume": 155087970,
+                "exchange": "NASDAQ",
+                "open": 127.72,
+                "previousClose": 131.01,
+            }
+        ]
+
+        mock.return_value = Mock()
+        mock.return_value.json.return_value = json_response
+        responses.add(
+            responses.GET,
+            "https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=123",
             json={},
             status=200,
         )
