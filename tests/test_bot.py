@@ -372,6 +372,15 @@ class TestGetPrice:
         assert price == 3112.70
         mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
+    @pytest.mark.usefixtures("mock_alpha_vantage_max_retries_exceeded")
+    def test_uses_fmp_api_as_backup_when_alpha_vantage_api_limit_exceeded(
+        self, mock_fmp_api_get_price_response
+    ):
+        price = bot.get_price("AAPL")
+
+        assert price == 126.66
+        mock_fmp_api_get_price_response.assert_called_once()
+
     def test_returns_price_for_cryptocurrency(
         self, mock_alpha_vantage_get_currency_exchange_rate
     ):
