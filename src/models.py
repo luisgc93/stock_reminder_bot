@@ -9,6 +9,7 @@ from peewee import (
     FloatField,
     Model,
     BooleanField,
+    InternalError,
 )
 from playhouse.db_url import connect
 
@@ -40,6 +41,31 @@ class Reminder(BaseModel):
 
     def refresh_from_db(self):
         return Reminder.get_by_id(self.id)
+
+    @classmethod
+    def create_instance(
+        cls,
+        user_name,
+        tweet_id,
+        created_on,
+        remind_on,
+        stock_symbol,
+        stock_price,
+        short,
+    ):
+        with db.atomic() as transaction:
+            try:
+                Reminder.create(
+                    user_name=user_name,
+                    tweet_id=tweet_id,
+                    created_on=created_on,
+                    remind_on=remind_on,
+                    stock_symbol=stock_symbol,
+                    stock_price=stock_price,
+                    short=short,
+                )
+            except InternalError:
+                transaction.rollback()
 
     @classmethod
     def due_now(cls):

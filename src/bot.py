@@ -167,7 +167,7 @@ def generate_investment_results(reminder):
 
 def create_reminder(mention, stock):
     price = get_price(stock)
-    return Reminder.create(
+    return Reminder.create_instance(
         user_name=mention.user.screen_name,
         tweet_id=mention.id,
         created_on=date.today(),
