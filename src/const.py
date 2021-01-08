@@ -31,8 +31,6 @@ GIF_FILE_NAME = "random.gif"
 
 POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
 
-NEGATIVE_RETURN_TAGS = ["poor", "broke", "no money"]
-
 NEGATIVE_RETURN_GIFS = [
     "https://media.giphy.com/media/3orieUs03VUeeBa7Wo/giphy.gif",
     "https://media.giphy.com/media/l2JdWPIgVK83qxB4Y/giphy.gif",
