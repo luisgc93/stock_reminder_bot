@@ -97,10 +97,9 @@ API_LIMIT_EXCEEDED_ERROR = (
 
 HELP_MESSAGE = (
     "To create a reminder, mention me with one or more ticker "
-    "symbols and a date. E.g. 'Remind me of $BTC in 3 months'. "
-    "If you'd like me to analyse a company for you, mention me "
-    "with the words 'analyse'/'analyze' or 'report' plus the "
-    "company's ticker symbol. E.g. 'Analyse $AMZN'."
+    "symbols and a date. E.g. 'Remind me of $BTC in 3 months'."
+    "You can read about all my other features and implementation "
+    "at: http://cutt.ly/Rh8CoJt"
 )
 
 API_LIMIT_EXCEEDED_RESPONSE = (
