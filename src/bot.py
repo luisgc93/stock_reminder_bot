@@ -225,6 +225,7 @@ def generate_report(stock):
                 data.pop(key)
 
         if data["DividendPerShare"] == "None":
+            data.pop("PayoutRatio")
             for key in [key for key in data.keys() if "dividend" in key.lower()]:
                 data.pop(key)
                 data["DividendPerShare"] = "None"
