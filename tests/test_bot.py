@@ -93,9 +93,7 @@ class TestReplyToMentions:
         assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_mention_with_invalid_format")
-    def test_replies_with_help_message_when_mention_is_not_valid(
-            self, mock_tweepy
-    ):
+    def test_replies_with_help_message_when_mention_is_not_valid(self, mock_tweepy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 

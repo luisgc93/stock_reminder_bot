@@ -39,6 +39,8 @@ NEGATIVE_RETURN_GIFS = [
     "https://media.giphy.com/media/ToMjGppB1bJC04ESjyE/giphy.gif",
     "https://media.giphy.com/media/3orieVe5VYqTdT16qk/giphy.gif"
     "https://media.giphy.com/media/S3n6idriKtiFbZyqve/giphy.gif",
+    "https://media.giphy.com/media/qBykyt7AiTOgM/giphy.gif",
+    "https://media.giphy.com/media/xThtatVgZVprKd3UEU/giphy.gif",
 ]
 
 REPORT_KEYWORDS = ["report", "analyse", "analyze"]
