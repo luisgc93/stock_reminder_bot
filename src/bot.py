@@ -248,7 +248,11 @@ def generate_rating(stock):
     ]
     if environ["SAVE_RATINGS_IMG"] == "active":
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        dfi.export(data_formatted, "rating_table.png")
+        dfi.export(
+            data_formatted,
+            "rating_table.png",
+            chrome_path=environ["GOOGLE_CHROME_PATH"],
+        )
     return ", ".join(ratings_list) + ". Details: "
 
 
