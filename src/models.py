@@ -28,6 +28,7 @@ class Reminder(BaseModel):
     remind_on = DateTimeField()
     stock_symbol = CharField()
     stock_price = FloatField()
+    short = BooleanField(default=False)
     is_finished = BooleanField(default=False)
 
     class Meta:
@@ -36,6 +37,9 @@ class Reminder(BaseModel):
     def finish(self):
         self.is_finished = True
         self.save()
+
+    def refresh_from_db(self):
+        return Reminder.get_by_id(self.id)
 
     @classmethod
     def due_now(cls):
