@@ -2,7 +2,6 @@ import os
 import random
 import re
 
-import chromedriver_autoinstaller
 import giphy_client
 import pytz
 
@@ -249,7 +248,6 @@ def generate_rating(stock):
     ]
     if environ["SAVE_RATINGS_IMG"] == "active":
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        chromedriver_autoinstaller.install()
         dfi.export(
             data_formatted,
             "rating_table.png",
