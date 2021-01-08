@@ -95,7 +95,7 @@ API_LIMIT_EXCEEDED_ERROR = (
     "Our standard API call frequency is 5 calls per minute and 500 calls per day."
 )
 
-INVALID_MENTION_RESPONSE = (
+HELP_MESSAGE = (
     "To create a reminder, mention me with one or more ticker "
     "symbols and a date. E.g. 'Remind me of $BTC in 3 months'. "
     "If you'd like me to analyse a company for you, mention me "

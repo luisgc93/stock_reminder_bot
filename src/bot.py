@@ -78,7 +78,7 @@ def reply_with_reminder_created_message(mention, remind_on):
 def reply_with_help_message(mention):
     user = mention.user.screen_name
     init_tweepy().update_status(
-        status=f"@{user} {const.INVALID_MENTION_RESPONSE}",
+        status=f"@{user} {const.HELP_MESSAGE}",
         in_reply_to_status_id=mention.id,
     )
 
