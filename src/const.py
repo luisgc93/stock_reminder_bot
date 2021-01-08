@@ -55,8 +55,6 @@ REPORT_FIELDS = [
     "PEGRatio",
     "Beta",
     "BookValue",
-    "DividendPerShare",
-    "DividendYield",
     "EPS",
     "DilutedEPSTTM",
     "RevenuePerShareTTM",
@@ -64,13 +62,6 @@ REPORT_FIELDS = [
     "TrailingPE",
     "52WeekHigh",
     "52WeekLow",
-    "ForwardAnnualDividendRate",
-    "ForwardAnnualDividendYield",
-    "PayoutRatio",
-    "DividendDate",
-    "ExDividendDate",
-    "LastSplitFactor",
-    "LastSplitDate",
 ]
 
 REPORT_FONT_PATH = "fonts/Arimo-Regular.ttf"

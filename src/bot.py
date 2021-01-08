@@ -228,12 +228,6 @@ def generate_report(stock):
                 data[key] = "${:,.2f}".format(float(val))
             if key not in const.REPORT_FIELDS:
                 data.pop(key)
-
-        if data["DividendPerShare"] == "None":
-            data.pop("PayoutRatio")
-            for key in [key for key in data.keys() if "dividend" in key.lower()]:
-                data.pop(key)
-                data["DividendPerShare"] = "None"
     save_report_to_image(data)
 
 
