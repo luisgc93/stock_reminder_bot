@@ -243,7 +243,8 @@ def generate_rating(stock):
     )
     rating_data = rating_response.json()
     ratings_list = [
-        (key.capitalize() + ": " + str(value)) for key, value in rating_data["rating"].items()
+        (key.capitalize() + ": " + str(value))
+        for key, value in rating_data["rating"].items()
     ]
     if environ["SAVE_RATINGS_IMG"] == "active":
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
