@@ -16,3 +16,4 @@ humanize
 giphy_client
 Pillow
 responses
+requests
