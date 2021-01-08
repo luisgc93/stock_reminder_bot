@@ -17,3 +17,4 @@ giphy_client
 Pillow
 responses
 requests
+pandas

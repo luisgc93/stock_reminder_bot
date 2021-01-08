@@ -26,6 +26,9 @@ import parsedatetime
 
 from PIL import Image, ImageDraw, ImageFont
 
+import pandas as pd
+import dataframe_image as dfi
+
 
 def init_tweepy():
     auth = tweepy.OAuthHandler(environ["CONSUMER_KEY"], environ["CONSUMER_SECRET"])
@@ -86,7 +89,10 @@ def reply_with_help_message(mention):
 def reply_with_report(mention, stock):
     generate_report(stock)
     user = mention.user.screen_name
-    media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
+    if environ["SAVE_RATINGS_IMG"] == "active":
+        media = init_tweepy().media_upload("rating_table.png")
+    else:
+        media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
 
     response = (
         const.CRYPTO_REPORT_RESPONSE + stock + ":"
@@ -240,7 +246,9 @@ def generate_rating(stock):
     ratings_list = [
         (key.capitalize() + ": " + str(value)) for key, value in rating_data.items()
     ]
-
+    if environ["SAVE_RATINGS_IMG"] == "active":
+        data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
+        dfi.export(data_formatted, "rating_table.png")
     return ", ".join(ratings_list) + ". Details: "
 
 
