@@ -111,11 +111,11 @@ class TestReplyToMentions:
             bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
-            status=f"@user_name To create a reminder, mention me "
-            f"with one or more ticker symbols and a date. "
-            f"E.g. 'Remind me of $BTC in 3 months'. "
-            f"You can read about all my other features and "
-            f"implementation at: http://cutt.ly/Rh8CoJt",
+            status="@user_name To create a reminder, mention me "
+            "with one or more ticker symbols and a date. "
+            "E.g. 'Remind me of $BTC in 3 months'. "
+            "You can read about all my other features and "
+            "implementation at: http://cutt.ly/Rh8CoJt",
             in_reply_to_status_id=1,
         )
 

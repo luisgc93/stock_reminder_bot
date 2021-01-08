@@ -89,16 +89,15 @@ def reply_with_help_message(mention):
 def reply_with_report(mention, stock):
     generate_report(stock)
     user = mention.user.screen_name
-    if environ["SAVE_RATINGS_IMG"] == "active":
-        media = init_tweepy().media_upload("rating_table.png")
-    else:
-        media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
-
     response = (
         const.CRYPTO_REPORT_RESPONSE + stock + ":"
         if stock in const.CRYPTO_CURRENCIES
         else (const.REPORT_RESPONSE + stock + ". " + generate_rating(stock))
     )
+    if environ["SAVE_RATINGS_IMG"] == "active":
+        media = init_tweepy().media_upload("rating_table.png")
+    else:
+        media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
     init_tweepy().update_status(
         status=f"@{user} {response}",
         in_reply_to_status_id=mention.id,
