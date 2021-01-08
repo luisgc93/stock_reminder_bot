@@ -253,7 +253,6 @@ def generate_rating(stock):
         dfi.export(
             data_formatted,
             "rating_table.png",
-            chrome_path=environ["GOOGLE_CHROME_BIN"],
         )
     return ", ".join(ratings_list) + ". Details: "
 
