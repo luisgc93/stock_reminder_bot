@@ -43,26 +43,17 @@ class Reminder(BaseModel):
         return Reminder.get_by_id(self.id)
 
     @classmethod
-    def create_instance(
-        cls,
-        user_name,
-        tweet_id,
-        created_on,
-        remind_on,
-        stock_symbol,
-        stock_price,
-        short,
-    ):
+    def create_instance(cls, values):
         with db.atomic() as transaction:
             try:
                 Reminder.create(
-                    user_name=user_name,
-                    tweet_id=tweet_id,
-                    created_on=created_on,
-                    remind_on=remind_on,
-                    stock_symbol=stock_symbol,
-                    stock_price=stock_price,
-                    short=short,
+                    user_name=values["user_name"],
+                    tweet_id=values["tweet_id"],
+                    created_on=values["created_on"],
+                    remind_on=values["remind_on"],
+                    stock_symbol=values["stock_symbol"],
+                    stock_price=values["stock_price"],
+                    short=values["short"],
                 )
             except InternalError:
                 transaction.rollback()

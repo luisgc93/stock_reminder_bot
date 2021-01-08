@@ -167,15 +167,16 @@ def generate_investment_results(reminder):
 
 def create_reminder(mention, stock):
     price = get_price(stock)
-    return Reminder.create_instance(
-        user_name=mention.user.screen_name,
-        tweet_id=mention.id,
-        created_on=date.today(),
-        remind_on=calculate_reminder_date(mention.text),
-        stock_symbol=stock,
-        stock_price=price,
-        short="short" in mention.text.lower(),
-    )
+    values = {
+        "user_name": mention.user.screen_name,
+        "tweet_id": mention.id,
+        "created_on": date.today(),
+        "remind_on": calculate_reminder_date(mention.text),
+        "stock_symbol": stock,
+        "stock_price": price,
+        "short": "short" in mention.text.lower(),
+    }
+    return Reminder.create_instance(values)
 
 
 def get_last_replied_tweet_id(client):
