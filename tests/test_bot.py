@@ -29,6 +29,7 @@ class TestReplyToMentions:
         assert reminder.stock_symbol == "AMZN"
         assert reminder.stock_price == 3112.70
         assert reminder.is_finished is False
+        assert reminder.short is False
         mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
@@ -50,6 +51,18 @@ class TestReplyToMentions:
             "AAPL",
             "BABA",
         ]
+
+    @pytest.mark.usefixtures(
+        "mock_mention_for_stock_shorting", "mock_alpha_vantage_get_intraday_amazon"
+    )
+    def test_creates_reminder_for_stock_shorting(self):
+        assert Reminder.select().count() == 0
+
+        with freeze_time("2020-12-11T15:32:00Z"):
+            bot.reply_to_mentions()
+
+        reminder = Reminder.select().first()
+        assert reminder.short is True
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
@@ -142,7 +155,7 @@ class TestPublishReminders:
 
         mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
-        assert Reminder().get_by_id(reminder.id).is_finished is True
+        assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_amazon",
@@ -168,7 +181,7 @@ class TestPublishReminders:
         ]
 
         assert expected_calls in mock_tweepy.mock_calls
-        assert Reminder().get_by_id(reminder.id).is_finished is True
+        assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_tesla",
@@ -200,7 +213,7 @@ class TestPublishReminders:
 
         mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
-        assert Reminder().get_by_id(reminder.id).is_finished is True
+        assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday_jnj",
@@ -233,7 +246,31 @@ class TestPublishReminders:
 
         mock_giphy.assert_called_once_with(const.POSITIVE_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
-        assert Reminder().get_by_id(reminder.id).is_finished is True
+        assert reminder.refresh_from_db().is_finished is True
+
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_company_overview_amazon",
+        "mock_alpha_vantage_get_daily_adjusted_amazon",
+    )
+    def test_publishes_reminder_when_stock_was_shorted(self, reminder, mock_tweepy):
+        reminder.short = True
+        reminder.save()
+        with freeze_time(reminder.remind_on):
+            bot.publish_reminders()
+
+        expected_calls = [
+            call().media_upload("random.gif"),
+            call().update_status(
+                status="@user_name 3 months ago you shorted $AMZN at $2,954.91. "
+                "It is now worth $3,112.70. That's a return of -5.34%! 😭📉",
+                media_ids=[ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
+
+        assert expected_calls in mock_tweepy.mock_calls
+        assert reminder.refresh_from_db().is_finished is True
 
     def test_does_not_publish_reminder_when_reminder_date_is_not_today(
         self, reminder, mock_tweepy
@@ -242,7 +279,7 @@ class TestPublishReminders:
             bot.publish_reminders()
 
         mock_tweepy.assert_not_called()
-        assert Reminder().get_by_id(reminder.id).is_finished is False
+        assert reminder.refresh_from_db().is_finished is False
 
 
 class TestReport:

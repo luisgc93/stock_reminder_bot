@@ -130,6 +130,13 @@ def mock_mention_with_multiple_stocks(mock_tweepy, status):
 
 
 @pytest.fixture
+def mock_mention_for_stock_shorting(mock_tweepy, status):
+    status.text = "Short $BTC remind me in 1 months."
+    mock_tweepy.return_value.mentions_timeline.return_value = [status]
+    return mock_tweepy
+
+
+@pytest.fixture
 def mock_mention_asking_for_report(mock_tweepy, status):
     status.text = "Report for $AMZN"
     mock_tweepy.return_value.mentions_timeline.return_value = [status]

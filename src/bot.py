@@ -149,12 +149,16 @@ def generate_investment_results(reminder):
             f" and a total dividend of ${'{:.2f}'.format(dividend)} was paid out"
         )
     time_since_created_on = calculate_time_delta(date.today(), reminder.created_on)
+    user_action = "bought"
+    if reminder.short:
+        rate_of_return *= -1
+        user_action = "shorted"
     if rate_of_return > 0:
         emoji = const.POSITIVE_RETURNS_EMOJI
     else:
         emoji = const.NEGATIVE_RETURNS_EMOJI
     return (
-        f"@{reminder.user_name} {time_since_created_on} ago you bought "
+        f"@{reminder.user_name} {time_since_created_on} ago you {user_action} "
         f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"
         f"{stock_split_message} It is now worth ${'{:,.2f}'.format(current_price)}"
         f"{dividend_message}. That's a return of {rate_of_return}%! {emoji}"
@@ -170,6 +174,7 @@ def create_reminder(mention, stock):
         remind_on=calculate_reminder_date(mention.text),
         stock_symbol=stock,
         stock_price=price,
+        short="short" in mention.text.lower(),
     )
 
 
