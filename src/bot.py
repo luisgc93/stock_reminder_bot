@@ -104,6 +104,7 @@ def reply_with_report(mention, stock):
         media_ids=[media.media_id],
     )
     remove_file(const.REPORT_FILE_NAME)
+    remove_file("rating_table.png")
 
 
 def reply_with_error_message(e, mention):
