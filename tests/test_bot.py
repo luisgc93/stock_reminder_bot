@@ -10,6 +10,7 @@ from src.models import Reminder
 from freezegun import freeze_time
 
 
+@freeze_time("2020-12-11T15:32:00Z")
 class TestReplyToMentions:
     @pytest.mark.usefixtures("mock_mention")
     def test_creates_reminder_when_mention_contains_stock_and_date(
@@ -17,8 +18,7 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+        bot.reply_to_mentions()
 
         assert Reminder.select().count() == 1
 
@@ -40,8 +40,7 @@ class TestReplyToMentions:
     ):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+        bot.reply_to_mentions()
 
         reminders = Reminder.select()
         assert reminders.count() == 4
@@ -58,11 +57,23 @@ class TestReplyToMentions:
     def test_creates_reminder_for_stock_shorting(self):
         assert Reminder.select().count() == 0
 
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+        bot.reply_to_mentions()
 
         reminder = Reminder.select().first()
         assert reminder.short is True
+
+    @pytest.mark.usefixtures("mock_mention_replies_to_another_tweet")
+    def test_creates_reminder_when_mention_is_a_reply_to_another_tweet(
+        self, mock_alpha_vantage_get_intraday_amazon
+    ):
+
+        bot.reply_to_mentions()
+
+        assert Reminder.select().count() == 1
+
+        reminder = Reminder.select().first()
+        assert reminder.tweet_id == 2
+        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
@@ -87,8 +98,8 @@ class TestReplyToMentions:
         "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+
+        bot.reply_to_mentions()
 
         expected_calls = [
             call().media_upload("random.gif"),
@@ -124,8 +135,8 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_when_stock_is_not_found(self, mock_tweepy):
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+
+        bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
             status=f"@user_name {const.STOCK_NOT_FOUND_RESPONSE}",

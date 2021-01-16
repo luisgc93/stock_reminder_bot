@@ -15,6 +15,7 @@ from alpha_vantage.cryptocurrencies import CryptoCurrencies
 from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.foreignexchange import ForeignExchange
 from alpha_vantage.fundamentaldata import FundamentalData
+from tweepy import TweepError
 
 from . import const
 from .models import Reminder
@@ -39,6 +40,8 @@ def reply_to_mentions():
     new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
     for mention in new_mentions:
         tweet = mention.text
+        if mention.in_reply_to_status_id:
+            reply_to_threaded_mention(mention)
         if not is_valid(mention.text):
             reply_with_help_message(mention)
             return
@@ -54,6 +57,22 @@ def reply_to_mentions():
             reply_with_reminder_created_message(mention, remind_on)
         except (ValueError, IndexError) as e:
             reply_with_error_message(e, mention)
+
+
+def reply_to_threaded_mention(mention):
+    try:
+        original_tweet = init_tweepy().get_status(mention.in_reply_to_status_id)[0].text
+        if not contains_stock(original_tweet):
+            reply_with_help_message(mention)
+            return
+        stocks = parse_stock_symbols(original_tweet)
+        remind_on = calculate_reminder_date(mention.text)
+        for stock in stocks:
+            create_reminder(mention, stock.replace("$", ""))
+        reply_with_reminder_created_message(mention, remind_on)
+    except (TweepError, IndexError):
+        reply_with_help_message(mention)
+        return
 
 
 def reply_with_reminder_created_message(mention, remind_on):

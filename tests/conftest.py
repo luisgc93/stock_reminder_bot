@@ -114,12 +114,30 @@ def status(twitter_user):
     tweet.id = 1
     tweet.text = "Price of $AMZN in 3 months."
     tweet.user = twitter_user
+    tweet.in_reply_to_status_id = None
     return tweet
 
 
 @pytest.fixture
 def mock_mention(mock_tweepy, status):
     mock_tweepy.return_value.mentions_timeline.return_value = [status]
+    return mock_tweepy
+
+
+@pytest.fixture
+def mock_mention_replies_to_another_tweet(mock_tweepy, twitter_user):
+    original_tweet = Status()
+    original_tweet.id = 1
+    original_tweet.text = "$AMZN is a great buy in 2021"
+
+    reply_tweet = Status()
+    reply_tweet.id = 2
+    reply_tweet.text = "@stock_reminder remind me of this in 1 year"
+    reply_tweet.user = twitter_user
+    reply_tweet.in_reply_to_status_id = original_tweet.id
+
+    mock_tweepy.return_value.mentions_timeline.return_value = [reply_tweet]
+    mock_tweepy.return_value.get_status.return_value = [original_tweet]
     return mock_tweepy
 
 
