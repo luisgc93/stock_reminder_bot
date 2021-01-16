@@ -70,6 +70,7 @@ def reply_to_threaded_mention(mention):
         remind_on = calculate_reminder_date(mention.text)
         for stock in stocks:
             create_reminder(mention, stock.replace("$", ""))
+        mention.text += " ".join(stocks)
         reply_with_reminder_created_message(mention, remind_on)
     except TweepError:
         reply_with_help_message(mention)
