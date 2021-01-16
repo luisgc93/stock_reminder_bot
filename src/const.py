@@ -46,7 +46,6 @@ REPORT_KEYWORDS = ["report", "analyse", "analyze"]
 REPORT_FIELDS = [
     "Name",
     "Industry",
-    "MarketCapitalization",
     "EBITDA",
     "EVToEBITDA",
     "PERatio",
