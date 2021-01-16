@@ -246,6 +246,7 @@ def generate_rating(stock):
         dfi.export(
             data_formatted,
             "rating_table.png",
+            table_conversion=None,
         )
     return ", ".join(ratings_list) + ". Details: "
 
