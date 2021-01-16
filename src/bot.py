@@ -56,8 +56,8 @@ def reply_to_mentions():
             for stock in stocks:
                 create_reminder(mention, stock.replace("$", ""))
             reply_with_reminder_created_message(mention, remind_on)
-        except (ValueError, IndexError) as e:
-            reply_with_error_message(e, mention)
+        except (KeyError, IndexError):
+            reply_with_stock_not_found_message(mention)
 
 
 def reply_to_threaded_mention(mention):
@@ -123,13 +123,9 @@ def reply_with_report(mention, stock):
     remove_file(const.REPORT_FILE_NAME)
 
 
-def reply_with_error_message(e, mention):
-    exc_mapper = {
-        ValueError: const.API_LIMIT_EXCEEDED_RESPONSE,
-        IndexError: const.STOCK_NOT_FOUND_RESPONSE,
-    }
+def reply_with_stock_not_found_message(mention):
     init_tweepy().update_status(
-        status=f"@{mention.user.screen_name} {exc_mapper[e.__class__]}",
+        status=f"@{mention.user.screen_name} {const.STOCK_NOT_FOUND_RESPONSE}",
         in_reply_to_status_id=mention.id,
     )
 
