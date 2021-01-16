@@ -470,3 +470,12 @@ class TestGetPrice:
     def test_returns_false_when_market_is_closed(self, current_time):
         with freeze_time(current_time):
             assert bot.nasdaq_is_open() is False
+
+    def test_uses_get_quote_endpoint_when_market_is_closed(
+        self, mock_alpha_vantage_get_quote_amazon
+    ):
+        with freeze_time("2021-01-07T09:30:00Z"):
+            price = bot.get_price("AMZN")
+
+        assert price == 3138.38
+        mock_alpha_vantage_get_quote_amazon.assert_called_once_with("AMZN")
