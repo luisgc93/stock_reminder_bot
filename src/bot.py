@@ -40,18 +40,18 @@ def reply_to_mentions():
     new_mentions = api.mentions_timeline(since_id=get_last_replied_tweet_id(api))
     for mention in new_mentions:
         tweet = mention.text
-        if mention.in_reply_to_status_id:
-            reply_to_threaded_mention(mention)
-            return
-        if not is_valid(mention.text):
-            reply_with_help_message(mention)
-            return
-        stocks = parse_stock_symbols(tweet)
-        if demands_report(tweet):
-            stock = stocks[0].replace("$", "")
-            reply_with_report(mention, stock)
-            return
         try:
+            if mention.in_reply_to_status_id:
+                reply_to_threaded_mention(mention)
+                return
+            if not is_valid(tweet):
+                reply_with_help_message(mention)
+                return
+            stocks = parse_stock_symbols(tweet)
+            if demands_report(tweet):
+                stock = stocks[0].replace("$", "")
+                reply_with_report(mention, stock)
+                return
             remind_on = calculate_reminder_date(tweet)
             for stock in stocks:
                 create_reminder(mention, stock.replace("$", ""))
