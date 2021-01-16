@@ -14,7 +14,6 @@ parsedatetime
 freezegun
 humanize
 giphy_client
-Pillow
 responses
 requests
 pandas

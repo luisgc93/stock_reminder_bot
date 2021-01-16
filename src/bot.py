@@ -24,8 +24,6 @@ import humanize
 
 import parsedatetime
 
-from PIL import Image, ImageDraw, ImageFont
-
 import pandas as pd
 import dataframe_image as dfi
 
@@ -94,17 +92,14 @@ def reply_with_report(mention, stock):
         if stock in const.CRYPTO_CURRENCIES
         else (const.REPORT_RESPONSE + stock + ". " + generate_rating(stock))
     )
-    if environ["SAVE_RATINGS_IMG"] == "active":
-        media = init_tweepy().media_upload("rating_table.png")
-    else:
-        media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
+
+    media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
     init_tweepy().update_status(
         status=f"@{user} {response}",
         in_reply_to_status_id=mention.id,
         media_ids=[media.media_id],
     )
     remove_file(const.REPORT_FILE_NAME)
-    remove_file("rating_table.png")
 
 
 def reply_with_error_message(e, mention):
@@ -241,24 +236,12 @@ def generate_rating(stock):
         (key.capitalize() + ": " + str(value))
         for key, value in rating_data["rating"].items()
     ]
-    if environ["SAVE_RATINGS_IMG"] == "active":
-        data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        dfi.export(
-            data_formatted,
-            "rating_table.png",
-            table_conversion=None,
-            fontsize=12
-        )
     return ", ".join(ratings_list) + ". Details: "
 
 
 def save_report_to_image(data):
-    img = Image.new("RGB", (600, 38 * len(data)), color=const.REPORT_BACKGROUND_COLOR)
-    draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(const.REPORT_FONT_PATH, 15)
-    text = "\n\n ".join("{!s}: {!s}".format(key, val) for (key, val) in data.items())
-    draw.text((14, 14), text, font=font, fill=const.REPORT_FONT_COLOR)
-    img.save(const.REPORT_FILE_NAME)
+    df = pd.DataFrame(data, index=[""]).T
+    dfi.export(df, const.REPORT_FILE_NAME, table_conversion=None, fontsize=12)
 
 
 def remove_lower_case_chars(string):
