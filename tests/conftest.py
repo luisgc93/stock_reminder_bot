@@ -179,18 +179,21 @@ def mock_mention_with_invalid_format(mock_tweepy, status):
 @pytest.fixture
 def mock_alpha_vantage_get_quote_amazon():
     with patch("alpha_vantage.timeseries.TimeSeries.get_quote_endpoint") as mock:
-        mock.return_value = {
-            "01. symbol": "AMZN",
-            "02. open": "3146.4800",
-            "03. high": "3197.5090",
-            "04. low": "3131.1600",
-            "05. price": "3138.3800",
-            "06. volume": "4394815",
-            "07. latest trading day": "1999-01-06",
-            "08. previous close": "3218.5100",
-            "09. change": "-80.1300",
-            "10. change percent": "-2.4897%",
-        }
+        mock.return_value = (
+            {
+                "01. symbol": "AMZN",
+                "02. open": "3146.4800",
+                "03. high": "3197.5090",
+                "04. low": "3131.1600",
+                "05. price": "3138.3800",
+                "06. volume": "4394815",
+                "07. latest trading day": "1999-01-06",
+                "08. previous close": "3218.5100",
+                "09. change": "-80.1300",
+                "10. change percent": "-2.4897%",
+            },
+            None,
+        )
         yield mock
 
 

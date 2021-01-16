@@ -294,7 +294,7 @@ def get_price(stock):
                 full_price = data[key]["4. close"]
                 return float(full_price[:-2])
             else:
-                data = ts.get_quote_endpoint(stock)
+                data, _ = ts.get_quote_endpoint(stock)
                 full_price = data["05. price"]
                 return float(full_price[:-2])
         except ValueError:
