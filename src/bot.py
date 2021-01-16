@@ -231,6 +231,8 @@ def generate_rating(stock):
     rating_response = requests.get(
         f'{const.FMP_API_RATING_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
     )
+    if not rating_response:
+        return
     rating_data = rating_response.json()
     ratings_list = [
         (key.capitalize() + ": " + str(value))
