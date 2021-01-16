@@ -247,6 +247,7 @@ def generate_rating(stock):
             data_formatted,
             "rating_table.png",
             table_conversion=None,
+            fontsize=12
         )
     return ", ".join(ratings_list) + ". Details: "
 
