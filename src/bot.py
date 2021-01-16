@@ -244,7 +244,7 @@ def generate_rating(stock):
     ]
     if environ["SAVE_RATINGS_IMG"] == "active":
         data_formatted = pd.DataFrame(rating_data["ratingDetails"]).T
-        os.chmod(chromedriver_binary.utils.get_chromedriver_path(), 0o755)
+        os.chmod(chromedriver_binary.utils.get_chromedriver_path(), 664)
         dfi.export(
             data_formatted,
             "rating_table.png",
