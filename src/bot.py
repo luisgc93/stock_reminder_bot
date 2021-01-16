@@ -42,6 +42,7 @@ def reply_to_mentions():
         tweet = mention.text
         if mention.in_reply_to_status_id:
             reply_to_threaded_mention(mention)
+            return
         if not is_valid(mention.text):
             reply_with_help_message(mention)
             return
