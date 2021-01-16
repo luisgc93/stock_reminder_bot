@@ -66,19 +66,37 @@ class TestReplyToMentions:
     def test_creates_reminder_when_mention_is_a_reply_to_another_tweet(
         self, mock_alpha_vantage_get_intraday_amazon
     ):
-
         bot.reply_to_mentions()
 
-        assert Reminder.select().count() == 1
-
-        reminder = Reminder.select().first()
-        assert reminder.tweet_id == 2
         mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
+        assert Reminder.select().count() == 1
+        assert Reminder.select().first().tweet_id == 2
+
+    @pytest.mark.usefixtures(
+        "mock_mention_replies_to_another_tweet",
+        "mock_alpha_vantage_get_intraday_amazon",
+    )
+    def test_replies_to_mention_when_mention_is_a_reply_to_another_tweet(
+        self, mock_tweepy, mock_giphy
+    ):
+        bot.reply_to_mentions()
+
+        expected_calls = [
+            call().media_upload("random.gif"),
+            call().update_status(
+                status="@user_name Sure thing buddy! I'll remind you of the price of "
+                "$AMZN on Saturday December 11 2021. I hope you make tons of money! 🤑",
+                in_reply_to_status_id=2,
+                media_ids=[ANY],
+            ),
+        ]
+
+        mock_giphy.assert_called_once_with(const.FINGERS_CROSSED_GIF_TAG)
+        assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
-        with freeze_time("2020-12-11T15:32:00Z"):
-            bot.reply_to_mentions()
+        bot.reply_to_mentions()
 
         expected_calls = [
             call().media_upload("random.gif"),
@@ -98,7 +116,6 @@ class TestReplyToMentions:
         "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
     )
     def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
-
         bot.reply_to_mentions()
 
         expected_calls = [
@@ -118,8 +135,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention_with_invalid_format")
     def test_replies_with_help_message_when_mention_is_not_valid(self, mock_tweepy):
-        with freeze_time("2020-12-13T15:32:00Z"):
-            bot.reply_to_mentions()
+        bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
             status="@user_name To create a reminder, mention me "
@@ -135,7 +151,6 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_stock_not_found")
     def test_replies_when_stock_is_not_found(self, mock_tweepy):
-
         bot.reply_to_mentions()
 
         expected_status_call = call().update_status(
