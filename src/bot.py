@@ -2,6 +2,7 @@ import os
 import random
 import re
 
+import chromedriver_binary
 import giphy_client
 import pytz
 
@@ -246,6 +247,7 @@ def generate_rating(stock):
         dfi.export(
             data_formatted,
             "rating_table.png",
+            chrome_path=chromedriver_binary.utils.get_chromedriver_path()
         )
     return ", ".join(ratings_list) + ". Details: "
 
