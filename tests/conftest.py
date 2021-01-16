@@ -137,7 +137,7 @@ def mock_mention_replies_to_another_tweet(mock_tweepy, twitter_user):
     reply_tweet.in_reply_to_status_id = original_tweet.id
 
     mock_tweepy.return_value.mentions_timeline.return_value = [reply_tweet]
-    mock_tweepy.return_value.get_status.return_value = [original_tweet]
+    mock_tweepy.return_value.get_status.return_value = original_tweet
     return mock_tweepy
 
 

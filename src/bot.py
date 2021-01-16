@@ -61,7 +61,7 @@ def reply_to_mentions():
 
 def reply_to_threaded_mention(mention):
     try:
-        original_tweet = init_tweepy().get_status(mention.in_reply_to_status_id)[0].text
+        original_tweet = init_tweepy().get_status(mention.in_reply_to_status_id).text
         if not contains_stock(original_tweet):
             reply_with_help_message(mention)
             return
@@ -70,7 +70,7 @@ def reply_to_threaded_mention(mention):
         for stock in stocks:
             create_reminder(mention, stock.replace("$", ""))
         reply_with_reminder_created_message(mention, remind_on)
-    except (TweepError, IndexError):
+    except TweepError:
         reply_with_help_message(mention)
         return
 
