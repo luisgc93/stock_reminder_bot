@@ -451,7 +451,7 @@ class TestGetPrice:
         mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures("mock_alpha_vantage_max_retries_exceeded")
-    def test_uses_fmp_api_as_backup_when_alpha_vantage_api_limit_exceeded(
+    def test_uses_fmp_api_as_fallback_when_alpha_vantage_api_limit_exceeded(
         self, mock_fmp_api_get_price_response
     ):
         with freeze_time("2021-01-07T15:31:00Z"):
