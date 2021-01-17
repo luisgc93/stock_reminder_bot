@@ -61,11 +61,6 @@ REPORT_FIELDS = [
     "52WeekLow",
 ]
 
-REPORT_FONT_PATH = "fonts/Arimo-Regular.ttf"
-
-REPORT_FONT_COLOR = (0, 0, 0)
-
-REPORT_BACKGROUND_COLOR = (255, 255, 255)
 
 REPORT_FILE_NAME = "report.png"
 
