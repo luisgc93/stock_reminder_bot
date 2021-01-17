@@ -83,8 +83,6 @@ def reply_with_reminder_created_message(mention, remind_on):
     if len(stocks) > 1:
         stocks[-1] = "and " + stocks[-1]
         stocks[:-2] = [stock + "," for stock in stocks[:-2]]
-    download_random_gif(const.FINGERS_CROSSED_GIF_TAG)
-    media = api.media_upload(const.GIF_FILE_NAME)
     api.update_status(
         status=f"@{mention.user.screen_name} "
         f"Sure thing buddy! I'll remind you "
@@ -92,9 +90,7 @@ def reply_with_reminder_created_message(mention, remind_on):
         f"{remind_on.strftime('%A %B %d %Y')}. "
         f"I hope you make tons of money! 🤑",
         in_reply_to_status_id=mention.id,
-        media_ids=[media.media_id],
     )
-    remove_file(const.GIF_FILE_NAME)
 
 
 def reply_with_help_message(mention):

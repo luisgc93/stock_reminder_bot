@@ -25,8 +25,6 @@ POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
 NEGATIVE_RETURNS_EMOJI = "😭📉"
 
-FINGERS_CROSSED_GIF_TAG = ["fingers crossed"]
-
 GIF_FILE_NAME = "random.gif"
 
 POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]

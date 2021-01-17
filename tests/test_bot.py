@@ -82,16 +82,13 @@ class TestReplyToMentions:
         bot.reply_to_mentions()
 
         expected_calls = [
-            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name Sure thing buddy! I'll remind you of the price of "
                 "$AMZN on Saturday December 11 2021. I hope you make tons of money! 🤑",
                 in_reply_to_status_id=2,
-                media_ids=[ANY],
             ),
         ]
 
-        mock_giphy.assert_called_once_with(const.FINGERS_CROSSED_GIF_TAG)
         assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
@@ -99,16 +96,13 @@ class TestReplyToMentions:
         bot.reply_to_mentions()
 
         expected_calls = [
-            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name Sure thing buddy! I'll remind you of the price of "
                 "$AMZN on Thursday March 11 2021. I hope you make tons of money! 🤑",
                 in_reply_to_status_id=1,
-                media_ids=[ANY],
             ),
         ]
 
-        mock_giphy.assert_called_once_with(const.FINGERS_CROSSED_GIF_TAG)
         assert Reminder.select().count() == 1
         assert expected_calls in mock_tweepy.mock_calls
 
@@ -119,17 +113,14 @@ class TestReplyToMentions:
         bot.reply_to_mentions()
 
         expected_calls = [
-            call().media_upload("random.gif"),
             call().update_status(
                 status="@user_name Sure thing buddy! I'll remind you of the price of "
                 "$AMZN, $MSFT, $AAPL and $BABA on Thursday March 11 2021. I hope you "
                 "make tons of money! 🤑",
                 in_reply_to_status_id=1,
-                media_ids=[ANY],
             ),
         ]
 
-        mock_giphy.assert_called_once_with(const.FINGERS_CROSSED_GIF_TAG)
         assert Reminder.select().count() == 4
         assert expected_calls in mock_tweepy.mock_calls
 
