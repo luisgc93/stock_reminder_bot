@@ -51,6 +51,13 @@ def mock_download_negative_returns_gif():
 
 
 @pytest.fixture
+def mock_random():
+    with patch("random.choice") as mock:
+        mock.return_value = "Sure thing buddy!"
+        yield mock
+
+
+@pytest.fixture
 def mock_fmp_api_rating_response():
     with patch("requests.get") as mock:
         json_response = {

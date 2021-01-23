@@ -73,6 +73,7 @@ class TestReplyToMentions:
     @pytest.mark.usefixtures(
         "mock_mention_replies_to_another_tweet",
         "mock_alpha_vantage_get_intraday_amazon",
+        "mock_random",
     )
     def test_replies_to_mention_when_mention_is_a_reply_to_another_tweet(
         self, mock_tweepy, mock_giphy
@@ -89,7 +90,9 @@ class TestReplyToMentions:
 
         assert expected_calls in mock_tweepy.mock_calls
 
-    @pytest.mark.usefixtures("mock_mention", "mock_alpha_vantage_get_intraday_amazon")
+    @pytest.mark.usefixtures(
+        "mock_mention", "mock_alpha_vantage_get_intraday_amazon", "mock_random"
+    )
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
         bot.reply_to_mentions()
 
@@ -105,7 +108,9 @@ class TestReplyToMentions:
         assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures(
-        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
+        "mock_mention_with_multiple_stocks",
+        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_random",
     )
     def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
         bot.reply_to_mentions()

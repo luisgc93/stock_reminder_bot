@@ -74,6 +74,8 @@ CRYPTO_REPORT_RESPONSE = (
     "Knowledge is power! 🧠💪 Here is your crypto ratings report for $"
 )
 
+CONFIRMATION_MESSAGES = ["Sure thing buddy!", "You got it boss!", "Sounds good!"]
+
 FMP_API_RATING_ENDPOINT = "https://financialmodelingprep.com/api/v3/company/rating/"
 
 FMP_API_GET_PRICE_ENDPOINT = "https://financialmodelingprep.com/api/v3/quote/"

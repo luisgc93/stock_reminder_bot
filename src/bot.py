@@ -83,9 +83,10 @@ def reply_with_reminder_created_message(mention, remind_on):
     if len(stocks) > 1:
         stocks[-1] = "and " + stocks[-1]
         stocks[:-2] = [stock + "," for stock in stocks[:-2]]
+
     api.update_status(
         status=f"@{mention.user.screen_name} "
-        f"Sure thing buddy! I'll remind you "
+        f"{random.choice(const.CONFIRMATION_MESSAGES)} I'll remind you "
         f"of the price of {' '.join(stocks)} on "
         f"{remind_on.strftime('%A %B %d %Y')}. "
         f"I hope you make tons of money! 🤑",
