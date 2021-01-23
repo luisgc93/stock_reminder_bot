@@ -25,9 +25,13 @@ POSITIVE_RETURNS_EMOJI = "🚀🤑📈"
 
 NEGATIVE_RETURNS_EMOJI = "😭📉"
 
+ZERO_RETURNS_EMOJI = "🤷‍♂️"
+
 GIF_FILE_NAME = "random.gif"
 
 POSITIVE_RETURN_TAGS = ["money", "rich", "cash", "dollars"]
+
+ZERO_RETURN_TAGS = ["shrug"]
 
 NEGATIVE_RETURN_GIFS = [
     "https://media.giphy.com/media/3orieUs03VUeeBa7Wo/giphy.gif",

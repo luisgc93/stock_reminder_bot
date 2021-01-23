@@ -132,6 +132,8 @@ def publish_reminders():
         status = generate_investment_results(reminder)
         if const.POSITIVE_RETURNS_EMOJI in status:
             download_random_gif(const.POSITIVE_RETURN_TAGS)
+        if const.ZERO_RETURNS_EMOJI in status:
+            download_random_gif(const.ZERO_RETURN_TAGS)
         else:
             gif_url = random.choice(const.NEGATIVE_RETURN_GIFS)
             download_pre_selected_gif(gif_url)
@@ -167,10 +169,14 @@ def generate_investment_results(reminder):
     if reminder.short:
         rate_of_return *= -1
         user_action = "shorted"
+
     if rate_of_return > 0:
         emoji = const.POSITIVE_RETURNS_EMOJI
-    else:
+    if rate_of_return == 0:
+        emoji = const.ZERO_RETURNS_EMOJI
+    if rate_of_return < 0:
         emoji = const.NEGATIVE_RETURNS_EMOJI
+
     return (
         f"@{reminder.user_name} {time_since_created_on} ago you {user_action} "
         f"${reminder.stock_symbol} at ${'{:,.2f}'.format(reminder.stock_price)}"

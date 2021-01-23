@@ -38,9 +38,15 @@ def mock_tweepy():
         yield mock
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def mock_giphy():
     with patch("src.bot.download_random_gif") as mock:
+        yield mock
+
+
+@pytest.fixture
+def mock_download_negative_returns_gif():
+    with patch("src.bot.download_pre_selected_gif") as mock:
         yield mock
 
 

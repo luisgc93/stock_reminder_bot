@@ -184,7 +184,7 @@ class TestPublishReminders:
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
     def test_publishes_reminder_when_remind_on_is_today_and_stock_went_down(
-        self, reminder, mock_tweepy, mock_giphy
+        self, reminder, mock_tweepy, mock_download_negative_returns_gif
     ):
         reminder.stock_price = 3386.12
         reminder.save()
@@ -201,6 +201,33 @@ class TestPublishReminders:
             ),
         ]
 
+        mock_download_negative_returns_gif.assert_called_once()
+        assert expected_calls in mock_tweepy.mock_calls
+        assert reminder.refresh_from_db().is_finished is True
+
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_company_overview_amazon",
+        "mock_alpha_vantage_get_daily_adjusted_amazon",
+    )
+    def test_publishes_reminder_when_remind_on_is_today_and_stock_did_not_change(
+        self, reminder, mock_tweepy, mock_giphy
+    ):
+        reminder.stock_price = 3112.70
+        reminder.save()
+        with freeze_time(reminder.remind_on):
+            bot.publish_reminders()
+
+        expected_calls = [
+            call().media_upload("random.gif"),
+            call().update_status(
+                status="@user_name 3 months ago you bought $AMZN at $3,112.70. "
+                "It is now worth $3,112.70. That's a return of 0.0%! 🤷‍♂️",
+                media_ids=[ANY],
+                in_reply_to_status_id=1,
+            ),
+        ]
+        mock_giphy.assert_called_once_with(const.ZERO_RETURN_TAGS)
         assert expected_calls in mock_tweepy.mock_calls
         assert reminder.refresh_from_db().is_finished is True
 
