@@ -170,8 +170,7 @@ def generate_investment_results(reminder):
         rate_of_return *= -1
         user_action = "shorted"
 
-    if rate_of_return > 0:
-        emoji = const.POSITIVE_RETURNS_EMOJI
+    emoji = const.POSITIVE_RETURNS_EMOJI
     if rate_of_return == 0:
         emoji = const.ZERO_RETURNS_EMOJI
     if rate_of_return < 0:
