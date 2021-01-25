@@ -41,16 +41,16 @@ def reply_to_mentions():
     for mention in new_mentions:
         tweet = mention.text
         try:
-            if mention.in_reply_to_status_id:
-                reply_to_threaded_mention(mention)
-                return
-            if not is_valid(tweet):
+            if not is_valid(tweet) and not mention.in_reply_to_status_id:
                 reply_with_help_message(mention)
                 return
             stocks = parse_stock_symbols(tweet)
             if demands_report(tweet):
                 stock = stocks[0].replace("$", "")
                 reply_with_report(mention, stock)
+                return
+            if mention.in_reply_to_status_id:
+                reply_to_threaded_mention(mention)
                 return
             remind_on = calculate_reminder_date(tweet)
             for stock in stocks:
