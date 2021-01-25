@@ -26,7 +26,8 @@ class TestReport:
         "mock_fmp_api_rating_response",
     )
     def test_replies_with_company_report_when_mention_contains_report_and_stock(
-        self, mock_tweepy,
+        self,
+        mock_tweepy,
     ):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
@@ -44,9 +45,7 @@ class TestReport:
         "mock_mention_asking_for_report",
         "mock_fmp_api_empty_rating_response",
     )
-    def test_replies_with_company_report_when_rating_not_available(
-            self, mock_tweepy
-    ):
+    def test_replies_with_company_report_when_rating_not_available(self, mock_tweepy):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
 
