@@ -108,7 +108,7 @@ def reply_with_report(mention, stock):
     response = (
         const.CRYPTO_REPORT_RESPONSE + stock + ":"
         if stock in const.CRYPTO_CURRENCIES
-        else (const.REPORT_RESPONSE + stock + ". " + generate_rating(stock))
+        else (const.REPORT_RESPONSE + stock + generate_rating(stock))
     )
 
     media = init_tweepy().media_upload(const.REPORT_FILE_NAME)
@@ -250,14 +250,17 @@ def generate_rating(stock):
     rating_response = requests.get(
         f'{const.FMP_API_RATING_ENDPOINT}{stock}?apikey={environ["FMP_API_KEY"]}'
     )
-    if not rating_response:
-        return
     rating_data = rating_response.json()
+
+    if not rating_data:
+        return ": "
+
     ratings_list = [
         (key.capitalize() + ": " + str(value))
         for key, value in rating_data["rating"].items()
     ]
-    return ", ".join(ratings_list) + ". Details: "
+
+    return ". " + ", ".join(ratings_list) + ". Details: "
 
 
 def save_report_to_image(data):
