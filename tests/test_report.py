@@ -26,8 +26,7 @@ class TestReport:
         "mock_fmp_api_rating_response",
     )
     def test_replies_with_company_report_when_mention_contains_report_and_stock(
-        self,
-        mock_tweepy,
+        self, mock_tweepy,
     ):
         with freeze_time("2020-12-13T15:32:00Z"):
             bot.reply_to_mentions()
@@ -35,6 +34,25 @@ class TestReport:
         expected_status_call = call().update_status(
             status="@user_name Knowledge is power! 🧠💪 Here is your company "
             "report for $AMZN. Score: 4, Rating: A+, Recommendation: Buy. Details: ",
+            in_reply_to_status_id=1,
+            media_ids=[ANY],
+        )
+        assert expected_status_call in mock_tweepy.mock_calls
+
+    @pytest.mark.usefixtures(
+        "mock_alpha_vantage_get_company_overview_amazon",
+        "mock_mention_asking_for_report",
+        "mock_fmp_api_empty_rating_response",
+    )
+    def test_replies_with_company_report_when_rating_not_available(
+            self, mock_tweepy
+    ):
+        with freeze_time("2020-12-13T15:32:00Z"):
+            bot.reply_to_mentions()
+
+        expected_status_call = call().update_status(
+            status="@user_name Knowledge is power! 🧠💪 Here is your company "
+            "report for $AMZN: ",
             in_reply_to_status_id=1,
             media_ids=[ANY],
         )

@@ -78,6 +78,15 @@ def mock_fmp_api_rating_response():
 
 
 @pytest.fixture
+def mock_fmp_api_empty_rating_response():
+    with patch("requests.get") as mock:
+        json_response = {}
+        mock.return_value = Mock()
+        mock.return_value.json.return_value = json_response
+        yield mock
+
+
+@pytest.fixture
 def mock_fmp_api_get_price_response():
     with patch("requests.get") as mock:
         json_response = [
