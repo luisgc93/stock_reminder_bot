@@ -135,7 +135,7 @@ def publish_reminders():
             download_random_gif(const.POSITIVE_RETURN_TAGS)
         if const.ZERO_RETURNS_EMOJI in status:
             download_random_gif(const.ZERO_RETURN_TAGS)
-        else:
+        if const.NEGATIVE_RETURNS_EMOJI in status:
             gif_url = random.choice(const.NEGATIVE_RETURN_GIFS)
             download_pre_selected_gif(gif_url)
         media = api.media_upload(const.GIF_FILE_NAME)
