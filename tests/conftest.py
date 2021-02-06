@@ -29,7 +29,6 @@ def mock_env_variables(monkeypatch):
     monkeypatch.setenv("BOT_USER_ID", "123")
     monkeypatch.setenv("GIPHY_API_KEY", "123")
     monkeypatch.setenv("FMP_API_KEY", "123")
-    monkeypatch.setenv("SAVE_RATINGS_IMG", "123")
 
 
 @pytest.fixture(autouse=True)
