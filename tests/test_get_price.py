@@ -25,7 +25,7 @@ class TestGetPrice:
     def test_returns_price_for_cryptocurrency(
         self, mock_alpha_vantage_get_currency_exchange_rate
     ):
-        price = bot.get_price("BTC")
+        price = bot.get_price("bitcoin")
 
         assert price == 23933.49
         mock_alpha_vantage_get_currency_exchange_rate.assert_called_once_with(
