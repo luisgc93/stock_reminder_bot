@@ -283,8 +283,6 @@ def calculate_time_delta(today, created_on):
 
 
 def get_price(stock):
-    if stock.lower() == "bitcoin":
-        stock = "BTC"
     if stock in const.CRYPTO_CURRENCIES:
         fe = ForeignExchange(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = fe.get_currency_exchange_rate(stock, "USD")
