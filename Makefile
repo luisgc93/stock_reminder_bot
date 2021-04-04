@@ -2,7 +2,7 @@ PROJECT_ROOT_FOLDER := $(shell pwd)
 DOCKER_COMPOSE_FILE := $(PROJECT_ROOT_FOLDER)/docker-compose.yaml
 
 install-requirements: ## Install project requirements
-	pip install -r requirements.txt
+	docker-compose -f $(DOCKER_COMPOSE_FILE) exec web pip install -r requirements.txt
 
 env-start: ## Start project containers defined in docker-compose
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
@@ -16,7 +16,7 @@ env-destroy: ## Destroy all project containers
 migrate: ## Create mentions table
 	docker-compose -f $(DOCKER_COMPOSE_FILE) exec -T worker python -m src.models
 
-env-recreate: env-destroy env-start migrate ## Destroy project containers, start them again and run migrations
+env-recreate: env-destroy env-start install-requirements migrate ## Destroy project containers, start them again and run migrations
 
 linting: ## Check/Enforce Python Code-Style
 	flake8 src/*.py tests/*.py --max-line-length 88
