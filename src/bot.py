@@ -222,7 +222,7 @@ def contains_date(tweet):
 
 
 def parse_stock_symbols(tweet):
-    return re.findall(r"[$][A-Za-z]*", tweet)
+    return re.findall(r"[$][A-Za-z]+", tweet)
 
 
 def demands_report(tweet):

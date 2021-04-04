@@ -43,6 +43,7 @@ class TestParseTweet:
                 ["$AMZN", "$AAPL", "$BABA"],
             ),
             ("$DDOG and $SNOW in 6 months", ["$DDOG", "$SNOW"]),
+            ("$TSLA is a great buy at $660", ["$TSLA"]),
         ],
     )
     def test_returns_stock_tickers_when_tweet_contains_stocks(
