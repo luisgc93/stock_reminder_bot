@@ -9,7 +9,7 @@ from freezegun import freeze_time
 
 class TestPublishReminders:
     @pytest.mark.usefixtures(
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
@@ -34,7 +34,7 @@ class TestPublishReminders:
         assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
@@ -61,7 +61,7 @@ class TestPublishReminders:
         assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
@@ -152,7 +152,7 @@ class TestPublishReminders:
         assert reminder.refresh_from_db().is_finished is True
 
     @pytest.mark.usefixtures(
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )

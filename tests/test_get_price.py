@@ -5,12 +5,12 @@ from freezegun import freeze_time
 
 
 class TestGetPrice:
-    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday_amazon):
+    def test_returns_price_for_stock(self, mock_alpha_vantage_get_intraday):
         with freeze_time("2021-01-07T15:31:00Z"):
             price = bot.get_price("AMZN")
 
         assert price == 3112.70
-        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
+        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures("mock_alpha_vantage_max_retries_exceeded")
     def test_uses_fmp_api_as_fallback_when_alpha_vantage_api_limit_exceeded(
