@@ -50,7 +50,7 @@ class TestReplyToMentions:
         ]
 
     @pytest.mark.usefixtures(
-        "mock_mention_for_stock_shorting", "mock_alpha_vantage_get_intraday"
+        "mock_mention_for_stock_shorting", "mock_alpha_vantage_get_currency_exchange_rate"
     )
     def test_creates_reminder_for_stock_shorting(self):
         assert Reminder.select().count() == 0
