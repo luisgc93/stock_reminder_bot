@@ -62,7 +62,11 @@ def reply_to_mentions():
 
 def reply_to_threaded_mention(mention):
     try:
-        original_tweet = init_tweepy().get_status(mention.in_reply_to_status_id).text
+        original_tweet = (
+            init_tweepy()
+            .get_status(mention.in_reply_to_status_id, tweet_mode="extended")
+            .full_text
+        )
         if not contains_stock(original_tweet) or not contains_date(mention.text):
             reply_with_help_message(mention)
             return
