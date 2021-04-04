@@ -153,6 +153,7 @@ class TestPublishReminders:
 
     @pytest.mark.usefixtures(
         "mock_alpha_vantage_get_intraday",
+        "mock_download_negative_returns_gif",
         "mock_alpha_vantage_get_company_overview_amazon",
         "mock_alpha_vantage_get_daily_adjusted_amazon",
     )
