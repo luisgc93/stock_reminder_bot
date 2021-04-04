@@ -12,7 +12,7 @@ from freezegun import freeze_time
 class TestReplyToMentions:
     @pytest.mark.usefixtures("mock_mention")
     def test_creates_reminder_when_mention_contains_stock_and_date(
-        self, mock_alpha_vantage_get_intraday_amazon
+        self, mock_alpha_vantage_get_intraday
     ):
         assert Reminder.select().count() == 0
 
@@ -28,10 +28,10 @@ class TestReplyToMentions:
         assert reminder.stock_price == 3112.70
         assert reminder.is_finished is False
         assert reminder.short is False
-        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
+        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
 
     @pytest.mark.usefixtures(
-        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday_amazon"
+        "mock_mention_with_multiple_stocks", "mock_alpha_vantage_get_intraday"
     )
     def test_creates_reminders_when_mention_contains_multiple_stocks_and_date(
         self,
@@ -50,7 +50,7 @@ class TestReplyToMentions:
         ]
 
     @pytest.mark.usefixtures(
-        "mock_mention_for_stock_shorting", "mock_alpha_vantage_get_intraday_amazon"
+        "mock_mention_for_stock_shorting", "mock_alpha_vantage_get_intraday"
     )
     def test_creates_reminder_for_stock_shorting(self):
         assert Reminder.select().count() == 0
@@ -62,17 +62,30 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures("mock_mention_replies_to_another_tweet")
     def test_creates_reminder_when_mention_is_a_reply_to_another_tweet(
-        self, mock_alpha_vantage_get_intraday_amazon
+        self, mock_alpha_vantage_get_intraday
     ):
         bot.reply_to_mentions()
 
-        mock_alpha_vantage_get_intraday_amazon.assert_called_once_with("AMZN")
+        mock_alpha_vantage_get_intraday.assert_called_once_with("AMZN")
         assert Reminder.select().count() == 1
+        assert Reminder.select().first().tweet_id == 2
+
+    @pytest.mark.usefixtures("mock_mention_replies_to_extended_tweet")
+    def test_creates_reminder_when_mention_is_a_reply_to_an_extended_tweet(
+        self,
+        mock_alpha_vantage_get_intraday,
+    ):
+        bot.reply_to_mentions()
+
+        mock_alpha_vantage_get_intraday.assert_has_calls(
+            [call("AMZN"), call("TSLA"), call("JNJ")]
+        )
+        assert Reminder.select().count() == 3
         assert Reminder.select().first().tweet_id == 2
 
     @pytest.mark.usefixtures(
         "mock_mention_replies_to_another_tweet",
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_random",
     )
     def test_replies_to_mention_when_mention_is_a_reply_to_another_tweet(
@@ -91,7 +104,7 @@ class TestReplyToMentions:
         assert expected_calls in mock_tweepy.mock_calls
 
     @pytest.mark.usefixtures(
-        "mock_mention", "mock_alpha_vantage_get_intraday_amazon", "mock_random"
+        "mock_mention", "mock_alpha_vantage_get_intraday", "mock_random"
     )
     def test_replies_to_mention_when_reminder_created(self, mock_tweepy, mock_giphy):
         bot.reply_to_mentions()
@@ -109,7 +122,7 @@ class TestReplyToMentions:
 
     @pytest.mark.usefixtures(
         "mock_mention_with_multiple_stocks",
-        "mock_alpha_vantage_get_intraday_amazon",
+        "mock_alpha_vantage_get_intraday",
         "mock_random",
     )
     def test_replies_when_multiple_reminders_created(self, mock_tweepy, mock_giphy):
