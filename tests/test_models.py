@@ -10,11 +10,9 @@ class TestReminder:
     @pytest.mark.parametrize(
         "time",
         [
-            datetime(2021, 1, 16, 11, 57),
-            datetime(2021, 1, 16, 11, 58),
-            datetime(2021, 1, 16, 11, 59),
-            datetime(2021, 1, 16, 12, 0),
-            datetime(2021, 1, 16, 12, 30),
+            datetime(2021, 1, 15, 16, 52),
+            datetime(2021, 1, 15, 16, 55),
+            datetime(2021, 1, 15, 16, 49),
         ],
     )
     @pytest.mark.usefixtures("reminder")

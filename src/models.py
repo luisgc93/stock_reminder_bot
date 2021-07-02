@@ -60,11 +60,11 @@ class Reminder(BaseModel):
 
     @classmethod
     def due_now(cls):
-        upper = datetime.now() + timedelta(minutes=3)
-        lower = datetime.now() - timedelta(minutes=3)
-
         return cls.select().where(
-            lower <= cls.remind_on <= upper,
+            cls.remind_on.between(
+                datetime.now() - timedelta(minutes=3),
+                datetime.now() + timedelta(minutes=3)
+            ),
             cls.is_finished == False,  # noqa
         )
 
