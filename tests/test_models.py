@@ -34,7 +34,16 @@ class TestReminder:
         with freeze_time(time):
             assert Reminder.due_now().count() == 0
 
-    def test_does_not_return_finished_reminders(self, reminder):
+    @pytest.mark.parametrize(
+        "time",
+        [
+            datetime(2021, 1, 15, 16, 52),
+            datetime(2021, 1, 15, 16, 55),
+            datetime(2021, 1, 15, 16, 49),
+        ],
+    )
+    def test_does_not_return_finished_reminders(self, reminder, time):
         reminder.finish()
 
-        assert Reminder.due_now().count() == 0
+        with freeze_time(time):
+            assert Reminder.due_now().count() == 0
