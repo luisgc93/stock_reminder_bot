@@ -1,5 +1,5 @@
 # stock_reminder bot 🤖 
-[![Build Status](https://travis-ci.org/luisgc93/stock_reminder_bot.svg?branch=master)](https://travis-ci.org/luisgc93/stock_reminder_bot) [![codecov](https://codecov.io/gh/luisgc93/stock_reminder_bot/branch/master/graph/badge.svg?token=2sx6C5pkSW)](https://codecov.io/gh/luisgc93/stock_reminder_bot)
+[![Build Status](https://www.travis-ci.com/luisgc93/stock_reminder_bot.svg?branch=master)](https://travis-ci.org/luisgc93/stock_reminder_bot) [![codecov](https://codecov.io/gh/luisgc93/stock_reminder_bot/branch/master/graph/badge.svg?token=2sx6C5pkSW)](https://codecov.io/gh/luisgc93/stock_reminder_bot)
 
 A [twitter bot](https://twitter.com/stock_reminder) that registers reminders for stock and cryptocurrency prices.
 Mention the bot with a [cashtag](https://money.cnn.com/2012/07/31/technology/twitter-cashtag/index.htm) followed by a stock or cryptocurrency ticker symbol and the reminder date:
