@@ -62,6 +62,9 @@ class Reminder(BaseModel):
     def due_now(cls):
         return cls.select().where(
             cls.remind_on.between(
+                # TODO: I think this should rather fetch all reminders for today's date.
+                #  If the job fails, upon retry, the reminder might not be fetched if
+                #  it's outside of the 6 min window
                 datetime.now() - timedelta(minutes=3),
                 datetime.now() + timedelta(minutes=3)
             ),
