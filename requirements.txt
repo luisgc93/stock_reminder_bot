@@ -14,7 +14,7 @@ parsedatetime==2.6
 freezegun==1.1.0
 humanize==3.9.0
 giphy_client==1.0.0
-responses==0.13.3
+responses==0.14.0
 requests==2.25.1
 pandas==1.2.5
 dataframe_image==0.1.1
