@@ -5,6 +5,9 @@ CASHTAG = "$"
 CRYPTO_CURRENCIES = (
     "BTC",
     "ETH",
+    "ADA",
+    "SOL",
+    "DOT",
     "XRP",
     "LTC",
     "NEO",
