@@ -23,10 +23,7 @@ linting: ## Check/Enforce Python Code-Style
 	black src/*.py tests/*.py
 
 test: ## Run tests and generate coverage report
-	pytest --cov=src.bot tests/
-
-reply-mentions: ## Reply to twitter mentions
-	docker-compose -f $(DOCKER_COMPOSE_FILE) exec -T worker python -m src.bot --reply-mentions
+	docker-compose run python_test
 
 help: ## Display help text
 	@grep '^[a-zA-Z]' $(MAKEFILE_LIST) | sort | awk -F ':.*?## ' 'NF==2 {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'

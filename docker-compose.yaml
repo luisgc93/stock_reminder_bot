@@ -10,6 +10,12 @@ services:
       - './src:/worker/src'
     ports:
       - "8000:8000"
+  python_test:
+    build: .
+    env_file:
+      - envfiles/local.env
+    command:
+      pytest
   db:
     image: postgres:13
     env_file:
