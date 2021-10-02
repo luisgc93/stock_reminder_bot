@@ -9,7 +9,7 @@ services:
     volumes:
       - './src:/worker/src'
     ports:
-      - 8000:8000
+      - "8000:8000"
   db:
     image: postgres:13
     env_file:
