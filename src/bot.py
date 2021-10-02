@@ -73,7 +73,7 @@ def reply_to_threaded_mention(mention):
         )
         if not contains_stock(original_tweet) or not contains_date(mention.text):
             reply_with_help_message(mention)
-            logger.info(f'Invalid threaded mention: {original_tweet}')
+            logger.info(f"Invalid threaded mention: {original_tweet}")
             return
         stocks = parse_stock_symbols(original_tweet)
         remind_on = calculate_reminder_date(mention.text)
@@ -130,7 +130,7 @@ def reply_with_report(mention, stock):
 
 
 def reply_with_stock_not_found_message(mention):
-    logger.info(f'Stock not found in mention: {mention.text}')
+    logger.info(f"Stock not found in mention: {mention.text}")
     init_tweepy().update_status(
         status=f"@{mention.user.screen_name} {const.STOCK_NOT_FOUND_RESPONSE}",
         in_reply_to_status_id=mention.id,
@@ -242,7 +242,7 @@ def demands_report(tweet):
 
 
 def generate_report(stock):
-    logger.info(f'Generating report for {stock}')
+    logger.info(f"Generating report for {stock}")
     if stock.replace("$", "") in const.CRYPTO_CURRENCIES:
         crypto = CryptoCurrencies(key=environ["ALPHA_VANTAGE_API_KEY"])
         data, _ = crypto.get_digital_crypto_rating(stock)

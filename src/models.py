@@ -66,7 +66,7 @@ class Reminder(BaseModel):
                 #  If the job fails, upon retry, the reminder might not be fetched if
                 #  it's outside of the 6 min window
                 datetime.now() - timedelta(minutes=3),
-                datetime.now() + timedelta(minutes=3)
+                datetime.now() + timedelta(minutes=3),
             ),
             cls.is_finished == False,  # noqa
         )
