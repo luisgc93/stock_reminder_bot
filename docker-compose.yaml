@@ -12,6 +12,8 @@ services:
       - "8000:8000"
   python_test:
     build: .
+    profiles:
+      ["python_test"]
     env_file:
       - envfiles/local.env
     command:
