@@ -19,8 +19,7 @@ migrate: ## Create mentions table
 env-recreate: env-destroy env-start install-requirements migrate ## Destroy project containers, start them again and run migrations
 
 linting: ## Check/Enforce Python Code-Style
-	flake8 src/*.py tests/*.py --max-line-length 88
-	black src/*.py tests/*.py
+	docker-compose run linting
 
 test: ## Run tests and generate coverage report
 	docker-compose run python_test

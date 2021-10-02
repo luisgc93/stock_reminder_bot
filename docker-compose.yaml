@@ -16,6 +16,13 @@ services:
       - envfiles/local.env
     command:
       pytest
+  linting:
+    build: .
+    env_file:
+      - envfiles/local.env
+    command:
+      bash -c "flake8 src/*.py tests/*.py --max-line-length 88
+      && black src/*.py tests/*.py"
   db:
     image: postgres:13
     env_file:
