@@ -1,20 +1,17 @@
-PROJECT_ROOT_FOLDER := $(shell pwd)
-DOCKER_COMPOSE_FILE := $(PROJECT_ROOT_FOLDER)/docker-compose.yaml
-
 install-requirements: ## Install project requirements
-	docker-compose -f $(DOCKER_COMPOSE_FILE) exec web pip install -r requirements.txt
+	docker-compose exec web pip install -r requirements.txt
 
 env-start: ## Start project containers defined in docker-compose
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
+	docker-compose up -d
 
 env-stop: ## Stop project containers defined in docker-compose
-	docker-compose -f $(DOCKER_COMPOSE_FILE) stop
+	docker-compose stop
 
 env-destroy: ## Destroy all project containers
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down -v --rmi local --remove-orphans
+	docker-compose down -v --rmi local --remove-orphans
 
 migrate: ## Create mentions table
-	docker-compose -f $(DOCKER_COMPOSE_FILE) exec -T worker python -m src.models
+	docker-compose exec -T worker python -m src.models
 
 env-recreate: env-destroy env-start install-requirements migrate ## Destroy project containers, start them again and run migrations
 
