@@ -279,10 +279,6 @@ def save_report_to_image(data):
     dfi.export(df, const.REPORT_FILE_NAME, table_conversion=None, fontsize=12)
 
 
-def remove_lower_case_chars(string):
-    return "".join(char for char in string if char.isupper())
-
-
 def calculate_reminder_date(tweet):
     cal = parsedatetime.Calendar(version=parsedatetime.VERSION_CONTEXT_STYLE)
     result, _ = cal.parseDT(tweet, tzinfo=pytz.utc, sourceTime=datetime.now())
