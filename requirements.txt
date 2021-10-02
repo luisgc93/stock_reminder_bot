@@ -9,7 +9,7 @@ pytest==6.2.4
 pytest-cov==2.12.1
 codecov==2.1.12
 sentry_sdk==1.1.0
-python-dateutil==2.8.1
+python-dateutil==2.8.2
 parsedatetime==2.6
 freezegun==1.1.0
 humanize==3.9.0
