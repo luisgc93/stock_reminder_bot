@@ -1,11 +1,16 @@
 language: python
 python:
   - "3.8"
+
+services:
+  - docker
+
 install:
   - pip install -r requirements.txt
+
 script:
-  - flake8 src/*.py tests/*.py --max-line-length 88
-  - black src/*.py tests/*.py
-  - pytest --cov=src.bot tests/
+  docker-compose run linting
+  docker-compose run python_test
+
 after_success:
   - codecov
