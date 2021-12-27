@@ -1,7 +1,7 @@
 APScheduler==3.7.0
 alpha_vantage==2.3.1
 tweepy==3.10.0
-black==21.6b0
+black==21.12b0
 flake8==3.9.2
 peewee==3.14.4
 psycopg2-binary==2.9.1
