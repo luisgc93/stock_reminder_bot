@@ -332,7 +332,8 @@ def get_split_factor(reminder):
     fd = FundamentalData(key=environ["ALPHA_VANTAGE_API_KEY"])
     data, _ = fd.get_company_overview(reminder.stock_symbol)
 
-    if data["LastSplitDate"] == "None":
+    last_split_date = data.get("LastSplitDate")
+    if last_split_date in [None, "None"]:
         return 1.0
     split_date = datetime.strptime(data["LastSplitDate"], "%Y-%m-%d").date()
     stock_was_split = reminder.created_on < split_date <= date.today()
