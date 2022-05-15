@@ -1,4 +1,4 @@
-# stock_reminder bot 🤖 
+# Stock-Reminder Bot 🤖 
 [![Build Status](https://www.travis-ci.com/luisgc93/stock_reminder_bot.svg?branch=master)](https://www.travis-ci.com/luisgc93/stock_reminder_bot) [![codecov](https://codecov.io/gh/luisgc93/stock_reminder_bot/branch/master/graph/badge.svg?token=2sx6C5pkSW)](https://codecov.io/gh/luisgc93/stock_reminder_bot)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
