@@ -5,7 +5,7 @@ black==22.3.0
 flake8==4.0.1
 peewee==3.15.0
 psycopg2-binary==2.9.3
-pytest==6.2.4
+pytest==7.1.2
 pytest-cov==2.12.1
 codecov==2.1.12
 sentry_sdk==1.5.1
