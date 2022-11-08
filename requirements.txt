@@ -1,6 +1,6 @@
 APScheduler==3.7.0
 alpha_vantage==2.3.1
-tweepy==3.10.0
+tweepy==4.12.1
 black==22.3.0
 flake8==4.0.1
 peewee==3.15.0
