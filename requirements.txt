@@ -12,7 +12,7 @@ sentry_sdk==1.5.1
 python-dateutil==2.8.2
 parsedatetime==2.6
 freezegun==1.1.0
-humanize==3.13.1
+humanize==4.6.0
 giphy_client==1.0.0
 responses==0.16.0
 requests==2.26.0
